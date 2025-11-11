@@ -9,7 +9,6 @@
   "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
   "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/self-improvement",
   "license": "MIT",
-  "category": "productivity",
   "keywords": [
     "self-improvement",
     "quality-analysis",
@@ -30,7 +29,7 @@
     "./commands/show-learnings.md",
     "./commands/show-metrics.md"
   ],
-  "agents": "./agents/",
+  "agents": ["./agents/self-critic.md"],
   "skills": "./skills/",
   "hooks": ["./hooks/hooks.json"]
 }

@@ -10,7 +10,7 @@ This is a **meta-repository** containing Claude Code plugins. It's essentially C
 
 ## Plugin Architecture
 
-### Two Main Plugins
+### Available Plugins
 
 1. **agent-builder**: Meta-agent plugin for building Claude Code extensions
    - Location: `./agent-builder/`
@@ -21,6 +21,11 @@ This is a **meta-repository** containing Claude Code plugins. It's essentially C
    - Location: `./self-improvement/`
    - Purpose: Enables Claude to critique its own work and create feedback loops
    - Contains: 1 agent, 3 skills, 5 commands, 1 hook
+
+3. **github-workflows**: GitHub workflow automation plugin
+   - Location: `./github-workflows/`
+   - Purpose: Comprehensive GitHub automation for projects, issues, PRs, and commits
+   - Contains: 1 agent, 3 skills, 9 commands, 1 hook
 
 ### Plugin Structure Standard
 
@@ -110,7 +115,7 @@ After creating components:
 ## Key Files & Locations
 
 ### Root Level
-- `marketplace.json`: Marketplace manifest listing all plugins
+- `.claude-plugin/marketplace.json`: Marketplace manifest listing all plugins (CRITICAL: must be updated when adding/modifying plugins)
 - `README.md`: Main documentation with installation instructions
 - `MARKETPLACE_CONTRIBUTION_WORKFLOW.md`: Guide for contributing improvements
 
@@ -158,7 +163,12 @@ After creating components:
 3. Add components following naming conventions
 4. Write comprehensive README.md
 5. Add validation scripts if applicable
-6. Update root `marketplace.json` to register the plugin
+6. **Update root `.claude-plugin/marketplace.json`** to register the plugin:
+   - Add new plugin entry to the `plugins` array
+   - Include all required fields: `name`, `source`, `description`, `version`, `category`, `keywords`, `author`, `repository`, `license`, `homepage`
+   - Ensure `source` path matches the actual plugin directory name (e.g., `"./plugin-name"`)
+   - Increment `metadata.stats.totalPlugins` count
+   - Update `metadata.stats.lastUpdated` to current date
 7. Test all components thoroughly
 
 ### Modifying Existing Plugins
@@ -166,7 +176,11 @@ After creating components:
 2. Bump version in `plugin.json` (follow semantic versioning)
 3. Re-run validation scripts to ensure compliance
 4. Update README.md with changes
-5. Update `marketplace.json` if metadata changed
+5. **Update `.claude-plugin/marketplace.json` if metadata changed**:
+   - Update plugin version in marketplace entry
+   - Update description, keywords, or other metadata as needed
+   - Update `metadata.stats.lastUpdated` to current date
+   - Verify `source` path is still correct if plugin was renamed
 
 ### Testing Changes
 1. Validate schema compliance using validation scripts

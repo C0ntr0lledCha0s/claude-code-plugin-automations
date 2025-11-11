@@ -9,7 +9,6 @@
   "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
   "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/agent-builder",
   "license": "MIT",
-  "category": "development-tools",
   "keywords": [
     "meta-agent",
     "agent-builder",
@@ -27,6 +26,6 @@
     "./commands/new-hook.md",
     "./commands/new-plugin.md"
   ],
-  "agents": "./agents/",
+  "agents": ["./agents/meta-architect.md"],
   "skills": "./skills/"
 }

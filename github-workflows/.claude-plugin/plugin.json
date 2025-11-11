@@ -9,7 +9,6 @@
   "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
   "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/github-workflows",
   "license": "MIT",
-  "category": "development-tools",
   "keywords": [
     "github",
     "project-management",
@@ -34,7 +33,10 @@
     "./commands/pr-quality-check.md",
     "./commands/workflow-status.md"
   ],
-  "agents": "./agents/",
+  "agents": [
+    "./agents/workflow-orchestrator.md",
+    "./agents/pr-reviewer.md"
+  ],
   "skills": "./skills/",
   "hooks": ["./hooks/hooks.json"]
 }
