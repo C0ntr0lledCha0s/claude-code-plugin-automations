@@ -1,0 +1,27 @@
+{
+  "name": "self-improvement",
+  "version": "1.0.0",
+  "description": "Self-improvement system for Claude with critic agent, quality analysis skills, and feedback loops. Enables continuous improvement through honest self-assessment and iterative refinement.",
+  "author": {
+    "name": "C0ntr0lledCha0s",
+    "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugins"
+  },
+  "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugins",
+  "license": "MIT",
+  "keywords": [
+    "self-improvement",
+    "quality-analysis",
+    "feedback-loop",
+    "critic",
+    "self-review",
+    "continuous-improvement",
+    "quality-assurance",
+    "meta-learning"
+  ],
+  "commands": [
+    "./commands/review-my-work.md",
+    "./commands/quality-check.md"
+  ],
+  "agents": "./agents/",
+  "skills": "./skills/"
+}

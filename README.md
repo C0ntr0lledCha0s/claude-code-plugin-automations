@@ -47,6 +47,38 @@ The Agent Builder plugin provides comprehensive tools for creating Claude Code e
 
 [See full documentation →](./agent-builder/README.md)
 
+### Self-Improvement Plugin
+
+**Claude critiquing Claude - A feedback loop for continuous improvement!**
+
+The Self-Improvement plugin enables Claude to critique its own work, identify quality issues, and create feedback loops for continuous learning. It includes a self-critic agent and skills for quality analysis, improvement suggestions, and feedback loops.
+
+**Features:**
+- 🔍 Self-critic agent for honest, constructive feedback
+- 📊 Quality analysis across 6 dimensions (correctness, completeness, clarity, efficiency, security, usability)
+- 💡 Actionable improvement suggestions with before/after examples
+- 🔄 Feedback loop systems for continuous learning
+- ⚡ Quick quality checks and comprehensive reviews
+- 📈 Pattern tracking and learning from mistakes
+
+**Quick Start:**
+```bash
+# Comprehensive review of recent work
+/review-my-work
+
+# Quick quality assessment
+/quality-check
+```
+
+**Use Cases:**
+- Catch bugs before delivery
+- Learn from recurring mistakes
+- Iterative refinement of solutions
+- Security hardening through self-review
+- Communication improvement
+
+[See full documentation →](./self-improvement-plugin/README.md)
+
 ## 📥 Installation
 
 ### For All Projects (User-Level)
@@ -61,6 +93,7 @@ cd claude-code-plugins
 # Link plugins to Claude user directory
 mkdir -p ~/.claude/plugins
 ln -s $(pwd)/agent-builder ~/.claude/plugins/agent-builder
+ln -s $(pwd)/self-improvement-plugin ~/.claude/plugins/self-improvement
 ```
 
 ### For a Specific Project
@@ -80,6 +113,10 @@ mkdir -p .claude/{agents,skills,commands}
 ln -s $(pwd)/claude-code-plugins/agent-builder/agents/* .claude/agents/
 ln -s $(pwd)/claude-code-plugins/agent-builder/skills/* .claude/skills/
 ln -s $(pwd)/claude-code-plugins/agent-builder/commands/* .claude/commands/
+
+ln -s $(pwd)/claude-code-plugins/self-improvement-plugin/agents/* .claude/agents/
+ln -s $(pwd)/claude-code-plugins/self-improvement-plugin/skills/* .claude/skills/
+ln -s $(pwd)/claude-code-plugins/self-improvement-plugin/commands/* .claude/commands/
 ```
 
 ### Using plugin.json (Recommended)
@@ -90,7 +127,8 @@ If your Claude Code version supports it, use the plugin manifest:
 # Add to your project's .claude/settings.json
 {
   "plugins": [
-    "/path/to/claude-code-plugins/agent-builder"
+    "/path/to/claude-code-plugins/agent-builder",
+    "/path/to/claude-code-plugins/self-improvement-plugin"
   ]
 }
 ```
@@ -314,7 +352,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🗺️ Roadmap
 
-Future plugin ideas:
+### Completed Plugins
+- ✅ **Agent Builder Plugin**: Meta-agent for building Claude Code extensions
+- ✅ **Self-Improvement Plugin**: Continuous improvement through self-critique and feedback loops
+
+### Future Plugin Ideas
 - **Testing Suite Plugin**: Automated test generation and execution
 - **Documentation Plugin**: Auto-generate docs from code
 - **Security Scanner Plugin**: Vulnerability detection and reporting
@@ -322,6 +364,8 @@ Future plugin ideas:
 - **Git Workflow Plugin**: Advanced git operations and automation
 - **API Generator Plugin**: REST/GraphQL API scaffolding
 - **Database Plugin**: Schema management and migration tools
+- **Code Review Plugin**: Automated code review with best practices
+- **Refactoring Plugin**: Intelligent code refactoring suggestions
 
 ---
 
