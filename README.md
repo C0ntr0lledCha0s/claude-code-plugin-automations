@@ -259,6 +259,21 @@ This repository is fully compatible with Claude Code marketplaces! The `.claude-
 - **All plugins include**: Complete manifests, documentation, and examples
 - **Compliance**: Follows 2025 Claude Code plugin standards
 
+### Contributing Improvements Back
+
+The self-improvement plugin creates a **meta-feedback loop** where it can identify and contribute improvements to itself! See the complete workflow:
+
+📖 **[Marketplace Contribution Workflow](./MARKETPLACE_CONTRIBUTION_WORKFLOW.md)** - Detailed guide on how improvements flow from pattern detection → implementation → marketplace distribution
+
+**Key Features:**
+- 🔄 Self-discovery of plugin limitations through pattern analysis
+- 🛠️ Structured improvement and testing workflow
+- 📦 Version management and semantic versioning
+- 🚀 Automated distribution through marketplace
+- 📊 Impact tracking and continuous measurement
+
+This creates a true continuous improvement cycle where the plugins improve themselves based on usage patterns!
+
 ## 🔧 Development
 
 ### Creating Your Own Plugin
