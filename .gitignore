@@ -1,0 +1,144 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# Virtual Environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+.vim/
+.netrwhist
+tags
+
+# Operating System
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Claude Code
+.claude/settings.local.json
+.claude-hooks.json
+.claude/logs/
+*.log
+
+# Secrets and Environment
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.crt
+secrets.json
+credentials.json
+
+# Test Files
+test-output/
+.pytest_cache/
+*.test.md
+test_*.py
+*_test.py
+
+# Temporary Files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.swp
+*.swo
+*~
+
+# Build and Distribution
+dist/
+build/
+*.tar.gz
+*.zip
+
+# Documentation Build
+docs/_build/
+docs/.doctrees/
+site/
+
+# Node (if any plugins use Node)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Local Development
+.local/
+.scratch/
+.experiments/
+sandbox/
+local-plugins/
+
+# Git
+*.orig
+*.rej
+
+# Ignore local plugin configurations
+*.local.json
+.claude-plugin.local/
+
+# Ignore user-specific hook scripts
+hooks/local/
+scripts/local/
