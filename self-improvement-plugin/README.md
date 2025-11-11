@@ -1,8 +1,8 @@
-# Self-Improvement Plugin
+# Self-Improvement Plugin v2.0
 
-**A comprehensive system for Claude's continuous self-improvement through critical feedback and iterative refinement.**
+**A comprehensive system for Claude's continuous self-improvement through critical feedback, automated analysis, and iterative refinement.**
 
-This plugin enables Claude to critique its own work, identify quality issues, suggest improvements, and create feedback loops for continuous learning and growth. It's a meta-learning system that helps Claude become better over time.
+This plugin enables Claude to critique its own work, identify quality issues, suggest improvements, and create feedback loops for continuous learning and growth. **NEW in v2.0**: Fully automated conversation analysis that runs in the background, tracking patterns, learnings, and trends without any user action required!
 
 ## 🎯 Purpose
 
@@ -13,6 +13,34 @@ The Self-Improvement Plugin addresses a fundamental challenge: how can an AI sys
 - **Suggest Improvements**: Propose specific, actionable enhancements
 - **Learn Patterns**: Track recurring issues and improve over time
 - **Iterate**: Refine outputs through systematic review
+- **✨ NEW: Automatic Analysis**: Background analysis after every conversation
+
+## ⚡ What's New in v2.0
+
+### Automated Background Analysis
+
+The plugin now includes **fully automated conversation analysis** that runs when conversations end:
+
+- 🔄 **Zero-effort improvement**: Runs automatically in background
+- 📊 **Pattern tracking**: Identifies recurring issues across conversations
+- 📚 **Learning reinforcement**: Tracks when topics come up repeatedly
+- 📈 **Trend detection**: Measures improvement over time
+- 🎯 **Context loading**: Applies learnings to new sessions automatically
+
+**How it works:**
+1. Conversation ends → Stop hook triggers analysis script
+2. Script analyzes conversation for keywords, patterns, quality indicators
+3. Patterns and learnings stored in local database
+4. Next conversation starts → SessionStart hook loads context
+5. Claude receives accumulated learnings and patterns
+6. Claude proactively avoids past mistakes!
+
+**View tracked data:**
+- `/show-patterns` - See recurring patterns
+- `/show-learnings` - View learning points
+- `/show-metrics` - Check conversation statistics
+
+[See full automated analysis documentation →](./AUTOMATED_ANALYSIS.md)
 
 ## 🏗️ Architecture
 
@@ -156,6 +184,81 @@ Performs quick quality assessment using the analyzing-response-quality skill.
 **Example:**
 ```bash
 /quality-check
+```
+
+#### `/show-patterns` ✨ NEW
+
+Displays all patterns automatically tracked across conversations.
+
+**What it shows:**
+- Pattern type and description
+- Severity (critical/important/minor)
+- Occurrence count
+- First and last seen timestamps
+
+**Example:**
+```bash
+/show-patterns
+```
+
+**Output:**
+```
+🔴 CRITICAL: high_error_rate
+   Description: Multiple errors encountered
+   Occurrences: 5
+
+🟡 IMPORTANT: missing_tests
+   Description: Code without tests
+   Occurrences: 12
+```
+
+#### `/show-learnings` ✨ NEW
+
+Displays all learning points automatically tracked when topics arise.
+
+**What it shows:**
+- Learning key and description
+- When first learned
+- Reinforcement count (how many times it came up again)
+- Last reinforcement timestamp
+
+**Example:**
+```bash
+/show-learnings
+```
+
+**Output:**
+```
+🔥 sql_injection_discussed
+   SQL injection - use parameterized queries
+   Reinforced: 5 times
+
+⭐ missing_validation_pattern
+   Add input validation before logic
+   Reinforced: 2 times
+```
+
+#### `/show-metrics` ✨ NEW
+
+Displays conversation metrics and statistics.
+
+**What it shows:**
+- Total sessions analyzed
+- Average/median conversation length
+- Recent session history
+- Trend analysis
+
+**Example:**
+```bash
+/show-metrics
+```
+
+**Output:**
+```
+📊 Conversation Statistics:
+   Total sessions: 47
+   Average turns: 12.3
+   Median turns: 8.0
 ```
 
 ## 🚀 Quick Start
