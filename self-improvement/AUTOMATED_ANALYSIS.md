@@ -538,7 +538,7 @@ Potential future features:
 
 ## Anthropic Best Practices Compliance
 
-This plugin and the broader claude-code-plugins architecture have been analyzed against [Anthropic's official guidance on building effective agents](https://www.anthropic.com/engineering/building-effective-agents). Here's the comprehensive assessment:
+This plugin and the broader claude-code-plugin-automations architecture have been analyzed against [Anthropic's official guidance on building effective agents](https://www.anthropic.com/engineering/building-effective-agents). Here's the comprehensive assessment:
 
 ### Core Principles Alignment
 
@@ -785,7 +785,7 @@ This self-improvement plugin represents **reference-quality agent architecture**
 
 - [Building Effective Agents - Anthropic Engineering](https://www.anthropic.com/engineering/building-effective-agents)
 - Analysis performed: 2025-11-11
-- Codebase: claude-code-plugins (self-improvement v2.0)
+- Codebase: claude-code-plugin-automations (self-improvement v2.0)
 
 ---
 

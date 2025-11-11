@@ -1,6 +1,6 @@
 # Claude Code Plugins
 
-[![Claude Marketplace](https://img.shields.io/badge/Claude-Marketplace-blue)](https://github.com/C0ntr0lledCha0s/claude-code-plugins)
+[![Claude Marketplace](https://img.shields.io/badge/Claude-Marketplace-blue)](https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations)
 [![Plugins](https://img.shields.io/badge/Plugins-2-green)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
@@ -93,7 +93,7 @@ Install directly from the Claude Code marketplace:
 
 ```bash
 # Add the marketplace to your Claude Code settings
-claude marketplace add https://github.com/C0ntr0lledCha0s/claude-code-plugins
+claude marketplace add https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations
 
 # Install specific plugins
 claude plugin install agent-builder
@@ -105,7 +105,7 @@ Or add to your `.claude/settings.json`:
 ```json
 {
   "marketplaces": [
-    "https://github.com/C0ntr0lledCha0s/claude-code-plugins"
+    "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
   ],
   "plugins": [
     "agent-builder",
@@ -120,8 +120,8 @@ Install plugins to your user-level Claude directory:
 
 ```bash
 # Clone the repository
-git clone https://github.com/C0ntr0lledCha0s/claude-code-plugins.git
-cd claude-code-plugins
+git clone https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations.git
+cd claude-code-plugin-automations
 
 # Link plugins to Claude user directory
 mkdir -p ~/.claude/plugins
@@ -138,18 +138,18 @@ Install plugins at the project level:
 cd /path/to/your/project
 
 # Clone the plugins
-git clone https://github.com/C0ntr0lledCha0s/claude-code-plugins.git
+git clone https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations.git
 
 # Link components to project .claude directory
 mkdir -p .claude/{agents,skills,commands}
 
-ln -s $(pwd)/claude-code-plugins/agent-builder/agents/* .claude/agents/
-ln -s $(pwd)/claude-code-plugins/agent-builder/skills/* .claude/skills/
-ln -s $(pwd)/claude-code-plugins/agent-builder/commands/* .claude/commands/
+ln -s $(pwd)/claude-code-plugin-automations/agent-builder/agents/* .claude/agents/
+ln -s $(pwd)/claude-code-plugin-automations/agent-builder/skills/* .claude/skills/
+ln -s $(pwd)/claude-code-plugin-automations/agent-builder/commands/* .claude/commands/
 
-ln -s $(pwd)/claude-code-plugins/self-improvement-plugin/agents/* .claude/agents/
-ln -s $(pwd)/claude-code-plugins/self-improvement-plugin/skills/* .claude/skills/
-ln -s $(pwd)/claude-code-plugins/self-improvement-plugin/commands/* .claude/commands/
+ln -s $(pwd)/claude-code-plugin-automations/self-improvement-plugin/agents/* .claude/agents/
+ln -s $(pwd)/claude-code-plugin-automations/self-improvement-plugin/skills/* .claude/skills/
+ln -s $(pwd)/claude-code-plugin-automations/self-improvement-plugin/commands/* .claude/commands/
 ```
 
 ### Using plugin.json
@@ -160,8 +160,8 @@ If your Claude Code version supports it, use the plugin manifest:
 # Add to your project's .claude/settings.json
 {
   "plugins": [
-    "/path/to/claude-code-plugins/agent-builder",
-    "/path/to/claude-code-plugins/self-improvement-plugin"
+    "/path/to/claude-code-plugin-automations/agent-builder",
+    "/path/to/claude-code-plugin-automations/self-improvement-plugin"
   ]
 }
 ```
@@ -219,7 +219,7 @@ Implement hooks for validation:
 ## 🏗️ Project Structure
 
 ```
-claude-code-plugins/
+claude-code-plugin-automations/
 ├── .claude-plugin/
 │   └── marketplace.json       # Marketplace manifest
 ├── agent-builder/             # Meta-agent plugin
@@ -344,7 +344,7 @@ Contributions are welcome! Here's how you can help:
 
 ### Report Issues
 
-Found a bug or have a feature request? [Open an issue](https://github.com/C0ntr0lledCha0s/claude-code-plugins/issues)
+Found a bug or have a feature request? [Open an issue](https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/issues)
 
 ### Submit Plugins
 
@@ -417,12 +417,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Claude Code Documentation](https://docs.claude.com/claude-code)
 - [Claude](https://claude.ai)
 - [Anthropic](https://anthropic.com)
-- [GitHub Repository](https://github.com/C0ntr0lledCha0s/claude-code-plugins)
+- [GitHub Repository](https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations)
 
 ## 💬 Support
 
-- **Issues**: [GitHub Issues](https://github.com/C0ntr0lledCha0s/claude-code-plugins/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/C0ntr0lledCha0s/claude-code-plugins/discussions)
+- **Issues**: [GitHub Issues](https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/discussions)
 - **Discord**: [Join our community](#) (if applicable)
 
 ## 🗺️ Roadmap

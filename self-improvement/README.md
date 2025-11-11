@@ -605,7 +605,7 @@ Total estimated time to address all issues: ~2 hours
 
 ```bash
 # Clone or navigate to the plugins repository
-cd claude-code-plugins
+cd claude-code-plugin-automations
 
 # Link to Claude user directory
 mkdir -p ~/.claude/plugins
@@ -755,7 +755,7 @@ Built using the Agent Builder plugin, demonstrating meta-meta-programming: a met
 ## 🔗 Links
 
 - [Claude Code Documentation](https://docs.claude.com/claude-code)
-- [Plugin Repository](https://github.com/C0ntr0lledCha0s/claude-code-plugins)
+- [Plugin Repository](https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations)
 - [Agent Builder Plugin](../agent-builder/README.md)
 
 ---

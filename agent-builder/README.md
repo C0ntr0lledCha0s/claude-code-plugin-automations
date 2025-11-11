@@ -366,7 +366,7 @@ MIT License
 ## Support
 
 For issues, questions, or contributions, please visit:
-https://github.com/C0ntr0lledCha0s/claude-code-plugins
+https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations
 
 ---
 

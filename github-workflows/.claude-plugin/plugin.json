@@ -1,0 +1,40 @@
+{
+  "name": "github-workflows",
+  "version": "1.0.0",
+  "description": "Comprehensive GitHub workflow automation including project boards, labels, milestones, commits, issues, and pull requests. Integrates with self-improvement plugin for PR reviews and quality gates.",
+  "author": {
+    "name": "C0ntr0lledCha0s",
+    "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
+  },
+  "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
+  "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/github-workflows",
+  "license": "MIT",
+  "category": "development-tools",
+  "keywords": [
+    "github",
+    "project-management",
+    "workflow-automation",
+    "git",
+    "project-boards",
+    "labels",
+    "milestones",
+    "pull-requests",
+    "commits",
+    "issues",
+    "code-review"
+  ],
+  "commands": [
+    "./commands/project-create.md",
+    "./commands/project-sync.md",
+    "./commands/label-sync.md",
+    "./commands/milestone-create.md",
+    "./commands/commit-review.md",
+    "./commands/issue-triage.md",
+    "./commands/pr-review-request.md",
+    "./commands/pr-quality-check.md",
+    "./commands/workflow-status.md"
+  ],
+  "agents": "./agents/",
+  "skills": "./skills/",
+  "hooks": ["./hooks/hooks.json"]
+}

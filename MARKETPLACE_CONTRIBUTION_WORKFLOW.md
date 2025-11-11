@@ -350,7 +350,7 @@ Users can update in several ways:
 ```json
 {
   "marketplaces": [
-    "https://github.com/C0ntr0lledCha0s/claude-code-plugins"
+    "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
   ],
   "plugins": [
     "self-improvement"
@@ -365,7 +365,7 @@ Users can update in several ways:
 claude plugin update self-improvement
 
 # Via git (if using symlinks)
-cd claude-code-plugins
+cd claude-code-plugin-automations
 git pull origin main
 
 # Via direct clone
