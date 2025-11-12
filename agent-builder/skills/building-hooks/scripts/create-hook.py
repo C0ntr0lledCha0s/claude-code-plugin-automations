@@ -123,12 +123,12 @@ log_hook "=== Hook triggered ==="
 
 # TODO: Implement your hook logic here
 
-# Example: Validation that allows operation
+# Example: Validation that approves operation
 validate_operation() {{
     # Add your validation logic
 
-    # Return success (allow operation)
-    echo '{{"decision": "allow", "reason": "Validation passed"}}'
+    # Return success (approve operation)
+    echo '{{"decision": "approve", "reason": "Validation passed"}}'
     exit 0
 }}
 

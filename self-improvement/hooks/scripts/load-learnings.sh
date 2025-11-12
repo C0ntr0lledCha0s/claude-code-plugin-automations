@@ -20,7 +20,7 @@ mkdir -p "${LOG_DIR}"
 load_learnings() {
     if [[ ! -f "${LEARNINGS_DB}" || ! -f "${PATTERNS_DB}" ]]; then
         # First run, no learnings yet
-        echo '{"decision": "allow", "suppressOutput": true}'
+        echo '{"decision": "approve", "suppressOutput": true}'
         exit 0
     fi
 
@@ -78,7 +78,7 @@ if critical_patterns or important_patterns or recent_learnings:
 
     # Output for Claude to see
     result = {
-        "decision": "allow",
+        "decision": "approve",
         "hookSpecificOutput": {
             "additionalContext": f"""
 🔄 Self-Improvement Context Loaded
@@ -92,7 +92,7 @@ Apply these learnings proactively in this session to avoid repeating past issues
     print(json.dumps(result))
 else:
     # No significant learnings yet, suppress output
-    print('{"decision": "allow", "suppressOutput": true}')
+    print('{"decision": "approve", "suppressOutput": true}')
 
 EOF
 }

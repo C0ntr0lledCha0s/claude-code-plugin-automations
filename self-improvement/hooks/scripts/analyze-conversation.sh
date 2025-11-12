@@ -408,7 +408,7 @@ main() {
     log_analysis "=== Conversation analysis complete ==="
 
     # Return success
-    echo '{"decision": "allow", "reason": "Conversation analyzed for continuous improvement"}'
+    echo '{"decision": "approve", "reason": "Conversation analyzed for continuous improvement"}'
     exit 0
 }
 

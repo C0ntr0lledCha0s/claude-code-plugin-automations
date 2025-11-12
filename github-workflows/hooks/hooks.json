@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Before allowing this git commit, validate that the commit message follows conventional commits format. If it doesn't, suggest the correct format and ask the user to confirm or revise."
+            "prompt": "Before approving this git commit, validate that the commit message follows conventional commits format. If it doesn't, suggest the correct format and ask the user to confirm or revise."
           }
         ]
       },

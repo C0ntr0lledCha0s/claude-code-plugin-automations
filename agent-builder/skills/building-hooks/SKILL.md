@@ -190,12 +190,12 @@ Hooks can return structured JSON to control behavior:
 ```json
 {
   "continue": true,
-  "decision": "allow",
+  "decision": "approve",
   "reason": "Explanation for the decision",
   "suppressOutput": false,
   "systemMessage": "Optional message shown to user",
   "hookSpecificOutput": {
-    "permissionDecision": "allow",
+    "permissionDecision": "approve",
     "permissionDecisionReason": "Safe operation",
     "additionalContext": "Extra context for Claude"
   }
@@ -205,7 +205,7 @@ Hooks can return structured JSON to control behavior:
 ### Key Fields
 
 - **`continue`**: `true` to proceed, `false` to stop
-- **`decision`**: `"allow"`, `"block"`, or `"warn"`
+- **`decision`**: `"approve"`, `"block"`, or `"warn"`
 - **`reason`**: Explanation for the decision
 - **`suppressOutput`**: Hide hook output from transcript
 - **`systemMessage`**: Message displayed to user
@@ -254,7 +254,7 @@ if [[ "$FILE_PATH" == /protected/* ]]; then
   exit 2
 fi
 
-echo '{"decision": "allow", "reason": "Path is valid"}'
+echo '{"decision": "approve", "reason": "Path is valid"}'
 exit 0
 ```
 
@@ -349,7 +349,7 @@ if echo "$COMMAND" | grep -qE "rm -rf /|dd if="; then
   exit 2
 fi
 
-echo '{"decision": "allow"}'
+echo '{"decision": "approve"}'
 exit 0
 ```
 
@@ -436,7 +436,7 @@ Ask the user:
 - Place hooks.json in `.claude/`
 - Trigger the event
 - Verify hook executes correctly
-- Check blocking/allowing works
+- Check blocking/approving works
 - Test error handling
 
 ## Generator Scripts
@@ -523,7 +523,7 @@ Hook configuration:
    - Proper shebang and error handling (`set -euo pipefail`)
    - Logging function and log file setup
    - Input parameter documentation
-   - Example validation functions (allow/block)
+   - Example validation functions (approve/block)
    - Placeholder for custom logic
    - Proper JSON return format
 
@@ -560,12 +560,12 @@ log_hook "Event: PreToolUse, Tool: ${TOOL_NAME}"
 
 # TODO: Implement your hook logic here
 
-# Example: Validation that allows operation
+# Example: Validation that approves operation
 validate_operation() {
     # Add your validation logic
 
-    # Return success (allow operation)
-    echo '{"decision": "allow", "reason": "Validation passed"}'
+    # Return success (approve operation)
+    echo '{"decision": "approve", "reason": "Validation passed"}'
     exit 0
 }
 
@@ -642,7 +642,7 @@ Always return well-formed JSON:
 #!/bin/bash
 
 # Success
-echo '{"decision": "allow", "reason": "Validation passed"}'
+echo '{"decision": "approve", "reason": "Validation passed"}'
 exit 0
 
 # Block
@@ -671,7 +671,7 @@ if ! validate_input "$1"; then
 fi
 
 # Normal processing
-echo '{"decision": "allow"}'
+echo '{"decision": "approve"}'
 exit 0
 ```
 
@@ -770,7 +770,7 @@ for dir in "${PROTECTED_DIRS[@]}"; do
   fi
 done
 
-echo '{"decision": "allow"}'
+echo '{"decision": "approve"}'
 exit 0
 ```
 
@@ -785,7 +785,7 @@ elif [[ "$FILE_PATH" == *.js ]] || [[ "$FILE_PATH" == *.ts ]]; then
   prettier --write "$FILE_PATH" > /dev/null 2>&1
 fi
 
-echo '{"decision": "allow", "reason": "File formatted"}'
+echo '{"decision": "approve", "reason": "File formatted"}'
 exit 0
 ```
 

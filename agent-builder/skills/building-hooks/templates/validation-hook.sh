@@ -52,6 +52,6 @@ if [[ "$TOOL_NAME" == "Bash" ]]; then
     fi
 fi
 
-# Allow the operation
-echo "{\"decision\": \"allow\", \"reason\": \"Validation passed\"}"
+# Approve the operation
+echo "{\"decision\": \"approve\", \"reason\": \"Validation passed\"}"
 exit 0

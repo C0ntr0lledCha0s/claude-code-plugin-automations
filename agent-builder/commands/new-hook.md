@@ -139,7 +139,7 @@ if [[ condition ]]; then
 fi
 
 # Allow the operation
-echo '{"decision": "allow", "reason": "Validation passed"}'
+echo '{"decision": "approve", "reason": "Validation passed"}'
 exit 0
 ```
 
@@ -160,7 +160,7 @@ for dir in "${PROTECTED[@]}"; do
   fi
 done
 
-echo '{"decision": "allow"}'
+echo '{"decision": "approve"}'
 exit 0
 ```
 
@@ -177,7 +177,7 @@ elif [[ "$FILE_PATH" == *.js ]]; then
   prettier --write "$FILE_PATH"
 fi
 
-echo '{"decision": "allow", "reason": "Formatted"}'
+echo '{"decision": "approve", "reason": "Formatted"}'
 exit 0
 ```
 
@@ -193,7 +193,7 @@ if echo "$COMMAND" | grep -qE "rm -rf /|dd if="; then
   exit 2
 fi
 
-echo '{"decision": "allow"}'
+echo '{"decision": "approve"}'
 exit 0
 ```
 
@@ -207,7 +207,7 @@ TIMESTAMP=$(date -Iseconds)
 
 echo "$TIMESTAMP: $TOOL_NAME used" >> ~/.claude/tool-log.txt
 
-echo '{"decision": "allow"}'
+echo '{"decision": "approve"}'
 exit 0
 ```
 
@@ -216,12 +216,12 @@ exit 0
 ```json
 {
   "continue": true,
-  "decision": "allow",
+  "decision": "approve",
   "reason": "Explanation",
   "suppressOutput": false,
   "systemMessage": "Message to user",
   "hookSpecificOutput": {
-    "permissionDecision": "allow",
+    "permissionDecision": "approve",
     "additionalContext": "Context for Claude"
   }
 }
@@ -229,7 +229,7 @@ exit 0
 
 ## Exit Codes
 
-- **0**: Success (allow operation)
+- **0**: Success (approve operation)
 - **2**: Block operation (stderr fed to Claude)
 - **Other**: Non-blocking error
 
