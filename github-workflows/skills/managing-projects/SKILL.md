@@ -3,7 +3,6 @@ name: managing-projects
 description: GitHub Projects v2 expertise for creating and managing project boards, fields, views, and items. Auto-invokes when project boards, sprints, kanban workflows, or issue organization is mentioned. Uses GraphQL for advanced project operations.
 version: 1.0.0
 allowed-tools: Bash, Read, Grep, Glob
-model: sonnet
 ---
 
 # Managing GitHub Projects (v2) Skill

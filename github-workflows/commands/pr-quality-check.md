@@ -2,7 +2,6 @@
 description: Run quality gates on PR without full review (quick check)
 allowed-tools: Bash
 argument-hint: "[pr-number]"
-model: sonnet
 ---
 
 # PR Quality Check

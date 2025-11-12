@@ -41,7 +41,6 @@ Single Markdown file with YAML frontmatter and Markdown body.
 ---
 description: Brief description of what the command does
 allowed-tools: Read, Grep, Glob, Bash
-model: sonnet
 argument-hint: [parameter-description]
 ---
 ```
@@ -51,7 +50,6 @@ argument-hint: [parameter-description]
 ---
 description: Brief description of command functionality
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash    # Pre-approved tools
-model: sonnet                                           # sonnet, opus, haiku
 argument-hint: [filename] [options]                    # Parameter guide for users
 disable-model-invocation: false                        # Prevent auto-invocation
 ---
@@ -82,7 +80,6 @@ Commands support special variables for arguments:
 description: One-line description of what this command does
 allowed-tools: Read, Grep, Bash
 argument-hint: [arg1] [arg2]
-model: sonnet
 ---
 
 # Command Name
@@ -212,7 +209,6 @@ The generated command file includes:
 description: Runs test suite and reports results
 allowed-tools: Read, Grep, Bash
 argument-hint: [test-path]
-model: haiku
 ---
 
 # Run Tests
@@ -367,7 +363,6 @@ Use for: Complete workflows (test + commit + push)
 description: Commit changes and push to remote
 allowed-tools: Read, Grep, Bash
 argument-hint: [commit-message]
-model: haiku
 ---
 
 # Git Commit and Push
@@ -392,7 +387,6 @@ Usage: `/git-commit-push Add authentication feature`
 description: Review a pull request for quality and security
 allowed-tools: Read, Grep, Bash
 argument-hint: [PR-number]
-model: sonnet
 ---
 
 # Review Pull Request
@@ -414,7 +408,6 @@ Usage: `/review-pr 123`
 description: Run specific test suite and report results
 allowed-tools: Read, Grep, Bash
 argument-hint: [test-path]
-model: haiku
 ---
 
 # Run Tests
@@ -435,7 +428,6 @@ Usage: `/run-tests ./tests/unit`
 description: Create a new React component with tests
 allowed-tools: Read, Write, Grep, Glob
 argument-hint: [component-name]
-model: sonnet
 ---
 
 # Create React Component
@@ -456,7 +448,6 @@ Usage: `/create-component UserProfile`
 description: Generate API documentation from code
 allowed-tools: Read, Write, Grep, Glob, Bash
 argument-hint: [source-directory]
-model: sonnet
 ---
 
 # Generate API Docs

@@ -3,7 +3,6 @@ name: reviewing-pull-requests
 description: Pull request workflow and review expertise. Auto-invokes when PRs, code review, merge, or pull request operations are mentioned. Integrates with self-improvement plugin for quality validation.
 version: 1.0.0
 allowed-tools: Bash, Read, Grep, Glob
-model: sonnet
 ---
 
 # Reviewing Pull Requests Skill

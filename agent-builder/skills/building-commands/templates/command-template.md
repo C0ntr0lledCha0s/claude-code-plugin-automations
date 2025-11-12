@@ -1,8 +1,7 @@
 ---
 description: Brief description of what this command does
 allowed-tools: Read, Grep, Glob, Bash
-argument-hint: [arg1] [arg2]
-model: sonnet
+argument-hint: "[arg1] [arg2]"
 ---
 
 # Command Name

@@ -1,7 +1,6 @@
 ---
 description: Show current workflow state (branch, commits, PRs, board status) and suggest next actions
 allowed-tools: Bash, Read
-model: sonnet
 ---
 
 # Workflow Status

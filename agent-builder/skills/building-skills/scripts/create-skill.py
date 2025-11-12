@@ -57,7 +57,7 @@ def select_resources():
     return create_scripts, create_references, create_assets
 
 
-def generate_skill_md(name, description, version, tools, model, overview, capabilities, when_to_use, resources_info):
+def generate_skill_md(name, description, version, tools, overview, capabilities, when_to_use, resources_info):
     """Generate SKILL.md content"""
 
     # Build frontmatter
@@ -71,8 +71,7 @@ def generate_skill_md(name, description, version, tools, model, overview, capabi
     if tools:
         frontmatter.append(f"allowed-tools: {tools}")
 
-    if model != 'inherit':
-        frontmatter.append(f"model: {model}")
+    # Note: Skills do not support the 'model' field - only agents do
 
     frontmatter.append("---")
 
@@ -225,15 +224,7 @@ def main():
     print("        Read, Write, Edit, Grep, Glob (with file modification)")
     tools = prompt_user("Allowed tools", "Read, Grep, Glob")
 
-    # Get model
-    print("\n🤖 Model")
-    print("  1. haiku - Fast, simple")
-    print("  2. sonnet - Default (recommended)")
-    print("  3. opus - Complex reasoning")
-    print("  4. inherit - Use parent model")
-    choice = prompt_user("Model [2]", "2")
-    model_map = {'1': 'haiku', '2': 'sonnet', '3': 'opus', '4': 'inherit'}
-    model = model_map.get(choice, 'sonnet')
+    # Note: Skills do not support model specification - they inherit from parent context
 
     # Get overview
     print("\n📋 Skill Overview")
@@ -289,7 +280,7 @@ def main():
     skill_dir = create_skill_structure(output_dir, name, create_scripts, create_references, create_assets)
 
     # Generate SKILL.md
-    content = generate_skill_md(name, description, version, tools, model, overview, capabilities, when_to_use, resources_info)
+    content = generate_skill_md(name, description, version, tools, overview, capabilities, when_to_use, resources_info)
     skill_md = skill_dir / 'SKILL.md'
     skill_md.write_text(content)
 

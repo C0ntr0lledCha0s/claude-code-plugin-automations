@@ -2,7 +2,6 @@
 description: Comprehensive PR review with quality gates and self-improvement integration
 allowed-tools: Bash, Read, Grep
 argument-hint: "[pr-number]"
-model: sonnet
 ---
 
 # Request PR Review

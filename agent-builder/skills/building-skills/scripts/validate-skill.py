@@ -124,11 +124,9 @@ def validate_skill(skill_dir: str) -> tuple[bool, list[str]]:
                 if tool not in valid_tools:
                     errors.append(f"Warning: Unknown tool '{tool}'. Valid tools: {', '.join(valid_tools)}")
 
+    # Skills do not support the 'model' field - only agents support it
     if 'model' in frontmatter:
-        model = frontmatter['model']
-        valid_models = ['sonnet', 'opus', 'haiku', 'inherit']
-        if model not in valid_models:
-            errors.append(f"Invalid model '{model}'. Valid models: {', '.join(valid_models)}")
+        errors.append("Invalid field 'model': Skills do not support model specification. Only agents can specify a model. Remove this field.")
 
     # Check body content
     body = content[match.end():]

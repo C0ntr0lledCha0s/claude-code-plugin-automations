@@ -2,7 +2,6 @@
 description: Review commit history for quality, format compliance, and suggest improvements
 allowed-tools: Bash, Read
 argument-hint: "[branch-name]"
-model: sonnet
 ---
 
 # Review Commit History

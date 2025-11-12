@@ -2,7 +2,6 @@
 description: Apply label taxonomy preset (standard, comprehensive, or minimal)
 allowed-tools: Bash, Read
 argument-hint: "[preset-name]"
-model: sonnet
 ---
 
 # Sync Label Taxonomy

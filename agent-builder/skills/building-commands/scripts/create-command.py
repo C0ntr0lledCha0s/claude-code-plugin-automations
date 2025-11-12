@@ -44,7 +44,7 @@ def prompt_user(question, default=None, required=True):
         print("This field is required. Please provide a value.")
 
 
-def generate_command(name, description, tools, model, argument_hint, has_args, workflow):
+def generate_command(name, description, tools, argument_hint, has_args, workflow):
     """Generate command markdown content"""
 
     # Build frontmatter
@@ -59,8 +59,7 @@ def generate_command(name, description, tools, model, argument_hint, has_args, w
     if argument_hint:
         frontmatter.append(f"argument-hint: {argument_hint}")
 
-    if model != 'inherit':
-        frontmatter.append(f"model: {model}")
+    # Note: Commands do not support the 'model' field - only agents do
 
     frontmatter.append("---")
 
@@ -153,14 +152,7 @@ def main():
     print("        Read, Write, Edit, Grep, Glob (for file operations)")
     tools = prompt_user("Allowed tools", "Read, Grep, Bash")
 
-    # Get model
-    print("\n🤖 Model")
-    print("  1. haiku - Fast, simple (recommended for commands)")
-    print("  2. sonnet - Default")
-    print("  3. opus - Complex reasoning")
-    choice = prompt_user("Model [1]", "1")
-    model_map = {'1': 'haiku', '2': 'sonnet', '3': 'opus'}
-    model = model_map.get(choice, 'haiku')
+    # Note: Commands do not support model specification - they inherit from parent context
 
     # Check if command needs arguments
     has_args = prompt_user("Does this command take arguments? (y/n)", "y").lower() == 'y'
@@ -177,7 +169,7 @@ def main():
     workflow = prompt_user("Workflow description")
 
     # Generate command content
-    content = generate_command(name, description, tools, model, argument_hint, has_args, workflow)
+    content = generate_command(name, description, tools, argument_hint, has_args, workflow)
 
     # Determine output path
     output_dir = Path.cwd() / '.claude' / 'commands'

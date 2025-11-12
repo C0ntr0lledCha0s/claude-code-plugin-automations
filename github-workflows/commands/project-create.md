@@ -2,7 +2,6 @@
 description: Create a GitHub Projects v2 board with template (sprint, kanban, or roadmap)
 allowed-tools: Bash, Read
 argument-hint: "[project-name] [template]"
-model: sonnet
 ---
 
 # Create Project Board Command

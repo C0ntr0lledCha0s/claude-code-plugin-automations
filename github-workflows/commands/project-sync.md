@@ -2,7 +2,6 @@
 description: Sync issues and PRs to a project board based on labels and filters
 allowed-tools: Bash, Read
 argument-hint: "[project-number] [filter]"
-model: sonnet
 ---
 
 # Sync Project Board

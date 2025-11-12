@@ -2,7 +2,6 @@
 description: Create a milestone with title and due date
 allowed-tools: Bash
 argument-hint: "[title] [due-date]"
-model: sonnet
 ---
 
 # Create Milestone

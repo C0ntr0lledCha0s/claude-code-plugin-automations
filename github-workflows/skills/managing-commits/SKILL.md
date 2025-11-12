@@ -3,7 +3,6 @@ name: managing-commits
 description: Git commit quality and conventional commits expertise. Auto-invokes when commits, commit messages, git history, or conventional commits are mentioned. Integrates with existing commit-helper skill.
 version: 1.0.0
 allowed-tools: Bash, Read, Grep, Glob
-model: sonnet
 ---
 
 # Managing Commits Skill

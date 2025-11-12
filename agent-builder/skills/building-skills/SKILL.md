@@ -74,7 +74,6 @@ description: Brief description of WHAT the skill does and WHEN Claude should use
 ---
 version: 1.0.0                     # Semantic version
 allowed-tools: Read, Grep, Glob    # Tools the skill can use without asking permission
-model: sonnet                      # sonnet, opus, haiku, or inherit
 ---
 ```
 

@@ -2,7 +2,6 @@
 description: Comprehensive issue triage with duplicate detection, labeling, and relationship mapping
 allowed-tools: Bash, Read, Grep
 argument-hint: "[issue-number]"
-model: sonnet
 ---
 
 # Triage Issue
