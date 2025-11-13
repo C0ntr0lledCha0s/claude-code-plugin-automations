@@ -182,6 +182,27 @@ Use GitHub CLI: `gh pr view $1`
 
 Usage: `/project:review-pr 123`
 
+## Model Field Guidance
+
+**IMPORTANT**: Commands support version aliases or full IDs, but NOT short aliases:
+
+✅ **Correct formats**:
+```yaml
+# No model field (recommended - inherits from conversation)
+# OR
+model: claude-haiku-4-5        # Version alias (auto-updates)
+# OR
+model: claude-haiku-4-5-20251001  # Full ID (stable)
+```
+
+❌ **WRONG - causes API 404 errors**:
+```yaml
+model: haiku   # Short alias - only works in agents
+model: sonnet  # Short alias - only works in agents
+```
+
+**Recommendation**: For most commands, omit the model field and let it inherit from the conversation. Only specify when you need specific performance (haiku for speed) or stable behavior (full ID).
+
 ## Important Notes
 
 - Commands are user-triggered (not auto-invoked like skills)
@@ -189,6 +210,7 @@ Usage: `/project:review-pr 123`
 - Document all arguments clearly
 - Test with various argument combinations
 - Consider edge cases (missing args, invalid input)
+- Model field: Use version aliases (claude-haiku-4-5) NOT short aliases (haiku)
 
 ## If No Name Provided
 

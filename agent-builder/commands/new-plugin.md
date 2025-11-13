@@ -295,6 +295,83 @@ Before finalizing plugin:
 - Include clear installation instructions
 - Consider adding examples directory
 
+## Marketplace Repository: Maintaining Manifest Files
+
+**If working in the claude-code-plugin-automations (marketplace) repository**, you MUST update TWO manifest files:
+
+### 1. Update Plugin's plugin.json
+**File**: `<plugin-name>/.claude-plugin/plugin.json`
+
+When modifying a plugin:
+- Increment version number (follow semantic versioning)
+- Update description if changed
+- Update commands array if commands added/removed
+- Update other metadata as needed
+
+### 2. Update Root marketplace.json
+**File**: `.claude-plugin/marketplace.json`
+
+**CRITICAL**: This file lists all plugins in the marketplace. You MUST update it when:
+
+**When adding a NEW plugin**:
+```json
+{
+  "metadata": {
+    "version": "X.Y.Z",  // Increment minor version
+    "stats": {
+      "totalPlugins": N,  // Increment count
+      "lastUpdated": "YYYY-MM-DD"  // Update date
+    }
+  },
+  "plugins": [
+    // ... existing plugins ...
+    {
+      "name": "new-plugin-name",
+      "source": "./new-plugin-name",
+      "description": "Plugin description",
+      "version": "1.0.0",
+      "category": "category-name",
+      "keywords": ["keyword1", "keyword2"],
+      "author": { /* ... */ },
+      "repository": "...",
+      "license": "MIT",
+      "homepage": "..."
+    }
+  ]
+}
+```
+
+**When updating an EXISTING plugin**:
+```json
+{
+  "metadata": {
+    "version": "X.Y.Z",  // Increment patch version
+    "stats": {
+      "lastUpdated": "YYYY-MM-DD"  // Update date
+    }
+  },
+  "plugins": [
+    {
+      "name": "existing-plugin",
+      "description": "Updated description if changed",
+      "version": "1.2.0",  // Match plugin's new version
+      // Update other fields as needed
+    }
+  ]
+}
+```
+
+**Fields to Keep in Sync**:
+- Plugin version in marketplace.json MUST match plugin's plugin.json version
+- Description should match between both files
+- Update lastUpdated date in metadata.stats
+
+**Why This Matters**:
+- marketplace.json is the central registry for all plugins
+- Users rely on it for plugin discovery and installation
+- Inconsistencies break plugin installation and updates
+- The marketplace uses this file to display available plugins
+
 ## If No Name Provided
 
 If $1 is empty, ask the user:

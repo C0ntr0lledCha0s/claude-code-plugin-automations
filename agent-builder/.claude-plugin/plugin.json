@@ -1,6 +1,6 @@
 {
   "name": "agent-builder",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Meta-agent plugin for building Claude Code agents, skills, slash commands, hooks, and plugins. Provides automated scaffolding, validation, and best practices guidance.",
   "author": {
     "name": "C0ntr0lledCha0s",
@@ -24,11 +24,7 @@
     "./commands/new-skill.md",
     "./commands/new-command.md",
     "./commands/new-hook.md",
-    "./commands/new-plugin.md",
-    "./commands/test-model-full.md",
-    "./commands/test-model-version-alias.md",
-    "./commands/test-model-short.md",
-    "./commands/test-no-model.md"
+    "./commands/new-plugin.md"
   ],
   "agents": ["./agents/meta-architect.md"],
   "skills": "./skills/"
