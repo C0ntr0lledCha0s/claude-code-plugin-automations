@@ -1,6 +1,7 @@
 ---
 name: agent-name
 description: Brief description of what the agent does and when Claude should invoke it (be specific about use cases)
+capabilities: ["task1", "task2", "task3"]
 tools: Read, Grep, Glob
 model: sonnet
 ---

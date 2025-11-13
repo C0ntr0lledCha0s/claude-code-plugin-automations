@@ -31,11 +31,11 @@ This plugin provides automated scaffolding, validation, and best practices guida
 
 ### Slash Commands
 
-- **`/new-agent [name]`**: Create a new Claude Code agent with proper schema and structure
-- **`/new-skill [name]`**: Create a new skill with directory structure and resources
-- **`/new-command [name]`**: Create a new slash command for user-triggered workflows
-- **`/new-hook [name]`**: Create a new event hook for automation and validation
-- **`/new-plugin [name]`**: Create a new plugin with complete directory structure
+- **`/agent-builder:agents:new [name]`**: Create a new Claude Code agent with proper schema and structure
+- **`/agent-builder:skills:new [name]`**: Create a new skill with directory structure and resources
+- **`/agent-builder:commands:new [name]`**: Create a new slash command for user-triggered workflows
+- **`/agent-builder:hooks:new [name]`**: Create a new event hook for automation and validation
+- **`/agent-builder:plugins:new [name]`**: Create a new plugin with complete directory structure
 
 ## Installation
 
@@ -70,7 +70,7 @@ This plugin provides automated scaffolding, validation, and best practices guida
 
 #### Create a New Agent
 ```bash
-/new-agent code-reviewer
+/agent-builder:agents:new code-reviewer
 ```
 Claude will guide you through:
 - Defining the agent's purpose
@@ -80,7 +80,7 @@ Claude will guide you through:
 
 #### Create a New Skill
 ```bash
-/new-skill analyzing-performance
+/agent-builder:skills:new analyzing-performance
 ```
 Claude will help you:
 - Design the skill structure
@@ -90,7 +90,7 @@ Claude will help you:
 
 #### Create a New Command
 ```bash
-/new-command run-tests
+/agent-builder:commands:new run-tests
 ```
 Claude will assist with:
 - Defining arguments and parameters
@@ -100,7 +100,7 @@ Claude will assist with:
 
 #### Create a New Hook
 ```bash
-/new-hook validate-writes
+/agent-builder:hooks:new validate-writes
 ```
 Claude will guide you through:
 - Choosing the event type
@@ -110,7 +110,7 @@ Claude will guide you through:
 
 #### Create a New Plugin
 ```bash
-/new-plugin my-custom-tools
+/agent-builder:plugins:new my-custom-tools
 ```
 Claude will help you:
 - Design the plugin structure
@@ -282,7 +282,7 @@ Use these as starting points for your own components.
 ### Example: Creating a Code Review Agent
 
 ```bash
-/new-agent security-reviewer
+/agent-builder:agents:new security-reviewer
 ```
 
 Claude will create:
@@ -302,7 +302,7 @@ You are a security expert specializing in code security analysis...
 ### Example: Creating a Data Analysis Skill
 
 ```bash
-/new-skill analyzing-csv-data
+/agent-builder:skills:new analyzing-csv-data
 ```
 
 Claude will create:
@@ -320,7 +320,7 @@ Claude will create:
 ### Example: Creating a Git Workflow Command
 
 ```bash
-/new-command git:commit-push
+/agent-builder:commands:new git:commit-push
 ```
 
 Claude will create:

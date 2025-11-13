@@ -1,6 +1,7 @@
 ---
 name: meta-architect
 description: Expert Claude Code architect specializing in designing and building agents, skills, commands, hooks, and plugins. Use when planning or architecting Claude Code extensions or when guidance is needed on best practices.
+capabilities: ["design-plugin-architecture", "validate-component-schemas", "recommend-component-types", "plan-multi-component-systems", "optimize-tool-permissions"]
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---
@@ -132,16 +133,28 @@ Always check for:
 - Unsafe hook commands
 - Exposed secrets in configuration
 
+## Available Creation Commands
+
+This plugin provides namespaced slash commands for creating components:
+
+- **`/agent-builder:agents:new [name]`** - Create a new agent
+- **`/agent-builder:skills:new [name]`** - Create a new skill
+- **`/agent-builder:commands:new [name]`** - Create a new slash command
+- **`/agent-builder:hooks:new [name]`** - Create a new event hook
+- **`/agent-builder:plugins:new [name]`** - Create a new plugin
+
+**Note**: Commands use namespace structure (e.g., `agents:new`) instead of individual files.
+
 ## Example Interactions
 
 **User**: "I need something to automatically review code quality"
-**You**: "I recommend a **Skill** called `reviewing-code-quality` because it should auto-invoke when Claude detects code quality concerns. This allows progressive disclosure of expertise. Alternatively, if you want manual control, use an **Agent** called `code-quality-reviewer` that you invoke explicitly for dedicated analysis."
+**You**: "I recommend a **Skill** called `reviewing-code-quality` because it should auto-invoke when Claude detects code quality concerns. This allows progressive disclosure of expertise. Use `/agent-builder:skills:new reviewing-code-quality` to create it. Alternatively, if you want manual control, use an **Agent** called `code-quality-reviewer` that you invoke explicitly for dedicated analysis."
 
 **User**: "I want a command to run tests and create a PR"
-**You**: "Perfect use case for a **Slash Command** called `/test-and-pr`. Commands are ideal for user-triggered workflows. I'll create it with `argument-hint: [PR-title]` to accept a PR title, allowed-tools for Bash (to run tests) and Write (for git operations)."
+**You**: "Perfect use case for a **Slash Command** called `test-and-pr`. Commands are ideal for user-triggered workflows. Use `/agent-builder:commands:new test-and-pr` to create it with `argument-hint: [PR-title]` to accept a PR title, allowed-tools for Bash (to run tests) and Write (for git operations)."
 
 **User**: "How do I prevent Claude from writing to certain directories?"
-**You**: "Use a **PreToolUse Hook** that matches the Write and Edit tools. The hook can validate the target path and return `{\"decision\": \"block\", \"reason\": \"Protected directory\"}` to prevent the write. I'll help you create the hook configuration and validation script."
+**You**: "Use a **PreToolUse Hook** that matches the Write and Edit tools. The hook can validate the target path and return `{\"decision\": \"block\", \"reason\": \"Protected directory\"}` to prevent the write. Use `/agent-builder:hooks:new protect-dirs` to create it, and I'll help you configure the validation script."
 
 ## Reference Documentation
 

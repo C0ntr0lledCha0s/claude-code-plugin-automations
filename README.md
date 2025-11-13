@@ -36,19 +36,19 @@ The Agent Builder plugin provides comprehensive tools for creating Claude Code e
 **Quick Start:**
 ```bash
 # Create a new agent
-/new-agent code-reviewer
+/agent-builder:agents:new code-reviewer
 
 # Create a new skill
-/new-skill analyzing-data
+/agent-builder:skills:new analyzing-data
 
 # Create a new command
-/new-command run-tests
+/agent-builder:commands:new run-tests
 
 # Create a new hook
-/new-hook validate-writes
+/agent-builder:hooks:new validate-writes
 
 # Create a complete plugin
-/new-plugin my-tools
+/agent-builder:plugins:new my-tools
 ```
 
 [See full documentation →](./agent-builder/README.md)
@@ -281,7 +281,7 @@ This creates a true continuous improvement cycle where the plugins improve thems
 Use the Agent Builder to create new plugins:
 
 ```bash
-/new-plugin my-awesome-plugin
+/agent-builder:plugins:new my-awesome-plugin
 ```
 
 Claude will guide you through:

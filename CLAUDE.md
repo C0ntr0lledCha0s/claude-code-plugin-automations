@@ -135,13 +135,13 @@ python3 -m json.tool .claude-plugin/marketplace.json
 ```
 
 ### Creating Components
-Use the agent-builder slash commands:
+Use the agent-builder slash commands (namespace structure):
 ```bash
-/new-agent agent-name       # Create a new agent
-/new-skill skill-name       # Create a new skill
-/new-command command-name   # Create a new command
-/new-hook hook-name         # Create a new hook
-/new-plugin plugin-name     # Create a complete plugin
+/agent-builder:agents:new agent-name       # Create a new agent
+/agent-builder:skills:new skill-name       # Create a new skill
+/agent-builder:commands:new command-name   # Create a new command
+/agent-builder:hooks:new hook-name         # Create a new hook
+/agent-builder:plugins:new plugin-name     # Create a complete plugin
 ```
 
 ### Testing Components
