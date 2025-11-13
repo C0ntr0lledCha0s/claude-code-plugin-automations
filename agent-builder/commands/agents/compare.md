@@ -1,8 +1,8 @@
 ---
 description: Compare two agents side-by-side to understand differences and trade-offs
 allowed-tools: Read, Grep, Glob
-argument-hint: [agent1] [agent2]
-model: haiku
+argument-hint: '[agent1] [agent2]'
+model: claude-haiku-4-5
 ---
 
 # Compare Two Agents
