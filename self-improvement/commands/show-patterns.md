@@ -1,7 +1,7 @@
 ---
 description: Display tracked patterns from automated conversation analysis
 allowed-tools: Bash
-model: haiku
+model: claude-haiku-4-5
 ---
 
 # Show Patterns

@@ -2,6 +2,7 @@
 description: Brief description of what this command does
 allowed-tools: Read, Grep, Glob, Bash
 argument-hint: "[arg1] [arg2]"
+# model: claude-haiku-4-5  # Optional: version alias (recommended) or full ID
 ---
 
 # Command Name

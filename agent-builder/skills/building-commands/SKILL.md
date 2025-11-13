@@ -36,6 +36,13 @@ You are an expert at creating Claude Code slash commands. Slash commands are use
 ### File Format
 Single Markdown file with YAML frontmatter and Markdown body.
 
+### Required Fields
+```yaml
+---
+description: Brief description of what the command does
+---
+```
+
 ### Recommended Fields
 ```yaml
 ---
@@ -48,12 +55,101 @@ argument-hint: [parameter-description]
 ### All Available Fields
 ```yaml
 ---
-description: Brief description of command functionality
-allowed-tools: Read, Write, Edit, Grep, Glob, Bash    # Pre-approved tools
-argument-hint: [filename] [options]                    # Parameter guide for users
-disable-model-invocation: false                        # Prevent auto-invocation
+description: Brief description of command functionality            # Required
+allowed-tools: Read, Write, Edit, Grep, Glob, Bash               # Optional: Pre-approved tools
+argument-hint: [filename] [options]                               # Optional: Parameter guide for users
+model: claude-3-5-haiku-20241022                                  # Optional: Specific model (see warning below)
+disable-model-invocation: false                                   # Optional: Prevent auto-invocation
 ---
 ```
+
+### ⚠️ CRITICAL: Model Field - Commands vs Agents
+
+**Commands support VERSION ALIASES or FULL IDs** (but NOT short aliases):
+
+```yaml
+---
+description: Fast operation
+model: claude-haiku-4-5  # ✅ Recommended - version alias (auto-updates)
+---
+```
+
+```yaml
+---
+description: Stable operation
+model: claude-haiku-4-5-20251001  # ✅ Also valid - full ID (locked version)
+---
+```
+
+**DO NOT use SHORT ALIASES** in commands (they cause API 404 errors):
+```yaml
+model: haiku   # ❌ WRONG - causes "model not found" error
+model: sonnet  # ❌ WRONG - causes "model not found" error
+model: opus    # ❌ WRONG - causes "model not found" error
+```
+
+**Best Practice**: Omit model field to inherit from conversation:
+```yaml
+---
+description: Inherits conversation model automatically
+# No model field - will use whatever model the conversation uses
+---
+```
+
+**Model Format Options**:
+
+1. **Short Aliases** (❌ DON'T WORK in commands):
+   - `haiku`, `sonnet`, `opus` - Only work in agents
+
+2. **Version Aliases** (✅ RECOMMENDED for commands):
+   - `claude-haiku-4-5` - Auto-updates to latest snapshot
+   - `claude-sonnet-4-5` - Auto-updates to latest snapshot
+   - `claude-opus-4-1` - Auto-updates to latest snapshot
+
+3. **Full IDs with Dates** (✅ STABLE for commands):
+   - `claude-haiku-4-5-20251001` - Locked to specific snapshot
+   - `claude-sonnet-4-5-20250929` - Locked to specific snapshot
+   - `claude-opus-4-1-20250805` - Locked to specific snapshot
+
+**Why the Difference?**
+- **Agents**: Claude Code translates short aliases (`haiku` → `claude-haiku-4-5-20251001`)
+- **Commands**: Passed directly to API (only recognizes `claude-*` format)
+- **Result**: Short aliases work in agents, fail in commands
+
+**When to Specify Model**:
+- ✅ Performance-critical fast operations (use haiku for speed)
+- ✅ Complex reasoning requiring specific capabilities (use opus)
+- ✅ Stable behavior needed (use full ID with date)
+- ❌ Most cases (inheritance is better - more flexible)
+
+**Recommendation**:
+- **General use**: Omit model field (inherit from conversation)
+- **Need speed**: Use `claude-haiku-4-5` (version alias)
+- **Need stability**: Use full ID with date
+
+**Finding Current Model IDs**:
+Check [Anthropic's model documentation](https://docs.anthropic.com/claude/docs/models-overview) for current versions.
+
+### Disable Model Invocation
+
+The `disable-model-invocation` field prevents Claude from autonomously triggering the command via the SlashCommand tool.
+
+```yaml
+---
+description: Delete all test data from database
+disable-model-invocation: true  # ✅ Prevents accidental invocation by Claude
+allowed-tools: Bash
+---
+```
+
+**When to Use**:
+- ✅ Destructive operations (delete, drop, remove)
+- ✅ Commands requiring explicit user confirmation
+- ✅ Testing/debugging commands
+- ✅ Manual-only workflows
+- ❌ Normal automation-friendly commands
+
+**Effect**: Command still appears in `/help` and can be manually invoked by users, but Claude won't suggest or execute it automatically.
 
 ### Naming Conventions
 - **Lowercase letters, numbers, and hyphens only**

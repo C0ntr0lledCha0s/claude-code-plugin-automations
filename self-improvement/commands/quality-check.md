@@ -1,7 +1,7 @@
 ---
 description: Quick quality assessment of recent work using the analyzing-response-quality skill
 allowed-tools: Read, Grep, Glob
-model: haiku
+model: claude-haiku-4-5
 ---
 
 # Quality Check

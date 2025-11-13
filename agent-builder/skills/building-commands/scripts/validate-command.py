@@ -88,12 +88,35 @@ def validate_command(file_path: str) -> tuple[bool, list[str]]:
                 if tool not in valid_tools:
                     errors.append(f"Warning: Unknown tool '{tool}'. Valid tools: {', '.join(valid_tools)}")
 
-    # Commands do not support the 'model' field - only agents support it
+    # Validate model field - commands support version aliases and full IDs, not short aliases
     if 'model' in frontmatter:
-        errors.append("Invalid field 'model': Commands do not support model specification. Only agents can specify a model. Remove this field.")
+        model_value = frontmatter['model']
+
+        # Check if it's a SHORT alias (these DON'T work in commands)
+        if model_value in ['haiku', 'sonnet', 'opus', 'inherit']:
+            errors.append(
+                f"CRITICAL ERROR: Commands cannot use short aliases. "
+                f"Found: '{model_value}' "
+                f"Use version alias like 'claude-haiku-4-5' or full ID like 'claude-haiku-4-5-20251001', "
+                f"or omit field to inherit from conversation. "
+                f"Note: Agents support short aliases, but commands require version aliases or full IDs."
+            )
+        # Check if it looks like a valid model ID (basic format check)
+        elif not model_value.startswith('claude-'):
+            errors.append(
+                f"Warning: Model '{model_value}' doesn't match expected format 'claude-*'. "
+                f"Ensure this is a valid Anthropic model ID (e.g., 'claude-haiku-4-5' or 'claude-haiku-4-5-20251001')."
+            )
 
     if 'argument-hint' in frontmatter:
         arg_hint = frontmatter['argument-hint']
+
+        # Handle both list and string types (YAML parsing can produce either)
+        if isinstance(arg_hint, list):
+            arg_hint = ' '.join(str(item) for item in arg_hint)
+        elif not isinstance(arg_hint, str):
+            arg_hint = str(arg_hint)
+
         if not arg_hint.startswith('['):
             errors.append(f"Warning: argument-hint typically uses brackets: '{arg_hint}' → '[{arg_hint}]'")
 

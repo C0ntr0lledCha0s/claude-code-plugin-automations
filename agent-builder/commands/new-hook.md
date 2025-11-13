@@ -2,7 +2,7 @@
 description: Create a new Claude Code event hook for automation and validation
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 argument-hint: [hook-name]
-model: sonnet
+model: claude-sonnet-4-5
 ---
 
 # Create New Hook

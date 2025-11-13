@@ -2,7 +2,7 @@
 description: Create a new Claude Code skill with directory structure and resources
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 argument-hint: [skill-name]
-model: sonnet
+model: claude-sonnet-4-5
 ---
 
 # Create New Skill

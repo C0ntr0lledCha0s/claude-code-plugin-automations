@@ -132,29 +132,30 @@ if 'model' in frontmatter:
     errors.append("Invalid field 'model': Commands do not support model specification...")
 ```
 
-**Actual Facts**:
+**Actual Facts (CONFIRMED BY TESTING)**:
 - ✅ Official docs show commands DO support `model` field
-- ❓ Docs show full API ID: `claude-3-5-haiku-20241022`
-- ❓ All our commands use aliases: `sonnet`, `haiku`
-- ⚠️ User reports: Aliases cause API errors in commands
+- ✅ Docs show full API ID format: `claude-3-5-haiku-20241022`
+- ❌ All our commands use aliases: `sonnet`, `haiku` (WRONG - causes API 404 errors)
+- ✅ Testing confirms: Aliases fail in commands, work in agents
+
+**TEST RESULTS** (See [TEST_RESULTS_model_field.md](TEST_RESULTS_model_field.md)):
+
+1. ✅ **Full API ID**: `model: claude-3-5-haiku-20241022` → **SUCCESS**
+2. ❌ **Alias**: `model: haiku` → **API Error 404** `{"error":{"type":"not_found_error","message":"model: haiku"}}`
+3. ✅ **No model field**: Inherits from conversation → **SUCCESS**
+
+**CRITICAL FINDING**:
+- **Commands**: Require FULL API IDs (e.g., `claude-3-5-haiku-20241022`)
+- **Agents**: Accept aliases (e.g., `sonnet`, `haiku`, `opus`)
+- **Reason**: Different execution paths - agents translate aliases, commands don't
+- **Impact**: ALL commands in this repo using aliases are BROKEN
 
 **Action Items**:
 
-1. **Immediate**: Remove validation error (field IS supported)
-2. **Testing Required**: Create test commands with:
-   - `model: sonnet` (current approach)
-   - `model: haiku` (current approach)
-   - `model: claude-3-5-haiku-20241022` (docs example)
-   - `model: claude-sonnet-4-5-20250929` (current model)
-   - No model field (should inherit)
-3. **Determine**: Do commands require full API IDs while agents accept aliases?
-
-**Test Commands Created**:
-- `.test-commands/test-model-short.md` (uses `model: haiku`)
-- `.test-commands/test-model-full.md` (uses full API ID)
-- `.test-commands/test-no-model.md` (inherits model)
-
-**Next Step**: User should test these commands to determine which format works
+1. **CRITICAL**: Fix validation script to REJECT aliases, ACCEPT full API IDs
+2. **CRITICAL**: Update all 11 existing commands (remove model field or use full IDs)
+3. **CRITICAL**: Update skill documentation with commands vs agents difference
+4. **CRITICAL**: Update command template with correct format and warnings
 
 ---
 

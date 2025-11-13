@@ -1,7 +1,7 @@
 ---
 description: Invoke the self-critic agent to review Claude's recent work and provide feedback
 allowed-tools: Read, Grep, Glob
-model: sonnet
+model: claude-sonnet-4-5
 ---
 
 # Review My Work

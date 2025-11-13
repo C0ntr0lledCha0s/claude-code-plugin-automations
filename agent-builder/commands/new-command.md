@@ -2,7 +2,7 @@
 description: Create a new Claude Code slash command for user-triggered workflows
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 argument-hint: [command-name]
-model: sonnet
+model: claude-sonnet-4-5
 ---
 
 # Create New Command
@@ -167,7 +167,7 @@ If user wants to create a PR review command:
 description: Review a pull request for quality and security
 allowed-tools: Read, Grep, Bash
 argument-hint: [PR-number]
-model: sonnet
+model: claude-sonnet-4-5
 ---
 
 # Review Pull Request

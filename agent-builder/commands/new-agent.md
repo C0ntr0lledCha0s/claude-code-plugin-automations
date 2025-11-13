@@ -2,7 +2,7 @@
 description: Create a new Claude Code agent with proper schema and structure
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 argument-hint: [agent-name]
-model: sonnet
+model: claude-sonnet-4-5
 ---
 
 # Create New Agent

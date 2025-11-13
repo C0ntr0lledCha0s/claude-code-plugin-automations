@@ -2,7 +2,7 @@
 description: Create a new Claude Code plugin with complete directory structure
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 argument-hint: [plugin-name]
-model: sonnet
+model: claude-sonnet-4-5
 ---
 
 # Create New Plugin
