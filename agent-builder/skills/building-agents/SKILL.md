@@ -626,6 +626,25 @@ The maintenance commands and scripts integrate with:
 - **git hooks**: Can run validations automatically
 - **CI/CD**: Can enforce quality gates
 
+### Maintenance Resources
+
+For detailed guidance on agent maintenance:
+
+- **Update Patterns**: See `{baseDir}/references/agent-update-patterns.md`
+  - 15+ common scenarios with solutions
+  - Performance, security, and quality patterns
+  - Before/after examples
+
+- **Migration Guide**: See `{baseDir}/references/migration-guide.md`
+  - Schema version migrations
+  - Breaking changes documentation
+  - Step-by-step migration workflows
+
+- **Quality Checklist**: See `{baseDir}/templates/agent-checklist.md`
+  - Comprehensive review checklist
+  - Scoring guidelines
+  - Action item tracking
+
 ## Validation Checklist
 
 Before finalizing an agent, verify:
@@ -641,11 +660,33 @@ Before finalizing an agent, verify:
 - [ ] Examples and guidelines are included
 - [ ] File is placed in correct directory
 
-## Reference Templates
+## Reference Documentation
 
-Full templates and examples are available at:
+### Templates
 - `{baseDir}/templates/agent-template.md` - Basic agent template
+- `{baseDir}/templates/agent-checklist.md` - Quality review checklist
+
+### References
 - `{baseDir}/references/agent-examples.md` - Real-world examples
+- `{baseDir}/references/agent-update-patterns.md` - Common update scenarios and solutions
+- `{baseDir}/references/migration-guide.md` - Schema version migration guide
+
+### Quick Reference
+
+**For creating new agents:**
+- Start with `agent-template.md`
+- Follow patterns from `agent-examples.md`
+- Use checklist from `agent-checklist.md` to validate
+
+**For updating existing agents:**
+- Check `agent-update-patterns.md` for your scenario
+- Follow `migration-guide.md` for schema updates
+- Use `/agent-builder:agents:update` command for interactive workflow
+
+**For quality assurance:**
+- Run `/agent-builder:agents:enhance` for analysis
+- Review with `agent-checklist.md`
+- Compare against `agent-examples.md` for best practices
 
 ## Your Role
 
