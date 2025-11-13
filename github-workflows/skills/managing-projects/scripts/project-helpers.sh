@@ -24,10 +24,31 @@ warn() {
     echo -e "${YELLOW}⚠ $1${NC}"
 }
 
-# Check prerequisites
-check_gh_auth() {
-    if ! gh auth status >/dev/null 2>&1; then
-        error "Not authenticated with GitHub. Run: gh auth login"
+# Check prerequisites and ensure gh CLI is installed
+ensure_gh_cli() {
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../../.. && pwd)"
+    local ensure_script="$script_dir/scripts/ensure-gh-cli.sh"
+
+    if [ -f "$ensure_script" ]; then
+        # Try to ensure gh is installed and authenticated
+        if bash "$ensure_script" true false; then
+            return 0
+        else
+            error "GitHub CLI setup failed"
+            return 1
+        fi
+    else
+        # Fallback to simple check
+        if ! command -v gh >/dev/null 2>&1; then
+            error "GitHub CLI (gh) is not installed"
+            echo "Install it from: https://github.com/cli/cli#installation" >&2
+            return 1
+        fi
+
+        if ! gh auth status >/dev/null 2>&1; then
+            error "Not authenticated with GitHub. Run: gh auth login"
+            return 1
+        fi
     fi
 }
 
@@ -42,7 +63,7 @@ create_project() {
     local template="${2:-}"
     local owner="${3:-$(get_org)}"
 
-    check_gh_auth
+    ensure_gh_cli || return 1
 
     if [[ -z "$owner" ]]; then
         error "Could not determine organization. Specify with --owner"
@@ -177,7 +198,7 @@ bulk_add_items() {
     local filter="$2"
     local owner="${3:-$(get_org)}"
 
-    check_gh_auth
+    ensure_gh_cli || return 1
 
     echo "Searching for items: $filter"
 
@@ -255,7 +276,7 @@ generate_report() {
 list_projects() {
     local owner="${1:-$(get_org)}"
 
-    check_gh_auth
+    ensure_gh_cli || return 1
 
     if [[ -z "$owner" ]]; then
         error "Could not determine organization"
