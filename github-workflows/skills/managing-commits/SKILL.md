@@ -498,6 +498,177 @@ Validate commits in PRs:
 4. Suggest improvements before merge
 ```
 
+## Multi-File Intelligent Grouping
+
+### When to Use Intelligent Grouping
+
+Invoke intelligent file grouping when:
+- User asks to "commit changes" with multiple modified files
+- User invokes `/commit-smart` command
+- Multiple scopes are detected in working directory
+- Conversation context suggests multiple logical commits
+
+### File Grouping Strategies
+
+**1. Scope-Based Grouping**
+
+Group files by functional area:
+```bash
+auth scope: src/auth/*.ts → One commit
+api scope: src/api/*.ts → Separate commit
+ui scope: src/components/*.tsx → Separate commit
+```
+
+**2. Type-Based Separation**
+
+Separate by commit type:
+```bash
+Implementation: src/**/*.ts (not tests) → feat/fix/refactor
+Tests: **/*.test.ts → test
+Documentation: **/*.md → docs
+Configuration: *.json, *.config.* → chore/build
+```
+
+**3. Relationship-Based Grouping**
+
+Keep related files together:
+```bash
+Feature implementation:
+  - src/auth/jwt.ts
+  - src/auth/types.ts
+  - src/auth/index.ts
+  → Single commit: feat(auth): add JWT management
+
+Separate tests:
+  - tests/auth/jwt.test.ts
+  → Separate commit: test(auth): add JWT tests
+```
+
+### Intelligent Grouping Workflow
+
+When multiple files need committing:
+
+**Step 1: Analyze all changes**
+```bash
+git status --porcelain
+git diff HEAD --stat
+```
+
+**Step 2: Detect scopes and types**
+```python
+# Use helper script
+python {baseDir}/scripts/group-files.py --analyze
+```
+
+Output:
+```
+Group 1: feat(auth) - 3 impl files, 245 LOC
+Group 2: test(auth) - 2 test files, 128 LOC
+Group 3: fix(api) - 2 files, 15 LOC
+Group 4: docs - 2 files, 67 LOC
+```
+
+**Step 3: Generate commit messages for each group**
+
+For each group:
+- Determine type (feat, fix, test, docs)
+- Extract scope from file paths
+- Create descriptive subject
+- Search for related issues
+- Build complete conventional commit message
+
+**Step 4: Present plan to user**
+
+```markdown
+Found 12 changed files in 4 logical groups:
+
+1. feat(auth): add JWT token refresh (3 files, +245 LOC)
+   - src/auth/jwt.ts
+   - src/auth/types.ts
+   - src/auth/index.ts
+   Related: #142
+
+2. test(auth): add JWT refresh tests (2 files, +128 LOC)
+   - tests/auth/jwt.test.ts
+   - tests/auth/integration.test.ts
+
+3. fix(api): resolve validation error (2 files, +15 LOC)
+   - src/api/validation.ts
+   - tests/api/validation.test.ts
+   Closes: #156
+
+4. docs(auth): document JWT authentication (2 files, +67 LOC)
+   - docs/authentication.md
+   - README.md
+
+Create these 4 commits? [y/n/edit]
+```
+
+**Step 5: Execute commits in order**
+
+```bash
+# Commit 1
+git add src/auth/jwt.ts src/auth/types.ts src/auth/index.ts
+git commit -m "feat(auth): add JWT token refresh mechanism..."
+
+# Commit 2
+git add tests/auth/jwt.test.ts tests/auth/integration.test.ts
+git commit -m "test(auth): add JWT refresh tests..."
+
+# Continue for all groups
+```
+
+### Commit Modes
+
+**Mode: all** - Analyze all unstaged and staged changes
+```markdown
+Strategy: Group all working directory changes
+Use when: User wants to commit everything
+```
+
+**Mode: staged** - Only commit what's staged
+```markdown
+Strategy: Group staged files, suggest splits if multiple scopes
+Use when: User has pre-selected files to commit
+```
+
+**Mode: context** - Analyze conversation history
+```markdown
+Strategy: Match files to conversation topics
+Use when: User wants to commit work from current conversation
+Example: "User asked to implement JWT and fix validation bug"
+→ Group 1: JWT files
+→ Group 2: Validation files
+```
+
+**Mode: scope** - Commit by specific scope
+```markdown
+Strategy: Let user select scope (auth, api, etc.)
+Use when: User wants to commit one functional area
+```
+
+**Mode: interactive** - Interactive with confirmations
+```markdown
+Strategy: Present plan, allow editing/confirming each commit
+Use when: Default mode, gives user full control
+```
+
+### Helper Scripts
+
+**File Grouper**
+
+{baseDir}/scripts/group-files.py:
+```bash
+# Analyze and group files
+python {baseDir}/scripts/group-files.py
+
+# Specific mode
+python {baseDir}/scripts/group-files.py --mode scope
+
+# JSON output for automation
+python {baseDir}/scripts/group-files.py --json
+```
+
 ## Common Use Cases
 
 ### Use Case 1: Create Feature Commit
@@ -526,7 +697,62 @@ Create this commit? [y/n]: y
 ✅ Committed: abc1234
 ```
 
-### Use Case 2: Fix Commit History
+### Use Case 2: Intelligent Multi-File Commit
+
+```markdown
+User: "/commit-smart all"
+
+You:
+Analyzing working directory...
+
+Found 12 changed files across 3 scopes:
+
+📦 Group 1: feat(auth) - Authentication feature (5 files, +312 LOC)
+  M src/auth/jwt.ts (+185)
+  M src/auth/types.ts (+25)
+  M src/auth/index.ts (+35)
+  A tests/auth/jwt.test.ts (+95)
+  M docs/authentication.md (+42)
+
+🐛 Group 2: fix(api) - API validation (2 files, +15 LOC)
+  M src/api/validation.ts (+12)
+  M tests/api/validation.test.ts (+3)
+
+📚 Group 3: docs - Documentation (1 file, +8 LOC)
+  M README.md (+8)
+
+Proposed commits:
+
+1. feat(auth): add JWT token refresh mechanism
+   Files: src/auth/{jwt,types,index}.ts
+   Related: #142
+
+2. test(auth): add JWT refresh tests
+   Files: tests/auth/jwt.test.ts
+
+3. docs(auth): document JWT authentication
+   Files: docs/authentication.md
+
+4. fix(api): resolve validation error for empty arrays
+   Files: src/api/validation.ts, tests/api/validation.test.ts
+   Closes: #156
+
+5. docs: update README with authentication guide
+   Files: README.md
+
+Create these 5 commits? [y/n/edit]: y
+
+Creating commits...
+✅ 1/5: feat(auth): add JWT token refresh [abc1234]
+✅ 2/5: test(auth): add JWT refresh tests [def5678]
+✅ 3/5: docs(auth): document JWT authentication [ghi9012]
+✅ 4/5: fix(api): resolve validation error [jkl3456]
+✅ 5/5: docs: update README [mno7890]
+
+✅ All 5 commits created successfully!
+```
+
+### Use Case 3: Fix Commit History
 
 ```markdown
 User: "My commit messages are a mess, fix them"
