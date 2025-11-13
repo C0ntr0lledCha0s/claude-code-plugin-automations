@@ -22,11 +22,12 @@ This document provides the complete specification for implementing all remaining
 ### ⏳ Remaining Implementation (75%)
 
 **Skills** (80% remaining - ~8,000 LOC):
-- ⏳ managing-projects: 3 more scripts, templates, references (900 LOC)
-- ⏳ organizing-with-labels: Complete skill (1,280 LOC)
-- ⏳ managing-commits: Complete skill (1,460 LOC)
-- ⏳ triaging-issues: Complete skill (1,700 LOC)
-- ⏳ reviewing-pull-requests: Complete skill (1,050 LOC)
+- ✅ managing-projects: Core skill complete, graphql-queries.sh implemented (400 lines), workarounds documented
+- ⏳ managing-projects: 2 more scripts (validate-board-config.py), templates, references (500 LOC)
+- ✅ organizing-with-labels: Complete skill with scripts (label-operations.py, milestone-manager.py)
+- ✅ managing-commits: Complete skill with scripts (commit-analyzer.py, conventional-commits.py)
+- ✅ triaging-issues: Complete skill with scripts (validate-issue.py, issue-helpers.sh, duplicate-detection.sh, relationship-mapper.sh)
+- ✅ reviewing-pull-requests: Complete skill with scripts (pr-manager.py, quality-gates.sh)
 
 **Commands** (0% complete - 1,100 LOC):
 - ⏳ 9 commands (120-180 LOC each)
@@ -41,12 +42,13 @@ This document provides the complete specification for implementing all remaining
 
 ---
 
-## Priority 1: managing-projects (COMPLETE REMAINING)
+## Priority 1: managing-projects (CORE COMPLETE ✅)
 
-### Files to Create
+### ✅ Completed Files
 
-#### 1. `skills/managing-projects/scripts/graphql-queries.sh`
+#### 1. `skills/managing-projects/scripts/graphql-queries.sh` ✅
 
+**Status**: COMPLETE (400 lines)
 **Purpose**: GraphQL query builder and executor for Projects v2 API
 
 **Key Functions** (250 lines):

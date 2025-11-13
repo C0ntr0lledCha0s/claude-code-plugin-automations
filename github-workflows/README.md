@@ -327,8 +327,21 @@ Solution: Check project exists with `gh project list --owner ORG`
 
 ```
 Error: GraphQL query failed
-Solution: Check syntax and field names, see references/gh-project-api.md
+Solution: Check syntax and field names
 ```
+
+**Multiple solutions available:**
+1. **Use the helper script**: `skills/managing-projects/scripts/graphql-queries.sh`
+   - Provides high-level commands for common operations
+   - Example: `graphql-queries.sh add_item PROJECT_ID CONTENT_ID`
+
+2. **Use direct gh api commands**: See `skills/managing-projects/references/graphql-workarounds.md`
+   - Complete reference with copy-paste ready commands
+   - Covers all GitHub Projects v2 operations
+   - Includes troubleshooting and examples
+   - No additional scripts needed
+
+3. **Check the API documentation**: `references/gh-project-api.md`
 
 ### Rate Limiting
 

@@ -382,16 +382,57 @@ Syncing board with repository state:
 {baseDir}/scripts/project-helpers.sh generate_report PROJECT_ID
 ```
 
-**GraphQL operations**:
+**GraphQL operations** (using helper script):
 ```bash
-# Execute GraphQL query
-{baseDir}/scripts/graphql-queries.sh query PROJECT_ID "fields"
+# Get project details
+{baseDir}/scripts/graphql-queries.sh get_project OWNER PROJECT_NUMBER
 
-# Execute GraphQL mutation
-{baseDir}/scripts/graphql-queries.sh mutate "addItem" '{"projectId": "...", "contentId": "..."}'
+# Add issue/PR to project
+{baseDir}/scripts/graphql-queries.sh add_item PROJECT_ID CONTENT_ID
 
-# Bulk update fields
-{baseDir}/scripts/graphql-queries.sh bulk_update PROJECT_ID FIELD_ID "In Progress" ITEM_IDS...
+# Update single select field (Status, Priority, etc.)
+{baseDir}/scripts/graphql-queries.sh update_field_select PROJECT_ID ITEM_ID FIELD_ID OPTION_ID
+
+# Update text field
+{baseDir}/scripts/graphql-queries.sh update_field_text PROJECT_ID ITEM_ID FIELD_ID "Text value"
+
+# Update number field (Story Points, etc.)
+{baseDir}/scripts/graphql-queries.sh update_field_number PROJECT_ID ITEM_ID FIELD_ID 5
+
+# Bulk update multiple items
+{baseDir}/scripts/graphql-queries.sh bulk_update PROJECT_ID FIELD_ID OPTION_ID ITEM_ID1 ITEM_ID2...
+
+# List all fields to find IDs
+{baseDir}/scripts/graphql-queries.sh list_fields OWNER PROJECT_NUMBER
+
+# Get field options (for single select fields)
+{baseDir}/scripts/graphql-queries.sh get_options OWNER PROJECT_NUMBER "Status"
+
+# Show help and examples
+{baseDir}/scripts/graphql-queries.sh help
+```
+
+**Direct gh api commands** (see `{baseDir}/references/graphql-workarounds.md` for complete guide):
+```bash
+# When you need full control or the helper script isn't available
+
+# Get project ID
+gh api graphql -f query='query($o: String!, $n: Int!) {
+  organization(login: $o) {projectV2(number: $n) {id}}
+}' -f o=OWNER -F n=PROJECT_NUM --jq '.data.organization.projectV2.id'
+
+# Add item to project
+gh api graphql -f query='mutation($p: ID!, $c: ID!) {
+  addProjectV2ItemById(input: {projectId: $p, contentId: $c}) {item {id}}
+}' -f p=PROJECT_ID -f c=CONTENT_ID
+
+# Update status field
+gh api graphql -f query='mutation($p: ID!, $i: ID!, $f: ID!, $o: String!) {
+  updateProjectV2ItemFieldValue(input: {
+    projectId: $p, itemId: $i, fieldId: $f,
+    value: {singleSelectOptionId: $o}
+  }) {projectV2Item {id}}
+}' -f p=PROJECT_ID -f i=ITEM_ID -f f=FIELD_ID -f o=OPTION_ID
 ```
 
 **Validation**:
@@ -425,10 +466,22 @@ python {baseDir}/scripts/validate-board-config.py PROJECT_ID --check-orphans --c
 ## References
 
 **GitHub Projects v2 Documentation**:
+- **GraphQL Workarounds Guide**: `{baseDir}/references/graphql-workarounds.md` ⭐
+  - Complete gh api command reference
+  - Direct alternatives to helper scripts
+  - Bulk operation examples
+  - Troubleshooting common issues
+  - Copy-paste ready commands
 - Official guide: `{baseDir}/references/gh-project-api.md`
 - GraphQL schema: `{baseDir}/references/graphql-schema.md`
 - Best practices: `{baseDir}/references/board-best-practices.md`
 - Examples: `{baseDir}/references/board-examples.md`
+
+**Important**: The `graphql-workarounds.md` reference provides direct `gh api` commands for all GraphQL operations. Use this when:
+- You want to understand what the helper scripts do under the hood
+- You need to customize or debug GraphQL operations
+- The helper script doesn't support your specific use case
+- You're learning the GitHub Projects v2 API
 
 ## Common Use Cases
 
