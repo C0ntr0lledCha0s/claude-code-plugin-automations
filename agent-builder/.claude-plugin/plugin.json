@@ -24,7 +24,10 @@
     "./commands/new-skill.md",
     "./commands/new-command.md",
     "./commands/new-hook.md",
-    "./commands/new-plugin.md"
+    "./commands/new-plugin.md",
+    "./commands/test-model-full.md",
+    "./commands/test-model-short.md",
+    "./commands/test-no-model.md"
   ],
   "agents": ["./agents/meta-architect.md"],
   "skills": "./skills/"
