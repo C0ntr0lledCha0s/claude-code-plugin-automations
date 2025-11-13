@@ -630,6 +630,256 @@ Full templates and examples are available at:
 - `{baseDir}/templates/command-template.md` - Basic command template
 - `{baseDir}/references/command-examples.md` - Real-world examples
 
+## Maintaining and Updating Commands
+
+### Maintenance Workflows
+
+Once commands are created, they need ongoing maintenance. This skill includes comprehensive tools for command lifecycle management.
+
+### Update Command Interactive Tool
+
+```bash
+/agent-builder:commands:update <command-name>
+```
+
+Interactive updater for modifying existing commands:
+- Update description
+- Change allowed-tools
+- Fix model field (critical for commands!)
+- Update argument-hint
+- Run validation
+
+**Script**: `{baseDir}/scripts/update-command.py`
+
+### Enhance Command Quality Analyzer
+
+```bash
+/agent-builder:commands:enhance <command-name>
+```
+
+AI-powered quality analysis and scoring:
+- Schema compliance (naming, fields)
+- Model configuration (version alias validation)
+- Argument handling (hints, documentation)
+- Security analysis (Bash validation, dangerous patterns)
+- Content quality (examples, workflow, documentation)
+- Maintainability (structure, formatting)
+
+Returns overall score (0-10) and prioritized recommendations.
+
+**Script**: `{baseDir}/scripts/enhance-command.py`
+
+### Migrate Command Schema Tool
+
+```bash
+/agent-builder:commands:migrate <command-name> --apply
+/agent-builder:commands:migrate --dry-run  # Preview all
+/agent-builder:commands:migrate --apply     # Apply to all
+```
+
+Automated schema migration:
+- ⚠️ **CRITICAL**: Short alias → version alias (fixes "model not found" errors)
+- Argument hint format standardization
+- Field renames and updates
+- Shows diff, creates backup, validates after
+
+**Script**: `{baseDir}/scripts/migrate-command.py`
+
+### Audit All Commands Tool
+
+```bash
+/agent-builder:commands:audit
+/agent-builder:commands:audit --verbose
+```
+
+Bulk validation and reporting:
+- Scans all commands in repository
+- Reports errors, warnings, recommendations
+- Security analysis
+- Summary statistics
+- Integration with pre-commit hooks
+
+**Script**: `{baseDir}/scripts/audit-commands.py`
+
+### Compare Commands Tool
+
+```bash
+/agent-builder:commands:compare <command1> <command2>
+```
+
+Side-by-side comparison:
+- Frontmatter field differences
+- Structure comparison (headings)
+- Content diff with color coding
+- Metrics (word count, code blocks, etc.)
+- Similarity scoring
+
+**Script**: `{baseDir}/scripts/compare-commands.py`
+
+### Validation Script
+
+```bash
+python3 {baseDir}/scripts/validate-command.py <command-file.md>
+```
+
+Schema and convention validation:
+- Filename format
+- Required fields
+- Model field format (CRITICAL: no short aliases)
+- Tool names validity
+- Argument handling
+- Security checks
+
+**When to Use Each Tool**:
+
+| Task | Tool |
+|------|------|
+| Fixing broken commands | `/agent-builder:commands:migrate --apply` |
+| Interactive updates | `/agent-builder:commands:update` |
+| Quality assessment | `/agent-builder:commands:enhance` |
+| Pre-commit validation | `/agent-builder:commands:audit` |
+| Understanding changes | `/agent-builder:commands:compare` |
+| Schema validation | `validate-command.py` |
+
+### Common Maintenance Scenarios
+
+#### Scenario 1: Command Fails with "Model Not Found"
+
+```bash
+# Quick fix: Migrate model field
+/agent-builder:commands:migrate my-command --apply
+```
+
+**Cause**: Using short alias (`haiku`) instead of version alias (`claude-haiku-4-5`)
+
+#### Scenario 2: Improve Command Quality
+
+```bash
+# Get quality score and recommendations
+/agent-builder:commands:enhance my-command
+
+# Apply improvements interactively
+/agent-builder:commands:update my-command
+```
+
+#### Scenario 3: Validate All Commands Before Commit
+
+```bash
+# Check all commands
+/agent-builder:commands:audit
+
+# Fix any errors found
+/agent-builder:commands:update <command-name>
+```
+
+#### Scenario 4: Standardize Commands Across Repository
+
+```bash
+# Preview all needed migrations
+/agent-builder:commands:migrate --dry-run
+
+# Apply all migrations
+/agent-builder:commands:migrate --apply
+```
+
+### Reference Documentation
+
+Comprehensive maintenance guides available:
+
+- **[Command Update Patterns]({baseDir}/references/command-update-patterns.md)**: 15+ common scenarios and solutions
+  - Model field issues (short aliases, wrong complexity)
+  - Security hardening (Bash validation, dangerous patterns)
+  - Argument handling (hints, documentation)
+  - Documentation improvements
+  - Schema compliance
+  - Tool permissions
+
+- **[Command Migration Guide]({baseDir}/references/command-migration-guide.md)**: Schema evolution and migration
+  - When to migrate (required vs recommended)
+  - Migration types (model field, argument format, field renames)
+  - Automated vs manual migration
+  - Troubleshooting guide
+  - Bulk migration strategy
+
+- **[Command Checklist]({baseDir}/references/command-checklist.md)**: Quality review checklist
+  - Schema compliance checks
+  - Model configuration validation
+  - Tool permissions review
+  - Argument handling verification
+  - Security audit
+  - Documentation completeness
+  - Pre-commit and PR review checklists
+
+### Best Practices for Maintenance
+
+1. **Before Modifying**:
+   - Run enhancement analysis to understand current state
+   - Compare with similar well-structured commands
+   - Backup if making manual edits
+
+2. **When Updating**:
+   - Use interactive tools for guided updates
+   - Always preview changes (diff) before applying
+   - Validate after changes
+   - Test command execution
+
+3. **Regular Audits**:
+   - Run `/agent-builder:commands:audit` periodically
+   - Address critical errors immediately
+   - Plan improvements for warnings
+   - Track quality scores over time
+
+4. **Security Reviews**:
+   - Extra scrutiny for commands with Bash access
+   - Validate all input handling
+   - Document security measures
+   - Test with malicious inputs
+
+5. **Documentation**:
+   - Keep examples up-to-date
+   - Document any breaking changes
+   - Update argument documentation when changed
+   - Link to related commands
+
+### Integration with Development Workflow
+
+#### Pre-Commit Hook Integration
+
+The audit tool can be integrated into pre-commit hooks to enforce quality standards:
+
+```bash
+# In .git/hooks/pre-commit
+python3 agent-builder/skills/building-commands/scripts/audit-commands.py
+```
+
+Blocks commits if critical errors found.
+
+#### Continuous Improvement Workflow
+
+1. **Create** → Use `/agent-builder:commands:new` or creation scripts
+2. **Validate** → Run `/agent-builder:commands:audit`
+3. **Enhance** → Check score with `/agent-builder:commands:enhance`
+4. **Iterate** → Update with `/agent-builder:commands:update`
+5. **Maintain** → Regular audits and migrations
+
+### Your Role When Maintaining Commands
+
+When the user asks to update, enhance, or fix commands:
+
+1. **Assess the situation**: Understand what needs to change
+2. **Recommend appropriate tool**: Point to the right maintenance tool
+3. **Guide the process**: Help interpret analysis results
+4. **Apply fixes**: Use update/migrate tools to make changes
+5. **Validate**: Ensure changes resolved issues
+6. **Document**: Update any affected documentation
+
+When users mention:
+- "fix my command" → Use migrate or update tools
+- "my command fails" → Check model field, suggest migrate
+- "improve my command" → Run enhance, apply recommendations
+- "check all commands" → Run audit
+- "compare commands" → Use compare tool
+
 ## Your Role
 
 When the user asks to create a command:
@@ -643,11 +893,23 @@ When the user asks to create a command:
 7. Place the file in the correct location
 8. Provide usage examples
 
+When the user asks to update, enhance, or fix commands:
+
+1. Assess what needs to change
+2. Recommend appropriate maintenance tool
+3. Guide through analysis or updates
+4. Apply fixes using tools
+5. Validate improvements
+6. Update documentation if needed
+
 Be proactive in:
 - Suggesting appropriate tool permissions
 - Recommending argument structures
 - Identifying security risks
 - Organizing commands with namespacing
 - Creating clear documentation
+- Catching model field errors (short aliases)
+- Recommending quality improvements
+- Suggesting migrations when needed
 
-Your goal is to help users create powerful, safe, and well-documented slash commands that streamline their workflows.
+Your goal is to help users create powerful, safe, and well-documented slash commands that streamline their workflows, and maintain them effectively over time.
