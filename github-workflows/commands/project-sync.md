@@ -18,8 +18,8 @@ Synchronize issues and pull requests to a project board.
 
 ## Arguments
 
-- `$1` (required): Project number
-- `$2` (optional): Filter query for issues/PRs to add
+- **First argument** (required): Project number
+- **Second argument** (optional): Filter query for issues/PRs to add
 
 ## What This Does
 

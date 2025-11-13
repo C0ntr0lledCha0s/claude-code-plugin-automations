@@ -2,6 +2,42 @@
 
 This document provides the complete specification for implementing all remaining components of the github-workflows plugin.
 
+## Recent Updates
+
+### ✅ GitHub CLI Auto-Installation (2025-01-13)
+
+**Feature Added**: Automatic detection and installation of GitHub CLI (`gh`)
+
+**Files Created/Modified**:
+1. **NEW**: [scripts/ensure-gh-cli.sh](scripts/ensure-gh-cli.sh) - 230 lines
+   - Auto-detects OS (Linux, macOS, Windows)
+   - Installs `gh` using appropriate package manager
+   - Supports Debian/Ubuntu (apt), RHEL/Fedora (dnf/yum), Arch (pacman), macOS (brew), Windows (winget)
+   - Checks authentication status
+   - Provides clear error messages and fallback instructions
+
+2. **UPDATED**: [skills/managing-projects/scripts/project-helpers.sh](skills/managing-projects/scripts/project-helpers.sh)
+   - Replaced `check_gh_auth()` with `ensure_gh_cli()`
+   - Now automatically installs `gh` if missing
+   - Updated all functions to use new prerequisite check
+
+3. **UPDATED**: [skills/managing-projects/SKILL.md](skills/managing-projects/SKILL.md)
+   - Added "Prerequisites and Setup" section
+   - Documents auto-installation feature
+   - Provides manual installation instructions
+
+4. **UPDATED**: [commands/project-create.md](commands/project-create.md)
+   - Added prerequisites section
+   - Documents supported platforms
+   - Explains auto-installation process
+
+5. **UPDATED**: [README.md](README.md)
+   - Updated prerequisites section
+   - Documents auto-installation capabilities
+   - Provides comprehensive manual installation guide
+
+**Impact**: Users no longer need to manually install GitHub CLI - the plugin handles it automatically. Improves first-time user experience significantly.
+
 ## Implementation Status
 
 ### ✅ Completed (25% - Foundation)
@@ -22,11 +58,12 @@ This document provides the complete specification for implementing all remaining
 ### ⏳ Remaining Implementation (75%)
 
 **Skills** (80% remaining - ~8,000 LOC):
-- ⏳ managing-projects: 3 more scripts, templates, references (900 LOC)
-- ⏳ organizing-with-labels: Complete skill (1,280 LOC)
-- ⏳ managing-commits: Complete skill (1,460 LOC)
-- ⏳ triaging-issues: Complete skill (1,700 LOC)
-- ⏳ reviewing-pull-requests: Complete skill (1,050 LOC)
+- ✅ managing-projects: Core skill complete, graphql-queries.sh implemented (400 lines), workarounds documented
+- ⏳ managing-projects: 2 more scripts (validate-board-config.py), templates, references (500 LOC)
+- ✅ organizing-with-labels: Complete skill with scripts (label-operations.py, milestone-manager.py)
+- ✅ managing-commits: Complete skill with scripts (commit-analyzer.py, conventional-commits.py)
+- ✅ triaging-issues: Complete skill with scripts (validate-issue.py, issue-helpers.sh, duplicate-detection.sh, relationship-mapper.sh)
+- ✅ reviewing-pull-requests: Complete skill with scripts (pr-manager.py, quality-gates.sh)
 
 **Commands** (0% complete - 1,100 LOC):
 - ⏳ 9 commands (120-180 LOC each)
@@ -41,12 +78,13 @@ This document provides the complete specification for implementing all remaining
 
 ---
 
-## Priority 1: managing-projects (COMPLETE REMAINING)
+## Priority 1: managing-projects (CORE COMPLETE ✅)
 
-### Files to Create
+### ✅ Completed Files
 
-#### 1. `skills/managing-projects/scripts/graphql-queries.sh`
+#### 1. `skills/managing-projects/scripts/graphql-queries.sh` ✅
 
+**Status**: COMPLETE (400 lines)
 **Purpose**: GraphQL query builder and executor for Projects v2 API
 
 **Key Functions** (250 lines):

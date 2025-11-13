@@ -1,6 +1,6 @@
 {
   "name": "github-workflows",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Comprehensive GitHub workflow automation including project boards, labels, milestones, commits, issues, and pull requests. Integrates with self-improvement plugin for PR reviews and quality gates.",
   "author": {
     "name": "C0ntr0lledCha0s",
@@ -28,6 +28,7 @@
     "./commands/label-sync.md",
     "./commands/milestone-create.md",
     "./commands/commit-review.md",
+    "./commands/commit-smart.md",
     "./commands/issue-triage.md",
     "./commands/pr-review-request.md",
     "./commands/pr-quality-check.md",

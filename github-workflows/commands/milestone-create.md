@@ -17,8 +17,8 @@ Create a new milestone for tracking issues.
 
 ## Arguments
 
-- `$1` (required): Milestone title
-- `$2` (optional): Due date (YYYY-MM-DD or days from now)
+- **First argument** (required): Milestone title
+- **Second argument** (optional): Due date (YYYY-MM-DD or days from now)
 
 ## What This Does
 

@@ -1,7 +1,7 @@
 ---
 name: building-agents
-description: Expert at creating Claude Code agents (subagents). Use when the user wants to create a new agent, needs help designing agent architecture, or wants to validate an existing agent definition.
-version: 1.0.0
+description: Expert at creating and modifying Claude Code agents (subagents). Auto-invokes when the user wants to create, update, modify, enhance, or validate an agent, needs help designing agent architecture, or wants to understand agent capabilities.
+version: 1.1.0
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 

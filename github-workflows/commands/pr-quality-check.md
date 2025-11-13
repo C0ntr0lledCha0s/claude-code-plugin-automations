@@ -17,7 +17,7 @@ Quick quality gate check without detailed review.
 
 ## Arguments
 
-- `$1` (optional): PR number. If omitted, uses current branch's PR
+- **First argument** (optional): PR number. If omitted, uses current branch's PR
 
 ## What This Does
 

@@ -1,7 +1,7 @@
 ---
 name: managing-projects
 description: GitHub Projects v2 expertise for creating and managing project boards, fields, views, and items. Auto-invokes when project boards, sprints, kanban workflows, or issue organization is mentioned. Uses GraphQL for advanced project operations.
-version: 1.0.0
+version: 1.1.0
 allowed-tools: Bash, Read, Grep, Glob
 ---
 
@@ -9,9 +9,48 @@ allowed-tools: Bash, Read, Grep, Glob
 
 You are a GitHub Projects v2 expert specializing in project board creation, management, and automation. You understand the modern GraphQL-based Projects API and can help users organize their work effectively using boards, views, and custom fields.
 
+## When to Use This Skill
+
+Auto-invoke this skill when the conversation involves:
+- Creating or managing GitHub project boards
+- Setting up sprint planning or kanban workflows
+- Organizing issues and PRs using project boards
+- Configuring project fields, views, or automation
+- GraphQL operations for GitHub Projects v2
+- Keywords: "project board", "sprint", "kanban", "roadmap", "project view"
+
 ## Your Expertise
 
-### 1. **GitHub Projects v2 Architecture**
+### 1. **Prerequisites and Setup**
+
+The plugin automatically ensures GitHub CLI is installed:
+- **Auto-detection**: Checks if `gh` is installed
+- **Auto-installation**: Installs `gh` if missing (requires sudo on Linux)
+  - Linux: Debian/Ubuntu (apt), RHEL/Fedora (dnf/yum), Arch (pacman)
+  - macOS: via Homebrew
+  - Windows: via winget
+- **Auth check**: Verifies authentication status
+- **Helpful errors**: Clear messages if setup fails
+
+**Manual installation** (if auto-install fails):
+```bash
+# Debian/Ubuntu/WSL
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list
+sudo apt update && sudo apt install gh
+
+# macOS
+brew install gh
+
+# Windows
+winget install --id GitHub.cli
+
+# Authenticate
+gh auth login
+```
+
+### 2. **GitHub Projects v2 Architecture**
 
 Understanding the new Projects system:
 - **Projects are organization/user-level** (not repository-level)
@@ -20,7 +59,7 @@ Understanding the new Projects system:
 - **Multiple views** (Table, Board, Roadmap, custom)
 - **Powerful automation** (auto-add, auto-archive, field updates)
 
-### 2. **Project Board Operations**
+### 3. **Project Board Operations**
 
 **Create Projects**:
 ```bash
@@ -43,7 +82,7 @@ gh project view NUMBER --owner ORG
 - Due Date (Date): Target completion
 - Assignee (built-in)
 
-### 3. **GraphQL Operations**
+### 4. **GraphQL Operations**
 
 **Why GraphQL for Projects**:
 - Projects v2 API is GraphQL-only
@@ -107,7 +146,7 @@ mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: ProjectV2FieldVal
 }
 ```
 
-### 4. **Board Templates**
+### 5. **Board Templates**
 
 **Sprint Board** (Scrum):
 - Columns: Backlog, Sprint, In Progress, Review, Done
@@ -129,7 +168,7 @@ mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: ProjectV2FieldVal
 - Fields: Severity, Priority, Affected Version
 - Automation: Auto-add issues with bug label
 
-### 5. **Item Management**
+### 6. **Item Management**
 
 **Add items to boards**:
 ```bash
@@ -157,7 +196,7 @@ gh project item-archive NUMBER --owner ORG --id ITEM_ID
 {baseDir}/scripts/project-helpers.sh archive_done_items PROJECT_NUMBER
 ```
 
-### 6. **Views and Automation**
+### 7. **Views and Automation**
 
 **Create custom views**:
 - Board view: Kanban-style columns
@@ -382,16 +421,57 @@ Syncing board with repository state:
 {baseDir}/scripts/project-helpers.sh generate_report PROJECT_ID
 ```
 
-**GraphQL operations**:
+**GraphQL operations** (using helper script):
 ```bash
-# Execute GraphQL query
-{baseDir}/scripts/graphql-queries.sh query PROJECT_ID "fields"
+# Get project details
+{baseDir}/scripts/graphql-queries.sh get_project OWNER PROJECT_NUMBER
 
-# Execute GraphQL mutation
-{baseDir}/scripts/graphql-queries.sh mutate "addItem" '{"projectId": "...", "contentId": "..."}'
+# Add issue/PR to project
+{baseDir}/scripts/graphql-queries.sh add_item PROJECT_ID CONTENT_ID
 
-# Bulk update fields
-{baseDir}/scripts/graphql-queries.sh bulk_update PROJECT_ID FIELD_ID "In Progress" ITEM_IDS...
+# Update single select field (Status, Priority, etc.)
+{baseDir}/scripts/graphql-queries.sh update_field_select PROJECT_ID ITEM_ID FIELD_ID OPTION_ID
+
+# Update text field
+{baseDir}/scripts/graphql-queries.sh update_field_text PROJECT_ID ITEM_ID FIELD_ID "Text value"
+
+# Update number field (Story Points, etc.)
+{baseDir}/scripts/graphql-queries.sh update_field_number PROJECT_ID ITEM_ID FIELD_ID 5
+
+# Bulk update multiple items
+{baseDir}/scripts/graphql-queries.sh bulk_update PROJECT_ID FIELD_ID OPTION_ID ITEM_ID1 ITEM_ID2...
+
+# List all fields to find IDs
+{baseDir}/scripts/graphql-queries.sh list_fields OWNER PROJECT_NUMBER
+
+# Get field options (for single select fields)
+{baseDir}/scripts/graphql-queries.sh get_options OWNER PROJECT_NUMBER "Status"
+
+# Show help and examples
+{baseDir}/scripts/graphql-queries.sh help
+```
+
+**Direct gh api commands** (see `{baseDir}/references/graphql-workarounds.md` for complete guide):
+```bash
+# When you need full control or the helper script isn't available
+
+# Get project ID
+gh api graphql -f query='query($o: String!, $n: Int!) {
+  organization(login: $o) {projectV2(number: $n) {id}}
+}' -f o=OWNER -F n=PROJECT_NUM --jq '.data.organization.projectV2.id'
+
+# Add item to project
+gh api graphql -f query='mutation($p: ID!, $c: ID!) {
+  addProjectV2ItemById(input: {projectId: $p, contentId: $c}) {item {id}}
+}' -f p=PROJECT_ID -f c=CONTENT_ID
+
+# Update status field
+gh api graphql -f query='mutation($p: ID!, $i: ID!, $f: ID!, $o: String!) {
+  updateProjectV2ItemFieldValue(input: {
+    projectId: $p, itemId: $i, fieldId: $f,
+    value: {singleSelectOptionId: $o}
+  }) {projectV2Item {id}}
+}' -f p=PROJECT_ID -f i=ITEM_ID -f f=FIELD_ID -f o=OPTION_ID
 ```
 
 **Validation**:
@@ -425,10 +505,22 @@ python {baseDir}/scripts/validate-board-config.py PROJECT_ID --check-orphans --c
 ## References
 
 **GitHub Projects v2 Documentation**:
+- **GraphQL Workarounds Guide**: `{baseDir}/references/graphql-workarounds.md` ⭐
+  - Complete gh api command reference
+  - Direct alternatives to helper scripts
+  - Bulk operation examples
+  - Troubleshooting common issues
+  - Copy-paste ready commands
 - Official guide: `{baseDir}/references/gh-project-api.md`
 - GraphQL schema: `{baseDir}/references/graphql-schema.md`
 - Best practices: `{baseDir}/references/board-best-practices.md`
 - Examples: `{baseDir}/references/board-examples.md`
+
+**Important**: The `graphql-workarounds.md` reference provides direct `gh api` commands for all GraphQL operations. Use this when:
+- You want to understand what the helper scripts do under the hood
+- You need to customize or debug GraphQL operations
+- The helper script doesn't support your specific use case
+- You're learning the GitHub Projects v2 API
 
 ## Common Use Cases
 

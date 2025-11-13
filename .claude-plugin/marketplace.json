@@ -11,7 +11,7 @@
     "pluginRoot": "./",
     "stats": {
       "totalPlugins": 3,
-      "lastUpdated": "2025-11-11"
+      "lastUpdated": "2025-01-13"
     }
   },
   "plugins": [
@@ -69,8 +69,8 @@
     {
       "name": "github-workflows",
       "source": "./github-workflows",
-      "description": "Comprehensive GitHub workflow automation including project boards, labels, milestones, commits, issues, and pull requests. Integrates with self-improvement plugin for PR reviews and quality gates.",
-      "version": "1.0.0",
+      "description": "Comprehensive GitHub workflow automation including project boards, labels, milestones, commits, issues, and pull requests. Features smart commit grouping, auto-installation of GitHub CLI, and GraphQL support for Projects v2. Integrates with self-improvement plugin for PR reviews and quality gates.",
+      "version": "1.1.0",
       "category": "development-tools",
       "keywords": [
         "github",
@@ -83,7 +83,9 @@
         "pull-requests",
         "commits",
         "issues",
-        "code-review"
+        "code-review",
+        "conventional-commits",
+        "graphql"
       ],
       "author": {
         "name": "C0ntr0lledCha0s",

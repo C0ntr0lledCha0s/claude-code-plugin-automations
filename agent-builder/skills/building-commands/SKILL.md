@@ -1,7 +1,7 @@
 ---
 name: building-commands
-description: Expert at creating Claude Code slash commands. Use when the user wants to create a new slash command, needs help designing command workflows, or wants to understand command arguments and parameters.
-version: 1.0.0
+description: Expert at creating and modifying Claude Code slash commands. Auto-invokes when the user wants to create, update, modify, enhance, or validate a slash command, needs help designing command workflows, or wants to understand command arguments and parameters.
+version: 1.1.0
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 

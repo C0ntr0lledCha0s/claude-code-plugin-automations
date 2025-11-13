@@ -2,6 +2,31 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ⚠️ CRITICAL: Always Validate Before Committing
+
+**MANDATORY**: Before creating ANY commit with plugin components (agents, skills, commands, hooks), you MUST:
+
+1. **Run validation scripts** on all modified components:
+   ```bash
+   # Quick validation of everything
+   bash validate-all.sh
+
+   # Or validate individual components:
+   python3 agent-builder/skills/building-agents/scripts/validate-agent.py path/to/agent.md
+   python3 agent-builder/skills/building-skills/scripts/validate-skill.py path/to/skill/
+   python3 agent-builder/skills/building-commands/scripts/validate-command.py path/to/command.md
+   python3 agent-builder/skills/building-hooks/scripts/validate-hooks.py path/to/hooks.json
+   ```
+
+2. **Fix ALL critical errors** before committing. The pre-commit hook will block commits with validation errors.
+
+3. **Use agent-builder tools** when creating/modifying components:
+   - Invoke the `building-agents`, `building-skills`, `building-commands`, or `building-hooks` skills
+   - Use templates from `agent-builder/skills/*/templates/`
+   - Reference examples from `agent-builder/skills/*/references/`
+
+**Why this matters**: Validation catches security vulnerabilities, naming issues, and structural problems BEFORE they become part of git history.
+
 ## Repository Overview
 
 This is a **meta-repository** containing Claude Code plugins. It's essentially Claude building tools for Claude - a collection of meta-agents, skills, commands, and hooks that extend Claude Code's capabilities.

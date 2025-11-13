@@ -18,7 +18,7 @@ Apply a predefined label taxonomy to the repository.
 
 ## Arguments
 
-- `$1` (required): Preset name (standard | comprehensive | minimal)
+- **First argument** (required): Preset name (standard | comprehensive | minimal)
 
 ## Presets
 

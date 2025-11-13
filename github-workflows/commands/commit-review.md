@@ -17,7 +17,7 @@ Analyze commits for quality and conventional commit compliance.
 
 ## Arguments
 
-- `$1` (optional): Branch name to review. Default: current branch vs main
+- **First argument** (optional): Branch name to review. Default: current branch vs main
 
 ## What This Does
 

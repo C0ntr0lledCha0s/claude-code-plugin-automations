@@ -1,7 +1,7 @@
 ---
 name: building-skills
-description: Expert at creating Claude Code skills. Use when the user wants to create a new skill, needs help designing skill architecture, or wants to understand when to use skills vs agents.
-version: 1.0.0
+description: Expert at creating and modifying Claude Code skills. Auto-invokes when the user wants to create, update, modify, enhance, or validate a skill, needs help designing skill architecture, or wants to understand when to use skills vs agents.
+version: 1.1.0
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 

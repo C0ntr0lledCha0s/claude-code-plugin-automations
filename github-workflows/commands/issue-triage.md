@@ -17,7 +17,7 @@ Perform comprehensive triage on a GitHub issue.
 
 ## Arguments
 
-- `$1` (required): Issue number or "all" for batch triage
+- **First argument** (required): Issue number or "all" for batch triage
 
 ## What This Does
 

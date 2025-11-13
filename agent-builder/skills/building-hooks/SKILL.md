@@ -1,7 +1,7 @@
 ---
 name: building-hooks
-description: Expert at creating Claude Code event hooks for automation and policy enforcement. Use when the user wants to create hooks, needs help with event-driven automation, or wants to validate tool usage.
-version: 1.0.0
+description: Expert at creating and modifying Claude Code event hooks for automation and policy enforcement. Auto-invokes when the user wants to create, update, modify, enhance, or validate hooks, needs help with event-driven automation, or wants to understand hook patterns.
+version: 1.1.0
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 

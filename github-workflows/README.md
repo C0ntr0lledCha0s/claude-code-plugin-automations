@@ -44,9 +44,35 @@ The GitHub Workflows plugin provides end-to-end automation for GitHub-based deve
 
 ### Prerequisites
 
-- GitHub CLI (`gh`) installed and authenticated
+**Required**:
 - Git repository
 - Claude Code with plugin support
+
+**GitHub CLI** (`gh`):
+The plugin automatically installs and configures GitHub CLI for you on:
+- **Linux**: Debian/Ubuntu (apt), RHEL/Fedora (dnf/yum), Arch (pacman)
+- **macOS**: via Homebrew
+- **Windows**: via winget
+
+If automatic installation fails, install manually:
+```bash
+# Debian/Ubuntu/WSL
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list
+sudo apt update && sudo apt install gh
+
+# macOS
+brew install gh
+
+# Windows
+winget install --id GitHub.cli
+
+# Authenticate after installation
+gh auth login
+```
+
+More info: https://github.com/cli/cli#installation
 
 ### Install Plugin
 
@@ -327,8 +353,21 @@ Solution: Check project exists with `gh project list --owner ORG`
 
 ```
 Error: GraphQL query failed
-Solution: Check syntax and field names, see references/gh-project-api.md
+Solution: Check syntax and field names
 ```
+
+**Multiple solutions available:**
+1. **Use the helper script**: `skills/managing-projects/scripts/graphql-queries.sh`
+   - Provides high-level commands for common operations
+   - Example: `graphql-queries.sh add_item PROJECT_ID CONTENT_ID`
+
+2. **Use direct gh api commands**: See `skills/managing-projects/references/graphql-workarounds.md`
+   - Complete reference with copy-paste ready commands
+   - Covers all GitHub Projects v2 operations
+   - Includes troubleshooting and examples
+   - No additional scripts needed
+
+3. **Check the API documentation**: `references/gh-project-api.md`
 
 ### Rate Limiting
 
