@@ -48,10 +48,13 @@ description: Brief description of what the agent does and when to use it (max 10
 ### Optional Fields
 ```yaml
 ---
-tools: Read, Grep, Glob, Bash    # Comma-separated list (omit to inherit all tools)
-model: sonnet                     # sonnet, opus, haiku, or inherit
+capabilities: ["task1", "task2", "task3"]  # Array of specialized tasks the agent can perform (helps Claude decide when to invoke)
+tools: Read, Grep, Glob, Bash              # Comma-separated list (omit to inherit all tools)
+model: sonnet                               # sonnet, opus, haiku, or inherit
 ---
 ```
+
+**Note on `capabilities` field**: This array lists specific tasks the agent specializes in, helping Claude autonomously determine when to invoke the agent. Use kebab-case strings (e.g., `"analyze-security"`, `"generate-tests"`, `"review-architecture"`). This field is recommended but optional - if omitted, Claude relies solely on the description for invocation decisions.
 
 ### Naming Conventions
 - **Lowercase letters, numbers, and hyphens only**
@@ -76,6 +79,7 @@ The Markdown body should include:
 ---
 name: agent-name
 description: One-line description of agent purpose and when to invoke it
+capabilities: ["task1", "task2", "task3"]
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
@@ -421,6 +425,15 @@ Side-by-side comparison:
 
 **Use when**: Deciding between similar agents or looking for redundancy
 
+#### `/agent-builder:agents:migrate [agent-name]`
+Automated schema and best practice migration:
+- Detects current schema version
+- Applies automated migrations
+- Updates to current standards
+- Creates backups automatically
+
+**Use when**: Upgrading old agents or applying new best practices
+
 ### Maintenance Workflow
 
 **Recommended maintenance cycle:**
@@ -507,6 +520,54 @@ Recommendations:
 2. 🟢 LOW: Improve section headings for better navigation
 ```
 
+#### migrate-agent.py - Automated Migrator
+Automated schema and best practice migration script.
+
+**Usage:**
+```bash
+python3 {baseDir}/scripts/migrate-agent.py <agent-name>
+```
+
+**What it does:**
+- Detects current schema version (pre-1.0, 0.x, 1.0)
+- Applies version-specific migrations automatically
+- Optimizes tool permissions
+- Updates model to version aliases
+- Adds missing content sections
+- Creates timestamped backups
+
+**Migration paths:**
+- **pre-1.0 → 1.0**: Adds YAML frontmatter, extracts name/description
+- **0.x → current**: Fixes schema, optimizes permissions, adds sections
+- **1.0 → current**: Applies best practice updates
+
+**Output:**
+- Shows detected version
+- Lists changes to apply
+- Displays diff preview
+- Runs validation after migration
+- Runs enhancement scoring
+- Provides rollback instructions
+
+**Example:**
+```bash
+python3 migrate-agent.py old-agent
+
+# Output:
+Detected schema version: pre-1.0
+
+Migration path: pre-1.0 → 1.0
+  1. Add YAML frontmatter
+  2. Extract name and description
+  3. Add default tools and model
+
+Apply migration? (y/n): y
+
+✅ Migration complete!
+   Backup: old-agent.md.pre-migration-20250113_143022
+   Enhanced score: 3.5/10 → 7.5/10 (+114%)
+```
+
 ### Common Update Scenarios
 
 #### Scenario 1: Reduce Tool Permissions
@@ -573,10 +634,23 @@ As best practices evolve, older agents may need modernization:
 
 **Automated modernization:**
 ```bash
+# Option 1: Full automated migration
+/agent-builder:agents:migrate my-agent
+# Detects version and applies all migrations
+
+# Option 2: Analyze then update
 /agent-builder:agents:enhance my-agent
 # Review suggestions
 /agent-builder:agents:update my-agent
-# Apply recommended changes
+# Apply recommended changes interactively
+```
+
+**Using migration script directly:**
+```bash
+python3 agent-builder/skills/building-agents/scripts/migrate-agent.py my-agent
+# Automated migration with diff preview
+# Creates backup automatically
+# Validates and scores after migration
 ```
 
 ### Version Control Best Practices
