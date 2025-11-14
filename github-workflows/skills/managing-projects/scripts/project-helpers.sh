@@ -24,14 +24,75 @@ warn() {
     echo -e "${YELLOW}⚠ $1${NC}"
 }
 
+# Execute command with retry logic
+execute_with_retry() {
+    local max_attempts="${MAX_RETRIES:-3}"
+    local attempt=1
+    local delay=2
+    local command="$@"
+
+    while [ $attempt -le $max_attempts ]; do
+        if eval "$command"; then
+            return 0
+        fi
+
+        if [ $attempt -lt $max_attempts ]; then
+            warn "Attempt $attempt/$max_attempts failed, retrying in ${delay}s..."
+            sleep $delay
+            ((attempt++))
+            delay=$((delay * 2))  # Exponential backoff
+        else
+            error "Command failed after $max_attempts attempts"
+            return 1
+        fi
+    done
+}
+
+# Validate prerequisites with helpful messages
+validate_prerequisites() {
+    local errors=()
+
+    # Check gh CLI
+    if ! command -v gh >/dev/null 2>&1; then
+        errors+=("GitHub CLI (gh) not installed. Install from: https://github.com/cli/cli#installation")
+    elif ! gh auth status >/dev/null 2>&1; then
+        errors+=("GitHub CLI not authenticated. Run: gh auth login")
+    fi
+
+    # Check jq if available
+    if ! command -v jq >/dev/null 2>&1; then
+        warn "jq not installed. Some features may not work. Install from: https://stedolan.github.io/jq/download/"
+    fi
+
+    # Report errors
+    if [ ${#errors[@]} -gt 0 ]; then
+        error "Prerequisites check failed:"
+        for err in "${errors[@]}"; do
+            echo "  - $err" >&2
+        done
+        return 1
+    fi
+
+    return 0
+}
+
 # Check prerequisites and ensure gh CLI is installed
 ensure_gh_cli() {
     local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd ../../.. && pwd)"
-    local ensure_script="$script_dir/scripts/ensure-gh-cli.sh"
+    local ensure_gh_script="$script_dir/scripts/ensure-gh-cli.sh"
+    local ensure_deps_script="$script_dir/scripts/ensure-dependencies.sh"
 
-    if [ -f "$ensure_script" ]; then
+    # First, ensure dependencies (jq, python3, etc.)
+    if [ -f "$ensure_deps_script" ]; then
+        if ! bash "$ensure_deps_script" true false >/dev/null 2>&1; then
+            warn "Some dependencies may be missing (jq, python3)"
+        fi
+    fi
+
+    # Then, ensure gh CLI
+    if [ -f "$ensure_gh_script" ]; then
         # Try to ensure gh is installed and authenticated
-        if bash "$ensure_script" true false; then
+        if bash "$ensure_gh_script" true false; then
             return 0
         else
             error "GitHub CLI setup failed"

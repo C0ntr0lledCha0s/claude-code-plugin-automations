@@ -1,7 +1,8 @@
 ---
 description: Create a GitHub Projects v2 board with template (sprint, kanban, or roadmap)
-allowed-tools: Bash, Read
+allowed-tools: Bash, Read, Task
 argument-hint: "[project-name] [template]"
+model: claude-haiku-4-5
 ---
 
 # Create Project Board Command

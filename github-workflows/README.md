@@ -74,6 +74,22 @@ gh auth login
 
 More info: https://github.com/cli/cli#installation
 
+**Optional Dependencies**:
+The plugin will auto-install these if missing:
+- **jq**: JSON processor for advanced operations
+- **python3**: For validation and analysis scripts
+
+### Robustness Features
+
+The plugin includes several features to ensure reliability:
+
+- **Automatic Dependency Installation**: Detects and installs missing tools (gh, jq, python3)
+- **Preflight Checks**: Validates environment before executing commands
+- **Retry Logic**: Automatically retries failed operations with exponential backoff
+- **Label Auto-Creation**: Creates labels if they don't exist before use
+- **Error Recovery**: Helpful error messages with actionable solutions
+- **Version Checking**: Ensures minimum required versions of tools
+
 ### Install Plugin
 
 ```bash
