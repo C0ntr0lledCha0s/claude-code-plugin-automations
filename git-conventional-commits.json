@@ -1,0 +1,92 @@
+{
+  "convention": {
+    "commitTypes": [
+      {
+        "type": "feat",
+        "description": "A new feature",
+        "emoji": "✨"
+      },
+      {
+        "type": "fix",
+        "description": "A bug fix",
+        "emoji": "🐛"
+      },
+      {
+        "type": "docs",
+        "description": "Documentation only changes",
+        "emoji": "📚"
+      },
+      {
+        "type": "style",
+        "description": "Changes that do not affect the meaning of the code",
+        "emoji": "💎"
+      },
+      {
+        "type": "refactor",
+        "description": "A code change that neither fixes a bug nor adds a feature",
+        "emoji": "♻️"
+      },
+      {
+        "type": "perf",
+        "description": "A code change that improves performance",
+        "emoji": "🚀"
+      },
+      {
+        "type": "test",
+        "description": "Adding missing tests or correcting existing tests",
+        "emoji": "✅"
+      },
+      {
+        "type": "build",
+        "description": "Changes that affect the build system or external dependencies",
+        "emoji": "📦"
+      },
+      {
+        "type": "ci",
+        "description": "Changes to our CI configuration files and scripts",
+        "emoji": "👷"
+      },
+      {
+        "type": "chore",
+        "description": "Other changes that don't modify src or test files",
+        "emoji": "🔧"
+      },
+      {
+        "type": "revert",
+        "description": "Reverts a previous commit",
+        "emoji": "⏪"
+      }
+    ],
+    "commitScopes": [
+      "agent-builder",
+      "self-improvement",
+      "github-workflows",
+      "agents",
+      "skills",
+      "commands",
+      "hooks",
+      "marketplace",
+      "ci",
+      "docs",
+      "deps"
+    ]
+  },
+  "changelog": {
+    "commitTypes": [
+      "feat",
+      "fix",
+      "perf",
+      "refactor"
+    ],
+    "includeInvalidCommits": false,
+    "commitScopes": [],
+    "commitIgnoreRegexPattern": "^WIP ",
+    "headlines": {
+      "feat": "Features",
+      "fix": "Bug Fixes",
+      "perf": "Performance Improvements",
+      "refactor": "Code Refactoring",
+      "breakingChange": "BREAKING CHANGES"
+    }
+  }
+}

@@ -1,0 +1,61 @@
+name: Validate Plugins
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate All Plugins
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Validate plugin structure
+        run: |
+          bash validate-plugins.sh
+
+      - name: Validate marketplace.json
+        run: |
+          python3 -m json.tool .claude-plugin/marketplace.json > /dev/null
+          echo "✓ marketplace.json is valid JSON"
+
+      - name: Check for validation errors
+        if: failure()
+        run: |
+          echo "::error::Plugin validation failed. Please run './validate-plugins.sh' locally to see details."
+          exit 1
+
+  lint-commits:
+    name: Lint Commit Messages
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install commitlint
+        run: |
+          npm install --save-dev @commitlint/cli @commitlint/config-conventional
+
+      - name: Validate PR commits
+        run: |
+          npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose

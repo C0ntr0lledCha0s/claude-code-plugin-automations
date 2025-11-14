@@ -1,0 +1,46 @@
+{
+  "name": "claude-code-plugins",
+  "version": "1.0.0",
+  "description": "Meta-repository of Claude Code plugins for building and improving Claude Code extensions",
+  "type": "module",
+  "scripts": {
+    "validate": "bash validate-plugins.sh",
+    "validate:quick": "bash validate-all.sh",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "changelog:write": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "version": "standard-version",
+    "version:prerelease": "standard-version --prerelease",
+    "version:major": "standard-version --release-as major",
+    "version:minor": "standard-version --release-as minor",
+    "version:patch": "standard-version --release-as patch",
+    "build": "npm run validate",
+    "test": "npm run validate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mcnei/claude-code-plugins.git"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "plugins",
+    "agents",
+    "skills",
+    "automation",
+    "ai",
+    "llm"
+  ],
+  "author": "mcnei",
+  "license": "MIT",
+  "devDependencies": {
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "conventional-changelog-cli": "^5.0.0",
+    "git-conventional-commits": "^2.6.7",
+    "standard-version": "^9.5.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

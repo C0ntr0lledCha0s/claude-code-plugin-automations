@@ -1,0 +1,48 @@
+{
+  "extends": ["@commitlint/config-conventional"],
+  "rules": {
+    "type-enum": [
+      2,
+      "always",
+      [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "build",
+        "ci",
+        "chore",
+        "revert"
+      ]
+    ],
+    "scope-enum": [
+      2,
+      "always",
+      [
+        "agent-builder",
+        "self-improvement",
+        "github-workflows",
+        "agents",
+        "skills",
+        "commands",
+        "hooks",
+        "marketplace",
+        "ci",
+        "docs",
+        "deps"
+      ]
+    ],
+    "scope-case": [2, "always", "lower-case"],
+    "subject-case": [2, "always", "lower-case"],
+    "subject-empty": [2, "never"],
+    "subject-full-stop": [2, "never", "."],
+    "header-max-length": [2, "always", 100],
+    "body-leading-blank": [1, "always"],
+    "body-max-line-length": [2, "always", 100],
+    "footer-leading-blank": [1, "always"],
+    "footer-max-line-length": [2, "always", 100]
+  }
+}
