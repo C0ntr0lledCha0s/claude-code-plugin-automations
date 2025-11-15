@@ -1,10 +1,14 @@
 # Claude Code Plugins
 
 [![Claude Marketplace](https://img.shields.io/badge/Claude-Marketplace-blue)](https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations)
-[![Plugins](https://img.shields.io/badge/Plugins-2-green)]()
+[![Plugins](https://img.shields.io/badge/Plugins-3-green)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+[![Validate Plugins](https://github.com/mcnei/claude-code-plugins/workflows/Validate%20Plugins/badge.svg)](https://github.com/mcnei/claude-code-plugins/actions)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
 A collection of plugins and meta-agents for [Claude Code](https://claude.ai/code), Anthropic's official CLI for Claude. These plugins extend Claude's capabilities with specialized agents, skills, commands, and hooks.
+
+**CI/CD Pipeline:** Automated validation, changelog management, and semantic versioning. [See CI/CD Guide →](./CI_CD_GUIDE.md)
 
 **Now available on Claude Marketplace!** Install with one command or browse plugins directly from Claude Code.
 
@@ -275,6 +279,40 @@ The self-improvement plugin creates a **meta-feedback loop** where it can identi
 This creates a true continuous improvement cycle where the plugins improve themselves based on usage patterns!
 
 ## 🔧 Development
+
+### CI/CD Pipeline
+
+This repository includes a comprehensive CI/CD pipeline for quality assurance:
+
+**Automated Validation:**
+- Runs on all PRs and commits to main/develop
+- Validates all plugin components (agents, skills, commands, hooks)
+- Enforces conventional commit format
+- Checks JSON schema compliance
+
+**Changelog Management:**
+- Automatic changelog generation from commits
+- Semantic versioning support
+- GitHub release automation
+
+**Commands:**
+```bash
+# Validate all plugins
+npm run validate
+
+# Quick validation
+npm run validate:quick
+
+# Generate changelog
+npm run changelog
+
+# Bump version (patch/minor/major)
+npm run version:patch
+npm run version:minor
+npm run version:major
+```
+
+**Learn more:** [CI/CD Guide](./CI_CD_GUIDE.md)
 
 ### Creating Your Own Plugin
 

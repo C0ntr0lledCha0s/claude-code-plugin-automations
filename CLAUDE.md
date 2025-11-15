@@ -105,12 +105,46 @@ plugin-name/
 
 ## Development Commands
 
+### CI/CD Pipeline
+
+**This repository has automated CI/CD pipelines** for validation and changelog management. See [CI_CD_GUIDE.md](./CI_CD_GUIDE.md) for full details.
+
+**Quick Commands:**
+```bash
+# Install dependencies (first time only)
+npm install
+
+# Validate all plugins (uses npm scripts)
+npm run validate
+
+# Quick validation (bash script)
+npm run validate:quick
+
+# Generate/update changelog
+npm run changelog
+
+# Bump version and create release
+npm run version:patch   # 1.0.0 → 1.0.1
+npm run version:minor   # 1.0.0 → 1.1.0
+npm run version:major   # 1.0.0 → 2.0.0
+```
+
 ### Validation
 
 **Quick Validation** (recommended):
 ```bash
 # Validate all plugins at once
 bash validate-all.sh
+# OR
+npm run validate:quick
+```
+
+**Comprehensive Validation:**
+```bash
+# Validate all plugins with detailed output
+bash validate-plugins.sh
+# OR
+npm run validate
 ```
 
 **Individual Component Validation**:
