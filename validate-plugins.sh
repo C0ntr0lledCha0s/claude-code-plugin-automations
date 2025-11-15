@@ -44,14 +44,25 @@ validate_plugin() {
     echo -e "   ${GREEN}✓${NC} plugin.json exists and is valid JSON"
 
     # Validate agents
+    echo "   [DEBUG] Checking for agents directory: $plugin_dir/agents"
     if [ -d "$plugin_dir/agents" ]; then
+        echo "   [DEBUG] Agents directory exists, looking for *.md files"
         for agent in "$plugin_dir/agents"/*.md; do
+            echo "   [DEBUG] Processing: $agent"
             if [ -f "$agent" ]; then
                 agent_name=$(basename "$agent")
-                if python3 agent-builder/skills/building-agents/scripts/validate-agent.py "$agent" >/dev/null 2>&1; then
+                # Run validation and capture output
+                # Temporarily disable exit-on-error to capture validation output
+                set +e
+                validation_output=$(python3 agent-builder/skills/building-agents/scripts/validate-agent.py "$agent" 2>&1)
+                validation_exit_code=$?
+                set -e
+
+                if [ $validation_exit_code -eq 0 ]; then
                     echo -e "   ${GREEN}✓${NC} Agent: $agent_name"
                 else
-                    echo -e "   ${RED}✗${NC} Agent: $agent_name (validation failed)"
+                    echo -e "   ${RED}✗${NC} Agent: $agent_name (validation failed with exit code $validation_exit_code)"
+                    echo "      Validation output: $validation_output"
                     ((ERRORS++))
                 fi
             fi
