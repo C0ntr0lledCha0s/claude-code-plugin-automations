@@ -10,7 +10,7 @@
     "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
     "pluginRoot": "./",
     "stats": {
-      "totalPlugins": 3,
+      "totalPlugins": 4,
       "lastUpdated": "2025-11-15"
     }
   },
@@ -95,6 +95,30 @@
       "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
       "license": "MIT",
       "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/github-workflows"
+    },
+    {
+      "name": "research-agent",
+      "source": "./research-agent",
+      "description": "Intelligent research agent for investigating codebases, discovering best practices, and analyzing patterns. Provides deep analysis, comparative research, and actionable recommendations.",
+      "version": "1.0.0",
+      "category": "development-tools",
+      "keywords": [
+        "research",
+        "investigation",
+        "best-practices",
+        "analysis",
+        "patterns",
+        "codebase-analysis",
+        "knowledge-discovery",
+        "comparative-research"
+      ],
+      "author": {
+        "name": "C0ntr0lledCha0s",
+        "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
+      },
+      "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
+      "license": "MIT",
+      "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/research-agent"
     }
   ]
 }

@@ -1,0 +1,25 @@
+{
+  "name": "research-agent",
+  "version": "1.0.0",
+  "description": "Intelligent research agent for investigating codebases, discovering best practices, and analyzing patterns. Provides deep analysis, comparative research, and actionable recommendations.",
+  "author": {
+    "name": "C0ntr0lledCha0s",
+    "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
+  },
+  "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/research-agent",
+  "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
+  "license": "MIT",
+  "keywords": [
+    "research",
+    "investigation",
+    "best-practices",
+    "analysis",
+    "patterns",
+    "codebase-analysis",
+    "knowledge-discovery",
+    "comparative-research"
+  ],
+  "commands": "./commands/",
+  "agents": ["./agents/investigator.md"],
+  "skills": "./skills/"
+}
