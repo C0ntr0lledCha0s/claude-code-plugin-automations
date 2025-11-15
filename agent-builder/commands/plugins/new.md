@@ -1,386 +1,384 @@
 ---
-description: Create a new Claude Code plugin with complete directory structure
-allowed-tools: Read, Write, Edit, Grep, Glob, Bash
+description: Create a new Claude Code plugin with automated component orchestration
+allowed-tools: Read, Write, Edit, Grep, Glob, Bash, AskUserQuestion, SlashCommand
 argument-hint: [plugin-name]
 model: claude-sonnet-4-5
 ---
 
-# Create New Plugin
+# Create New Plugin (Orchestrated)
 
-Create a new Claude Code plugin named: **$1**
+Create a new Claude Code plugin with **automated component creation**.
 
-## Your Task
+Plugin name: **$1**
 
-1. **Gather Requirements**: Ask the user about:
-   - Plugin name and purpose
-   - What components will it include? (agents, skills, commands, hooks)
-   - Author information
-   - License type (MIT, Apache, etc.)
-   - Repository URL (if applicable)
-   - Keywords for searchability
+## Orchestration Workflow
 
-2. **Design Plugin Structure**: Plan the directory layout:
-   ```
-   plugin-name/
-   ├── .claude-plugin/
-   │   └── plugin.json       # Manifest
-   ├── agents/               # Optional
-   ├── skills/               # Optional
-   ├── commands/             # Optional
-   ├── hooks/                # Optional
-   ├── scripts/              # Optional helper scripts
-   └── README.md            # Documentation
-   ```
+This command automatically orchestrates the creation of a complete plugin by:
+1. ✅ Gathering requirements interactively
+2. ✅ Creating plugin structure and manifest
+3. ✅ **Automatically invoking component builders** for agents, skills, commands, hooks
+4. ✅ Generating comprehensive documentation
+5. ✅ Validating the complete plugin
 
-3. **Validate Plugin Name**:
-   - Must be lowercase-hyphens only
-   - Max 64 characters
-   - Descriptive and unique
-   - No underscores or special characters
+---
 
-4. **Create Directory Structure**:
-   ```bash
-   mkdir -p $1/.claude-plugin
-   mkdir -p $1/agents
-   mkdir -p $1/skills
-   mkdir -p $1/commands
-   mkdir -p $1/hooks
-   mkdir -p $1/scripts
-   ```
+## Step 1: Gather Requirements
 
-5. **Create plugin.json Manifest**:
-   ```json
-   {
-     "name": "$1",
-     "version": "1.0.0",
-     "description": "Plugin description",
-     "author": {
-       "name": "Author Name",
-       "email": "email@example.com",
-       "url": "https://github.com/username"
-     },
-     "homepage": "https://github.com/username/$1",
-     "repository": "https://github.com/username/$1",
-     "license": "MIT",
-     "keywords": ["keyword1", "keyword2"],
-     "commands": ["./commands/"],
-     "agents": "./agents/",
-     "skills": "./skills/",
-     "hooks": ["./hooks/hooks.json"]
-   }
-   ```
+First, ask the user what components they want to include.
 
-6. **Create README.md**:
-   Include:
-   - Plugin name and description
-   - Installation instructions
-   - Component list (agents, skills, commands, hooks)
-   - Usage examples
-   - Configuration options
-   - License information
+Use the **AskUserQuestion** tool:
 
-7. **Initialize Components** (based on requirements):
-   - Create initial agents if needed
-   - Set up skill directories if needed
-   - Add starter commands if needed
-   - Configure hooks if needed
+```yaml
+questions:
+  - question: "What type of plugin template would you like to start with?"
+    header: "Template"
+    multiSelect: false
+    options:
+      - label: "Minimal"
+        description: "Simple plugin with 1-2 commands (best for beginners)"
+      - label: "Standard"
+        description: "Plugin with agents and commands (most common)"
+      - label: "Full"
+        description: "Complete plugin with all component types"
+      - label: "Custom"
+        description: "I'll specify exactly what I need"
 
-8. **Validate the Plugin**:
-   - Check plugin.json syntax (valid JSON)
-   - Verify directory structure
-   - Ensure all referenced files exist
-   - Validate naming conventions
+  - question: "Which components should this plugin include?"
+    header: "Components"
+    multiSelect: true
+    options:
+      - label: "Agents"
+        description: "Specialized subagents for complex tasks"
+      - label: "Skills"
+        description: "Auto-invoked expertise modules"
+      - label: "Commands"
+        description: "User-triggered slash commands"
+      - label: "Hooks"
+        description: "Event-driven automation"
+```
 
-9. **Provide Usage Instructions**:
-   - How to install the plugin
-   - How to use included components
-   - How to contribute or extend
+Based on the user's selections, determine what to create.
 
-## Plugin Manifest Schema (plugin.json)
+## Step 2: Gather Plugin Metadata
 
-### Required Fields
+Ask for plugin details:
+
+```yaml
+questions:
+  - question: "What category best describes this plugin?"
+    header: "Category"
+    multiSelect: false
+    options:
+      - label: "Development Tools"
+        description: "Code generation, testing, linting, formatting"
+      - label: "Automation"
+        description: "Workflow automation, task automation"
+      - label: "Integration"
+        description: "External service integrations, APIs"
+      - label: "Productivity"
+        description: "General productivity enhancements"
+
+  - question: "What is the plugin's primary purpose?"
+    header: "Purpose"
+    multiSelect: false
+    options:
+      - label: "I'll type it"
+        description: "Let me describe the plugin purpose"
+```
+
+Then ask for:
+- Plugin name (if not provided in $1)
+- Description
+- Author name and email
+- Keywords (3-5 recommended)
+
+## Step 3: Validate Plugin Name
+
+If plugin name is provided in $1, use it. Otherwise, ask the user.
+
+**Validation rules:**
+- Must be lowercase-hyphens only (no underscores, no spaces, no uppercase)
+- Max 64 characters
+- Descriptive and unique
+- No special characters except hyphens
+
+**Example valid names:**
+- `code-review-suite`
+- `data-analysis-tools`
+- `git-workflow-automation`
+
+If name is invalid, explain the issue and ask for a corrected name.
+
+## Step 4: Create Plugin Directory Structure
+
+Create the base plugin structure:
+
+```bash
+# Create plugin root and essential directories
+mkdir -p $PLUGIN_NAME/.claude-plugin
+mkdir -p $PLUGIN_NAME/agents
+mkdir -p $PLUGIN_NAME/skills
+mkdir -p $PLUGIN_NAME/commands
+mkdir -p $PLUGIN_NAME/hooks
+mkdir -p $PLUGIN_NAME/scripts
+```
+
+## Step 5: Create plugin.json Manifest
+
+Generate the plugin manifest with collected metadata:
+
 ```json
 {
   "name": "plugin-name",
   "version": "1.0.0",
-  "description": "What the plugin does"
-}
-```
-
-### Optional Fields
-```json
-{
+  "description": "Description from user input",
   "author": {
-    "name": "Your Name",
-    "email": "your.email@example.com",
-    "url": "https://github.com/yourname"
+    "name": "Author Name",
+    "email": "author@example.com",
+    "url": "https://github.com/username"
   },
-  "homepage": "https://github.com/yourname/plugin-name",
-  "repository": "https://github.com/yourname/plugin-name",
+  "homepage": "https://github.com/username/plugin-name",
+  "repository": "https://github.com/username/plugin-name",
   "license": "MIT",
-  "keywords": ["tag1", "tag2", "tag3"],
-  "commands": ["./commands/cmd1.md", "./commands/cmd2.md"],
+  "keywords": ["keyword1", "keyword2", "keyword3"],
+  "commands": "./commands/",
   "agents": "./agents/",
   "skills": "./skills/",
-  "hooks": ["./hooks/hooks.json"],
-  "mcpServers": {
-    "server-name": {
-      "command": "executable-path",
-      "args": ["arg1", "arg2"],
-      "env": {
-        "VAR": "value"
-      }
-    }
-  }
+  "hooks": ["./hooks/hooks.json"]
 }
 ```
 
-## Plugin Directory Structure
+**Use the Write tool** to create `$PLUGIN_NAME/.claude-plugin/plugin.json`
 
-### Minimal Plugin
-```
-my-plugin/
-├── .claude-plugin/
-│   └── plugin.json
-└── README.md
-```
+## Step 6: Orchestrate Component Creation
 
-### Full Plugin
-```
-my-plugin/
-├── .claude-plugin/
-│   └── plugin.json
-├── agents/
-│   ├── agent1.md
-│   └── agent2.md
-├── skills/
-│   ├── skill1/
-│   │   ├── SKILL.md
-│   │   ├── scripts/
-│   │   └── references/
-│   └── skill2/
-│       └── SKILL.md
-├── commands/
-│   ├── cmd1.md
-│   └── cmd2.md
-├── hooks/
-│   ├── hooks.json
-│   └── scripts/
-│       └── validate.sh
-├── scripts/
-│   └── setup.sh
-├── .mcp.json
-└── README.md
+**This is the key orchestration step!** Based on what components the user selected, automatically invoke the appropriate builders.
+
+### For Each Agent Requested
+
+Ask the user: "What should this agent be named and what will it do?"
+
+Then **automatically invoke the agent builder**:
+
+```bash
+# Use SlashCommand tool to invoke the agent builder
+/agent-builder:agents:new agent-name
 ```
 
-## Naming Conventions
+The agent will be created in `$PLUGIN_NAME/agents/`
 
-- **Plugin name**: lowercase-hyphens, max 64 chars
-- **Descriptive**: Indicates plugin purpose
-- **Unique**: Not conflicting with existing plugins
-- **Examples**: `code-review-suite`, `data-analysis-tools`, `git-workflow-automation`
+**Repeat for each agent** the user wants to create.
 
-## Example Plugin Types
+### For Each Skill Requested
 
-### Development Tools Plugin
-```
-dev-tools-plugin/
-├── .claude-plugin/plugin.json
-├── agents/
-│   ├── code-reviewer.md
-│   └── test-generator.md
-├── commands/
-│   ├── format-code.md
-│   └── run-linter.md
-└── README.md
+Ask the user: "What should this skill be named and what expertise will it provide?"
+
+Then **automatically invoke the skill builder**:
+
+```bash
+# Use SlashCommand tool to invoke the skill builder
+/agent-builder:skills:new skill-name
 ```
 
-### Data Analysis Plugin
-```
-data-analytics-plugin/
-├── .claude-plugin/plugin.json
-├── skills/
-│   ├── analyzing-csv/
-│   └── generating-reports/
-├── commands/
-│   └── analyze-dataset.md
-└── README.md
+The skill directory will be created in `$PLUGIN_NAME/skills/`
+
+**Repeat for each skill** the user wants to create.
+
+### For Each Command Requested
+
+Ask the user: "What should this command be named and what will it do?"
+
+Then **automatically invoke the command builder**:
+
+```bash
+# Use SlashCommand tool to invoke the command builder
+/agent-builder:commands:new command-name
 ```
 
-### Git Workflow Plugin
-```
-git-workflow-plugin/
-├── .claude-plugin/plugin.json
-├── commands/
-│   ├── git/
-│   │   ├── commit.md
-│   │   ├── pr.md
-│   │   └── rebase.md
-├── hooks/
-│   ├── hooks.json
-│   └── scripts/
-│       └── validate-commit.sh
-└── README.md
+The command will be created in `$PLUGIN_NAME/commands/`
+
+**Repeat for each command** the user wants to create.
+
+### For Hooks (If Requested)
+
+If the user wants hooks, ask: "What events should trigger hooks?"
+
+Then **automatically invoke the hook builder**:
+
+```bash
+# Use SlashCommand tool to invoke the hook builder
+/agent-builder:hooks:new hook-configuration
 ```
 
-## README.md Template
+The hooks configuration will be created in `$PLUGIN_NAME/hooks/`
+
+## Step 7: Generate README.md
+
+Use the template from `agent-builder/skills/building-plugins/templates/plugin-readme-template.md`
+
+Customize it with:
+- Plugin name and description
+- List of all created components (agents, skills, commands, hooks)
+- Installation instructions
+- Basic usage examples for each component
+- License information
+
+**Use the Write tool** to create `$PLUGIN_NAME/README.md`
+
+## Step 8: Validate the Plugin
+
+Run the validation script to ensure everything is correct:
+
+```bash
+python3 agent-builder/skills/building-plugins/scripts/validate-plugin.py $PLUGIN_NAME/
+```
+
+If validation fails:
+- Show the errors to the user
+- Offer to fix the issues automatically
+- Re-run validation after fixes
+
+## Step 9: Summary and Next Steps
+
+Provide a comprehensive summary:
 
 ```markdown
-# Plugin Name
+✅ Plugin Created Successfully!
 
-Brief description of what this plugin does.
+📦 Plugin: $PLUGIN_NAME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Features
+📁 Structure:
+$PLUGIN_NAME/
+├── .claude-plugin/plugin.json
+├── agents/ (X agents)
+│   └── [list agent files]
+├── skills/ (X skills)
+│   └── [list skill directories]
+├── commands/ (X commands)
+│   └── [list command files]
+├── hooks/
+│   └── hooks.json
+└── README.md
 
-- Feature 1
-- Feature 2
-- Feature 3
+🔧 Components Created:
+- X Agents: [names]
+- X Skills: [names]
+- X Commands: [names]
+- Hooks: [configured events]
 
-## Installation
+📝 Next Steps:
 
-[Installation instructions]
+1. **Test the plugin**:
+   ```bash
+   ln -s $(pwd)/$PLUGIN_NAME ~/.claude/plugins/$PLUGIN_NAME
+   ```
 
-## Components
+2. **Customize components**:
+   - Edit agent prompts in agents/
+   - Enhance skill expertise in skills/
+   - Add command logic in commands/
 
-### Agents
-- **agent-name**: Description
+3. **Validate**:
+   ```bash
+   python3 agent-builder/skills/building-plugins/scripts/validate-plugin.py $PLUGIN_NAME/
+   ```
 
-### Skills
-- **skill-name**: Description
+4. **Documentation**:
+   - Update README.md with detailed usage
+   - Add examples to component files
+   - Document configuration options
 
-### Commands
-- `/command-name`: Description
-
-### Hooks
-- **EventName**: Description
-
-## Usage
-
-### Example 1
-[Usage example]
-
-### Example 2
-[Usage example]
-
-## Configuration
-
-[Configuration options]
-
-## License
-
-MIT License
+5. **(Optional) Publish**:
+   - Create GitHub repository
+   - Tag version: git tag v1.0.0
+   - Submit to Claude Code marketplace
 ```
 
-## Validation Checklist
+## Error Handling
 
-Before finalizing plugin:
+### If No Plugin Name Provided
 
-- [ ] plugin.json has valid JSON syntax
-- [ ] Name is lowercase-hyphens, max 64 chars
-- [ ] Version follows semantic versioning (1.0.0)
-- [ ] Description is clear and concise
-- [ ] Directory structure follows conventions
-- [ ] All referenced files exist
-- [ ] README.md is complete
-- [ ] Components follow naming conventions
-- [ ] Scripts are executable if present
-- [ ] License is specified
+If $1 is empty, ask:
+```
+"What should your plugin be named? (lowercase-hyphens only, e.g., 'my-awesome-plugin')"
+```
+
+### If Plugin Directory Already Exists
+
+If `$PLUGIN_NAME/` directory exists:
+```
+"⚠️  Directory '$PLUGIN_NAME' already exists.
+Would you like to:
+1. Choose a different name
+2. Overwrite (WARNING: will delete existing)
+3. Cancel"
+```
+
+### If Component Builder Fails
+
+If any SlashCommand invocation fails:
+```
+"❌ Failed to create [component-type]: [error]
+
+Would you like to:
+1. Retry
+2. Skip this component
+3. Create manually later"
+```
+
+## Template Integration
+
+Optionally, if the user selected a template type, you can:
+
+1. **Copy template files** from `agent-builder/skills/building-plugins/templates/[template-type]/`
+2. **Customize** the copied files with user's metadata
+3. **Skip component creation** if template already includes them
+
+This provides a faster starting point.
 
 ## Important Notes
 
-- Plugins bundle related components for distribution
-- Use semantic versioning (major.minor.patch)
-- Document all components in README
-- Test all components before publishing
-- Include clear installation instructions
-- Consider adding examples directory
+- ✅ **Automated Orchestration**: This command automatically calls other builders
+- ✅ **Interactive**: Uses AskUserQuestion for requirements gathering
+- ✅ **Validated**: Runs validation automatically before completion
+- ✅ **Comprehensive**: Creates complete plugin with all selected components
+- ✅ **Template Support**: Can use templates for faster setup
 
-## Marketplace Repository: Maintaining Manifest Files
+## Advanced: Custom Component Creation
 
-**If working in the claude-code-plugin-automations (marketplace) repository**, you MUST update TWO manifest files:
+If the user wants to add components later, remind them they can use:
 
-### 1. Update Plugin's plugin.json
-**File**: `<plugin-name>/.claude-plugin/plugin.json`
+```bash
+# Add more components to existing plugin
+cd $PLUGIN_NAME
 
-When modifying a plugin:
-- Increment version number (follow semantic versioning)
-- Update description if changed
-- Update commands array if commands added/removed
-- Update other metadata as needed
+# Create additional agents
+/agent-builder:agents:new new-agent
 
-### 2. Update Root marketplace.json
-**File**: `.claude-plugin/marketplace.json`
+# Create additional skills
+/agent-builder:skills:new new-skill
 
-**CRITICAL**: This file lists all plugins in the marketplace. You MUST update it when:
+# Create additional commands
+/agent-builder:commands:new new-command
 
-**When adding a NEW plugin**:
-```json
-{
-  "metadata": {
-    "version": "X.Y.Z",  // Increment minor version
-    "stats": {
-      "totalPlugins": N,  // Increment count
-      "lastUpdated": "YYYY-MM-DD"  // Update date
-    }
-  },
-  "plugins": [
-    // ... existing plugins ...
-    {
-      "name": "new-plugin-name",
-      "source": "./new-plugin-name",
-      "description": "Plugin description",
-      "version": "1.0.0",
-      "category": "category-name",
-      "keywords": ["keyword1", "keyword2"],
-      "author": { /* ... */ },
-      "repository": "...",
-      "license": "MIT",
-      "homepage": "..."
-    }
-  ]
-}
+# Update plugin.json if needed
+# Re-run validation
+python3 ../agent-builder/skills/building-plugins/scripts/validate-plugin.py ./
 ```
-
-**When updating an EXISTING plugin**:
-```json
-{
-  "metadata": {
-    "version": "X.Y.Z",  // Increment patch version
-    "stats": {
-      "lastUpdated": "YYYY-MM-DD"  // Update date
-    }
-  },
-  "plugins": [
-    {
-      "name": "existing-plugin",
-      "description": "Updated description if changed",
-      "version": "1.2.0",  // Match plugin's new version
-      // Update other fields as needed
-    }
-  ]
-}
-```
-
-**Fields to Keep in Sync**:
-- Plugin version in marketplace.json MUST match plugin's plugin.json version
-- Description should match between both files
-- Update lastUpdated date in metadata.stats
-
-**Why This Matters**:
-- marketplace.json is the central registry for all plugins
-- Users rely on it for plugin discovery and installation
-- Inconsistencies break plugin installation and updates
-- The marketplace uses this file to display available plugins
-
-## If No Name Provided
-
-If $1 is empty, ask the user:
-- What should the plugin be named?
-- What is the plugin's purpose?
-- What components will it include?
-
-Then proceed with the creation process.
 
 ---
 
-**Remember**: Use the building-agents, building-skills, building-commands, and building-hooks skills as needed to create plugin components.
+## Execution Strategy
+
+When this command is invoked:
+
+1. **Invoke building-plugins skill**: Auto-invoke for plugin expertise
+2. **Gather requirements**: Use AskUserQuestion tool
+3. **Create structure**: Use Bash and Write tools
+4. **Orchestrate components**: Use SlashCommand tool to invoke other builders
+5. **Generate docs**: Use templates and Write tool
+6. **Validate**: Use Bash to run validation script
+7. **Report**: Provide comprehensive summary
+
+**Remember**: The goal is to create a **complete, production-ready plugin** with minimal manual work. Automate everything possible while keeping the user informed of progress.

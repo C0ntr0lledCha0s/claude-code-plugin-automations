@@ -34,6 +34,60 @@ Plugins enable users to install complete functionality with a single command.
 - You're customizing for a specific project
 - You don't plan to distribute or share
 
+## Automated Plugin Creation (Orchestration)
+
+The agent-builder provides **automated orchestration** for plugin creation:
+
+### Quick Start: Automated Creation
+
+```bash
+# Command invokes automated workflow
+/agent-builder:plugins:new my-plugin-name
+```
+
+This **orchestrated command** automatically:
+1. ✅ Gathers requirements interactively (using AskUserQuestion)
+2. ✅ Creates plugin structure and manifest
+3. ✅ **Automatically invokes component builders**:
+   - `/agent-builder:agents:new` for each agent
+   - `/agent-builder:skills:new` for each skill
+   - `/agent-builder:commands:new` for each command
+   - `/agent-builder:hooks:new` for hooks
+4. ✅ Generates comprehensive README.md
+5. ✅ Validates the complete plugin
+6. ✅ Provides next steps and usage instructions
+
+### Interactive Script
+
+For manual/standalone use:
+
+```bash
+python3 {baseDir}/scripts/create-plugin-interactive.py
+```
+
+This interactive script guides you through:
+- Plugin naming and validation
+- Metadata collection (author, keywords, category)
+- Component selection
+- Directory structure creation
+- manifest generation
+- Documentation scaffolding
+
+### How Orchestration Works
+
+When you use the `/agent-builder:plugins:new` command, it:
+
+1. **Invokes this skill** for plugin expertise
+2. **Delegates component creation** to specialized builders:
+   - `building-agents` skill for agents
+   - `building-skills` skill for skills
+   - `building-commands` skill for commands
+   - `building-hooks` skill for hooks
+3. **Coordinates** the entire workflow seamlessly
+4. **Validates** the final result
+
+**Key Benefit**: You get a complete, production-ready plugin without manually creating each component.
+
 ## Plugin Structure & Schema
 
 ### Directory Structure
@@ -170,7 +224,21 @@ Examples:
 
 ## Creating a Plugin
 
-### Step 1: Gather Requirements
+### Recommended: Use Automated Orchestration
+
+The **fastest and recommended way** to create a plugin is using the orchestrated command:
+
+```bash
+/agent-builder:plugins:new my-plugin-name
+```
+
+This automatically handles all steps below. See the "Automated Plugin Creation (Orchestration)" section above for details.
+
+### Manual Creation (Alternative)
+
+If you prefer manual control or need to understand the detailed steps:
+
+#### Step 1: Gather Requirements
 
 Ask the user:
 1. **Plugin name and purpose**: What will this plugin do?
@@ -186,7 +254,7 @@ Ask the user:
    - Repository URL
    - Keywords for searchability
 
-### Step 2: Design Plugin Architecture
+#### Step 2: Design Plugin Architecture
 
 Plan the component structure:
 
@@ -213,7 +281,7 @@ code-review-suite/
 - **Minimal Overlap**: Avoid duplicating functionality
 - **Progressive Complexity**: Start simple, add features iteratively
 
-### Step 3: Create Directory Structure
+#### Step 3: Create Directory Structure
 
 ```bash
 mkdir -p plugin-name/.claude-plugin
@@ -224,7 +292,7 @@ mkdir -p plugin-name/hooks
 mkdir -p plugin-name/scripts
 ```
 
-### Step 4: Create plugin.json Manifest
+#### Step 4: Create plugin.json Manifest
 
 Use the plugin.json schema template and populate all fields:
 
@@ -255,9 +323,9 @@ Use the plugin.json schema template and populate all fields:
 - Version is semantic (X.Y.Z)
 - All paths reference actual directories/files
 
-### Step 5: Create Components
+#### Step 5: Create Components
 
-Use the specialized builder skills:
+Use the specialized builder skills (or let the orchestrated command handle this automatically):
 
 **For Agents:**
 ```bash
@@ -283,7 +351,7 @@ Or invoke the `building-commands` skill expertise.
 ```
 Or invoke the `building-hooks` skill expertise.
 
-### Step 6: Write Comprehensive README.md
+#### Step 6: Write Comprehensive README.md
 
 Use the README template from `{baseDir}/templates/plugin-readme-template.md`.
 
@@ -303,7 +371,7 @@ Use the README template from `{baseDir}/templates/plugin-readme-template.md`.
 - Contributing guidelines
 - Changelog
 
-### Step 7: Validate the Plugin
+#### Step 7: Validate the Plugin
 
 Run the validation script:
 
@@ -322,7 +390,7 @@ python3 {baseDir}/scripts/validate-plugin.py plugin-name/
 - [ ] License file exists (if license specified)
 - [ ] No security issues (exposed secrets, dangerous scripts)
 
-### Step 8: Test the Plugin
+#### Step 8: Test the Plugin
 
 **Testing Checklist:**
 1. **Installation Test**: Symlink to `.claude/plugins/` and verify Claude loads it
@@ -334,7 +402,7 @@ python3 {baseDir}/scripts/validate-plugin.py plugin-name/
 3. **Integration Tests**: Verify components work together
 4. **Edge Cases**: Test with invalid inputs, missing files, etc.
 
-### Step 9: Document Usage
+#### Step 9: Document Usage
 
 Provide clear instructions:
 
