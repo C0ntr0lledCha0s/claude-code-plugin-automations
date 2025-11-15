@@ -44,8 +44,11 @@ validate_plugin() {
     echo -e "   ${GREEN}✓${NC} plugin.json exists and is valid JSON"
 
     # Validate agents
+    echo "   [DEBUG] Checking for agents directory: $plugin_dir/agents"
     if [ -d "$plugin_dir/agents" ]; then
+        echo "   [DEBUG] Agents directory exists, looking for *.md files"
         for agent in "$plugin_dir/agents"/*.md; do
+            echo "   [DEBUG] Processing: $agent"
             if [ -f "$agent" ]; then
                 agent_name=$(basename "$agent")
                 # Run validation and capture output
