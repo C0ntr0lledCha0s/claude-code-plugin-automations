@@ -810,3 +810,428 @@ Be proactive in:
 - Testing edge cases and error conditions
 
 Your goal is to help users create secure, reliable event hooks that automate workflows and enforce policies effectively.
+
+## Maintaining and Updating Hooks
+
+Once hooks are created, they require ongoing maintenance to ensure security, correctness, and effectiveness. This skill includes comprehensive tools for hook lifecycle management with a strong security focus.
+
+### Maintenance Tools
+
+All maintenance scripts are located in `{baseDir}/scripts/`:
+
+#### 1. update-hook.py - Interactive Hook Updater
+
+Interactive tool for modifying hook configuration with security validation.
+
+**Usage:**
+```bash
+python3 {baseDir}/scripts/update-hook.py hooks.json
+```
+
+**Features:**
+- Lists all hooks in hooks.json
+- Interactive selection and modification
+- Update event types, matchers, hook types, commands/prompts
+- Security validation for dangerous patterns
+- Regex validation for matchers
+- Shows colored diff before applying
+- Creates automatic backup
+
+**When to Use:**
+- Changing hook event types or matchers
+- Updating hook commands or prompts
+- Migrating hooks between events
+- Security hardening existing hooks
+
+**Security Checks:**
+- Command injection patterns (eval, command substitution)
+- Dangerous commands (rm -rf, dd, mkfs, etc.)
+- Parameter usage without validation
+- Relative vs absolute paths
+
+**Slash Command:** `/agent-builder:hooks:update path/to/hooks.json`
+
+#### 2. enhance-hook.py - Security-Focused Quality Analyzer
+
+Comprehensive 7-category analysis with security priority.
+
+**Usage:**
+```bash
+python3 {baseDir}/scripts/enhance-hook.py hooks.json
+```
+
+**Analysis Categories:**
+1. **Schema Compliance** (0-10): JSON structure, event names, matcher requirements
+2. **Security** (0-10) ⚠️ CRITICAL: Dangerous patterns, injection risks, validation
+3. **Matcher Validity** (0-10): Regex patterns, appropriate wildcards
+4. **Script Existence** (0-10): Referenced scripts exist and are executable
+5. **Hook Types** (0-10): Valid types, required fields present
+6. **Documentation** (0-10): Clarity, decision keywords
+7. **Maintainability** (0-10): Hook count, duplicates, consistency
+
+**Output:**
+- Score for each category (0-10)
+- Overall percentage and grade (A/B/C)
+- Prioritized recommendations
+- Critical security findings highlighted
+
+**Exit Codes:**
+- 0: No critical issues
+- 1: Critical security issues found
+
+**When to Use:**
+- Pre-commit security audits
+- Quality gates in PR reviews
+- Identifying improvement opportunities
+- Learning security best practices
+
+**Slash Command:** `/agent-builder:hooks:enhance path/to/hooks.json`
+
+#### 3. migrate-hook.py - Schema Migration Tool
+
+Automated migrations for schema evolution and fixes.
+
+**Usage:**
+```bash
+# Preview changes
+python3 {baseDir}/scripts/migrate-hook.py hooks.json --dry-run
+
+# Apply migrations
+python3 {baseDir}/scripts/migrate-hook.py hooks.json
+```
+
+**Migrations:**
+1. Remove invalid event names
+2. Remove empty matchers from lifecycle events
+3. Add missing matchers to tool events (defaults to '*')
+4. Validate and fix hook types
+5. Recommend ${CLAUDE_PLUGIN_ROOT} for relative paths
+
+**Safety Features:**
+- Automatic backup creation
+- Dry-run mode for preview
+- Error recovery (restores from backup on failure)
+- Validation before saving
+
+**When to Use:**
+- Upgrading Claude Code versions
+- Fixing validation errors
+- Cleaning up deprecated patterns
+- Preparing hooks for production
+
+**Slash Command:** `/agent-builder:hooks:migrate path/to/hooks.json [--dry-run]`
+
+#### 4. audit-hooks.py - Bulk Security Auditor
+
+Repository-wide security audit of all hooks.json files.
+
+**Usage:**
+```bash
+# Audit current directory
+python3 {baseDir}/scripts/audit-hooks.py .
+
+# Verbose output
+python3 {baseDir}/scripts/audit-hooks.py . --verbose
+```
+
+**Features:**
+- Finds all hooks.json files in directory tree
+- Validates each file for security and schema
+- Categorizes: Valid, Warnings, Errors, Parse Errors
+- Summary report with counts
+- Exit code 1 if errors found (CI/CD friendly)
+
+**When to Use:**
+- Repository-wide security audits
+- CI/CD pipelines
+- Pre-commit hooks
+- Regular security reviews
+- Onboarding inherited codebases
+
+**Slash Command:** `/agent-builder:hooks:audit [directory] [--verbose]`
+
+#### 5. compare-hooks.py - Hook Comparison Tool
+
+Side-by-side comparison of hooks.json files.
+
+**Usage:**
+```bash
+python3 {baseDir}/scripts/compare-hooks.py hooks1.json hooks2.json
+
+# Detailed diff
+python3 {baseDir}/scripts/compare-hooks.py hooks1.json hooks2.json --verbose
+```
+
+**Comparison Dimensions:**
+- Structure (event counts, hook counts, types)
+- Event-by-event hook counts
+- Detailed line-by-line diff (verbose mode)
+- Similarity percentage
+
+**When to Use:**
+- Version comparison (before/after updates)
+- Migration validation
+- Pull request reviews
+- Merge conflict resolution
+- Understanding changes between branches
+
+**Slash Command:** `/agent-builder:hooks:compare hooks1.json hooks2.json [--verbose]`
+
+### Common Maintenance Scenarios
+
+#### Scenario 1: Adding Security to Existing Hook
+
+**Context:** Existing Bash hook lacks input validation
+
+**Steps:**
+1. Analyze current security:
+   ```bash
+   python3 {baseDir}/scripts/enhance-hook.py hooks.json
+   ```
+
+2. Review security findings, note validation issues
+
+3. Update hook to add validation:
+   ```bash
+   python3 {baseDir}/scripts/update-hook.py hooks.json
+   # Select the hook
+   # Update command to include validation script
+   ```
+
+4. Verify improvement:
+   ```bash
+   python3 {baseDir}/scripts/enhance-hook.py hooks.json
+   # Security score should increase to ≥8/10
+   ```
+
+#### Scenario 2: Migrating Hook to Different Event
+
+**Context:** Move validation from PostToolUse to PreToolUse
+
+**Steps:**
+1. Backup current state:
+   ```bash
+   cp hooks.json hooks.json.before
+   ```
+
+2. Update event type interactively:
+   ```bash
+   python3 {baseDir}/scripts/update-hook.py hooks.json
+   # Select hook to migrate
+   # Change event to PreToolUse
+   # Verify/update matcher
+   ```
+
+3. Compare and validate:
+   ```bash
+   python3 {baseDir}/scripts/compare-hooks.py hooks.json.before hooks.json
+   python3 {baseDir}/scripts/enhance-hook.py hooks.json
+   ```
+
+4. Test by triggering PreToolUse event
+
+#### Scenario 3: Repository-Wide Security Audit
+
+**Context:** Audit all hooks across multiple plugins
+
+**Steps:**
+1. Run bulk audit:
+   ```bash
+   python3 {baseDir}/scripts/audit-hooks.py . --verbose > audit-report.txt
+   ```
+
+2. For each file with errors, analyze:
+   ```bash
+   python3 {baseDir}/scripts/enhance-hook.py plugin/hooks/hooks.json
+   ```
+
+3. Fix critical issues:
+   ```bash
+   python3 {baseDir}/scripts/update-hook.py plugin/hooks/hooks.json
+   # Address each critical finding
+   ```
+
+4. Apply automated migrations:
+   ```bash
+   python3 {baseDir}/scripts/migrate-hook.py plugin/hooks/hooks.json
+   ```
+
+5. Re-audit to verify:
+   ```bash
+   python3 {baseDir}/scripts/audit-hooks.py .
+   ```
+
+#### Scenario 4: Preparing for Production
+
+**Context:** Ensure hooks meet production quality standards
+
+**Steps:**
+1. Run comprehensive analysis:
+   ```bash
+   python3 {baseDir}/scripts/enhance-hook.py hooks.json
+   ```
+   Target: Grade A (≥80%), Security ≥8/10
+
+2. Apply migrations:
+   ```bash
+   python3 {baseDir}/scripts/migrate-hook.py hooks.json
+   ```
+
+3. Fix remaining issues interactively:
+   ```bash
+   python3 {baseDir}/scripts/update-hook.py hooks.json
+   ```
+
+4. Final validation:
+   ```bash
+   python3 {baseDir}/scripts/enhance-hook.py hooks.json
+   python3 {baseDir}/scripts/validate-hooks.py hooks.json
+   ```
+
+5. Test all hooks by triggering events
+
+6. Document any special considerations
+
+### Security-First Maintenance
+
+Hooks execute with privileges, making security paramount. Always prioritize security over convenience.
+
+**Critical Security Principles:**
+
+1. **Never Trust Input:** All parameters are potentially malicious
+   ```bash
+   # WRONG
+   eval "$1"
+
+   # RIGHT
+   if [[ "$1" =~ ^[a-zA-Z0-9_/-]+$ ]]; then
+       # Safe to use
+   fi
+   ```
+
+2. **Validate Everything:** Check parameters, paths, commands
+   ```bash
+   set -euo pipefail  # Strict error handling
+   [[ ! "$PATH" =~ \.\. ]]  # No directory traversal
+   ```
+
+3. **Use Safe Defaults:** Block by default, approve explicitly
+   ```bash
+   echo '{"decision": "block", "reason": "Validation failed"}' >&2
+   exit 2
+   ```
+
+4. **Block Dangerous Patterns:**
+   - `eval`, command substitution without validation
+   - `rm -rf /`, `dd if=`, `mkfs`
+   - Piping wget/curl to bash
+   - Overly permissive permissions (chmod 777)
+
+**Security Checklist Before Commit:**
+- [ ] Run `enhance-hook.py` - no critical errors
+- [ ] Security score ≥8/10
+- [ ] All scripts exist and are executable
+- [ ] Input validation present for all parameters
+- [ ] No dangerous command patterns
+- [ ] Matchers are valid regex
+- [ ] Using ${CLAUDE_PLUGIN_ROOT} for paths
+- [ ] Bash scripts use `set -euo pipefail`
+- [ ] Tested by triggering events
+
+### Best Practices
+
+1. **Always Backup:** Maintenance tools create backups, but manual backups don't hurt
+2. **Test Locally:** Trigger events to test hooks before committing
+3. **Use Dry-Run:** Preview migrations before applying
+4. **Validate Often:** Run enhance-hook.py frequently during development
+5. **Review Diffs:** Always review changes before saving
+6. **Security First:** When in doubt, block and investigate
+7. **Document Changes:** Note why hooks were modified
+8. **Version Control:** Commit hooks.json changes with clear messages
+9. **Audit Regularly:** Run repository-wide audits monthly
+10. **Update Incrementally:** Make small, tested changes
+
+### Integration with Development Workflow
+
+#### Pre-Commit Hook
+```bash
+#!/bin/bash
+# .git/hooks/pre-commit
+
+for file in $(git diff --cached --name-only | grep 'hooks.json'); do
+    python3 agent-builder/skills/building-hooks/scripts/enhance-hook.py "$file"
+    if [ $? -ne 0 ]; then
+        echo "❌ Hook validation failed for $file"
+        exit 1
+    fi
+done
+```
+
+#### CI/CD Pipeline
+```yaml
+# .github/workflows/validate.yml
+- name: Audit Hooks
+  run: |
+    python3 agent-builder/skills/building-hooks/scripts/audit-hooks.py .
+```
+
+### Decision Matrix: Which Tool to Use?
+
+| Goal | Tool | Command |
+|------|------|---------|
+| Fix specific hook | update-hook.py | `/agent-builder:hooks:update` |
+| Security audit | enhance-hook.py | `/agent-builder:hooks:enhance` |
+| Automated fixes | migrate-hook.py | `/agent-builder:hooks:migrate` |
+| Repository scan | audit-hooks.py | `/agent-builder:hooks:audit` |
+| Version comparison | compare-hooks.py | `/agent-builder:hooks:compare` |
+
+### Reference Documentation
+
+- **Maintenance Guide:** `{baseDir}/references/hook-maintenance-guide.md`
+  Comprehensive security-focused maintenance guide with scenarios and troubleshooting
+
+- **Security Checklist:** `{baseDir}/references/hook-checklist.md`
+  Pre-commit, PR review, and production deployment checklists
+
+### Your Role in Maintenance
+
+When the user asks to maintain or update hooks:
+
+1. **Assess the Need:**
+   - What is being changed and why?
+   - Are there security implications?
+   - Is this a one-time fix or systematic issue?
+
+2. **Choose the Right Tool:**
+   - Specific hook: Use update-hook.py
+   - Security audit: Use enhance-hook.py
+   - Schema issues: Use migrate-hook.py
+   - Multiple files: Use audit-hooks.py
+   - Comparison: Use compare-hooks.py
+
+3. **Prioritize Security:**
+   - Always run security analysis first
+   - Fix critical issues before other improvements
+   - Validate dangerous patterns
+   - Test thoroughly
+
+4. **Validate Changes:**
+   - Run enhance-hook.py after modifications
+   - Use compare-hooks.py to review changes
+   - Test by triggering events
+   - Verify security score ≥8/10
+
+5. **Document and Test:**
+   - Note why changes were made
+   - Test all affected events
+   - Update documentation if needed
+   - Commit with clear message
+
+Be proactive in:
+- Identifying security risks during maintenance
+- Recommending security improvements
+- Preventing regression in quality scores
+- Ensuring hooks remain maintainable
+- Educating users on security best practices
+
+Remember: Hooks are security-critical infrastructure. Maintain them with the same rigor as production code.
