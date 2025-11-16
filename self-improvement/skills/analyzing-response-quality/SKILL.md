@@ -310,36 +310,45 @@ Missing Optimization:
 
 ## Validation Scripts
 
-Helper scripts for automated quality checks:
+> **⚠️ Note**: The validation scripts below are planned features but not yet implemented.
+> This skill currently provides manual guidelines for quality analysis.
+> See GitHub issue #20 for implementation tracking.
 
-### Code Quality Check
+**Future automation features** (not yet available):
+
+### Code Quality Check (Planned)
 ```bash
+# NOT YET IMPLEMENTED - Manual analysis required
 python {baseDir}/scripts/check-code-quality.py <file>
 ```
-Checks:
+**When implemented, will check:**
 - Syntax errors
 - Common anti-patterns
 - Security issues
 - Style violations
 
-### Completeness Check
+### Completeness Check (Planned)
 ```bash
+# NOT YET IMPLEMENTED - Manual analysis required
 python {baseDir}/scripts/check-completeness.py <conversation-file>
 ```
-Compares:
+**When implemented, will compare:**
 - User requirements
 - Delivered outputs
 - Coverage percentage
 
-### Documentation Check
+### Documentation Check (Planned)
 ```bash
+# NOT YET IMPLEMENTED - Manual analysis required
 python {baseDir}/scripts/check-documentation.py <output-dir>
 ```
-Validates:
+**When implemented, will validate:**
 - README presence
 - Code comments
 - API documentation
 - Usage examples
+
+**Current usage**: Use the quality evaluation framework and checklists above for manual analysis.
 
 ## Examples
 

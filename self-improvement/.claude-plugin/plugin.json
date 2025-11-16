@@ -27,7 +27,8 @@
     "./commands/quality-check.md",
     "./commands/show-patterns.md",
     "./commands/show-learnings.md",
-    "./commands/show-metrics.md"
+    "./commands/show-metrics.md",
+    "./commands/health-check.md"
   ],
   "agents": ["./agents/self-critic.md"],
   "skills": "./skills/"

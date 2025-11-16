@@ -8,6 +8,11 @@ model: claude-haiku-4-5
 
 Perform a quick quality assessment of Claude's recent work using the analyzing-response-quality skill.
 
+> **ℹ️ Command Type**: This is a prompt-based workflow, not an automated script.
+> Claude will interpret these instructions and apply the quality analysis framework.
+> The assessment requires Claude's active judgment and analysis.
+> See GitHub issue #40 for discussion on automation enhancements.
+
 ## Your Task
 
 Activate the `analyzing-response-quality` skill to perform a rapid quality evaluation.

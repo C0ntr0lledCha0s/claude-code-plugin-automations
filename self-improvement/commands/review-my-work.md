@@ -8,6 +8,11 @@ model: claude-sonnet-4-5
 
 Invoke the self-critic agent to perform a comprehensive review of Claude's recent work and provide constructive feedback for improvement.
 
+> **ℹ️ Command Type**: This is a prompt-based workflow, not an automated script.
+> Claude will interpret these instructions and invoke the self-critic agent.
+> The workflow requires Claude's active participation to execute correctly.
+> See GitHub issue #40 for discussion on automation enhancements.
+
 ## Your Task
 
 Use the `self-critic` agent to analyze the conversation and Claude's outputs, then provide a detailed critique.
