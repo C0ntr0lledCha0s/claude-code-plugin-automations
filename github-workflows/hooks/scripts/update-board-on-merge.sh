@@ -18,14 +18,22 @@ LINKED_ISSUES=$(gh pr view "$PR_NUMBER" --json body -q '.body' | grep -oE '#[0-9
 
 if [ -n "$LINKED_ISSUES" ]; then
     while read -r issue_num; do
-        echo "Closing issue #$issue_num (linked to merged PR)"
+        # Check if issue has "Closes #N" syntax (not just "Ref #N")
+        if gh pr view "$PR_NUMBER" --json body -q '.body' | grep -qiE "(close[sd]?|fix(e[sd])?|resolve[sd]?)\s+#${issue_num}"; then
+            echo "Closing issue #$issue_num (linked to merged PR)"
 
-        # Move to Done column in project boards (would need project-specific logic)
-        # gh issue close "$issue_num" --comment "Closed by PR #$PR_NUMBER"
-
+            # Close the issue with a reference to the PR
+            if gh issue close "$issue_num" --comment "Automatically closed by merged PR #$PR_NUMBER" 2>/dev/null; then
+                echo "  ✓ Issue #$issue_num closed"
+            else
+                echo "  ⚠ Could not close issue #$issue_num (may already be closed or insufficient permissions)"
+            fi
+        else
+            echo "Skipping issue #$issue_num (referenced but not closed by PR)"
+        fi
     done <<< "$LINKED_ISSUES"
 
-    echo "✓ Updated project boards for linked issues"
+    echo "✓ Processed linked issues for merged PR"
 else
     echo "No linked issues found"
 fi
