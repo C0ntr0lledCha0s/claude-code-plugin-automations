@@ -2,7 +2,6 @@
 description: Compare multiple approaches, technologies, or implementations with trade-off analysis and recommendations
 allowed-tools: Read, Grep, Glob, WebSearch, WebFetch
 argument-hint: "[option A] vs [option B] (for context)"
-model: sonnet
 ---
 
 # Compare Command

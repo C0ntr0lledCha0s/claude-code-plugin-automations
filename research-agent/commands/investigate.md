@@ -2,7 +2,6 @@
 description: Deep-dive investigation of code, features, or components with execution tracing and detailed analysis
 allowed-tools: Read, Grep, Glob, Task
 argument-hint: "[feature/component to investigate]"
-model: sonnet
 ---
 
 # Investigate Command
