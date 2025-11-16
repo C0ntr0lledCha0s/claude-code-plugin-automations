@@ -1,0 +1,28 @@
+{
+  "name": "testing-expert",
+  "version": "1.0.0",
+  "description": "Comprehensive testing expertise for Jest, Playwright, Vitest, and more. Automatically generates unit tests, integration tests, and E2E tests with best practices. Analyzes test coverage and debugs test failures.",
+  "author": {
+    "name": "C0ntr0lledCha0s",
+    "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
+  },
+  "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/testing-expert",
+  "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
+  "license": "MIT",
+  "keywords": [
+    "testing",
+    "jest",
+    "playwright",
+    "vitest",
+    "unit-tests",
+    "e2e-tests",
+    "test-generation",
+    "test-coverage",
+    "tdd",
+    "quality-assurance"
+  ],
+  "commands": "./commands/",
+  "agents": ["./agents/test-engineer.md"],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json"
+}
