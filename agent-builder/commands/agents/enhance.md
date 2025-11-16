@@ -163,6 +163,29 @@ python3 agent-builder/skills/building-agents/scripts/enhance-agent.py <agent-pat
 
 Parse and present results in user-friendly format.
 
+### 6. **Self-Improvement Integration** (If Available)
+
+Check if self-improvement plugin is installed and invoke quality analysis:
+
+```bash
+# Check if self-improvement plugin is available
+if [ -d "self-improvement/skills/analyzing-component-quality" ]; then
+    # Use self-improvement for deeper quality analysis
+    /analyze-component <agent-path>
+fi
+```
+
+**If self-improvement is available:**
+- Invoke the `analyzing-component-quality` skill for comprehensive quality scoring
+- Get dimension-specific scores (Description Clarity, Tool Permissions, Security, Usability)
+- Receive concrete before/after improvement suggestions
+- Integration provides automated quality scoring (1-5 scale)
+
+**If self-improvement is NOT available:**
+- Continue with agent-builder's built-in analysis
+- Show message: "💡 Tip: Install self-improvement plugin for automated quality scoring and deeper analysis"
+- Provide enhancement suggestions based on agent-builder heuristics
+
 ## Analysis Heuristics
 
 ### Tool Permission Analysis
