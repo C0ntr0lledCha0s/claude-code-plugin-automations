@@ -2,7 +2,7 @@
 description: Look up current best practices for a technology, pattern, or implementation approach with recommendations
 allowed-tools: Read, Grep, Glob, WebSearch, WebFetch
 argument-hint: "[technology/pattern/topic]"
-model: claude-sonnet-4-5
+model: sonnet
 ---
 
 # Best Practice Command

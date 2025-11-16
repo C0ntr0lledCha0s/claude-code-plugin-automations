@@ -227,6 +227,29 @@ claude plugin install research-agent
 }
 ```
 
+## Templates & Resources
+
+### Investigation Template
+A comprehensive template for documenting investigation findings is available at:
+`skills/investigating-codebases/assets/investigation-template.md`
+
+This template provides a structured format for capturing:
+- Component location and file references
+- Execution flow analysis
+- Key components and their roles
+- Data flow diagrams
+- Pattern observations
+- Security and performance notes
+- Related components and dependencies
+- Next steps for further investigation
+
+**Usage**: Copy and fill out the template when conducting thorough investigations to ensure consistent, complete documentation.
+
+### Additional Resources
+- **Scripts**: Automation tools in `skills/*/scripts/` for mapping structure, finding entry points, and pattern detection
+- **References**: Best practice guides, pattern catalogs, and checklists in `skills/*/references/`
+- **Assets**: Templates and diagrams in `skills/*/assets/`
+
 ## Usage Examples
 
 ### Example 1: Understanding Unfamiliar Code

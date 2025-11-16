@@ -2,7 +2,7 @@
 description: Conduct comprehensive research on a topic, technology, or question with evidence and recommendations
 allowed-tools: Read, Grep, Glob, WebSearch, WebFetch, Task
 argument-hint: "[research topic or question]"
-model: claude-sonnet-4-5
+model: sonnet
 ---
 
 # Research Command
