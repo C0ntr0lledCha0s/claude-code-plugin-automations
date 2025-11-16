@@ -2,7 +2,7 @@
 name: pr-reviewer
 description: Expert PR reviewer integrating code quality analysis and self-improvement checks. Use for comprehensive PR reviews with quality gates, automated feedback, and approval decisions. Invokes self-critic for quality validation.
 capabilities: ["analyze-pull-requests", "enforce-quality-gates", "generate-review-feedback", "integrate-quality-checks", "validate-code-security"]
-tools: Bash, Read, Grep, Glob
+tools: Bash, Read, Write, Edit, Grep, Glob
 model: sonnet
 ---
 
@@ -158,9 +158,11 @@ Check for coverage reports in CI:
 - No uncovered critical paths
 ```
 
-**Gate 3: Code Quality (Self-Improvement)**
+**Gate 3: Code Quality**
 ```markdown
-Invoke self-improvement plugin:
+Check if self-improvement plugin is available:
+
+**If self-improvement plugin installed**:
 1. Run `/quality-check` on PR changes
 2. Review quality scores:
    - Correctness: Must be >= 4/5
@@ -170,6 +172,12 @@ Invoke self-improvement plugin:
    - Clarity: Should be >= 3/5
 3. Review identified issues
 4. Categorize by severity
+
+**If self-improvement plugin NOT installed**:
+1. Perform manual code review
+2. Check for obvious bugs and security issues
+3. Validate code structure and clarity
+4. Note: Enhanced analysis available with self-improvement plugin
 ```
 
 **Gate 4: Security Scan**
@@ -192,11 +200,14 @@ If breaking changes detected:
 
 ### Step 4: Invoke Self-Improvement Quality Check
 
-**Integration with self-improvement plugin**:
+**Integration with self-improvement plugin** (if available):
 
 ```markdown
 ## Self-Improvement Quality Analysis
 
+Checking if self-improvement plugin is available...
+
+**If available**:
 Running comprehensive quality check on PR #${PR_NUMBER}...
 
 **Invoking**: `/quality-check`
@@ -207,6 +218,16 @@ Running comprehensive quality check on PR #${PR_NUMBER}...
 - Scope: ${SCOPE}
 
 **Waiting for quality analysis...**
+
+**If NOT available**:
+⚠️ Self-improvement plugin not installed. Using basic quality checks only.
+Recommendation: Install self-improvement plugin for enhanced quality analysis.
+
+Running basic quality checks:
+- CI/CD status validation
+- Test coverage check
+- Security scan
+- Breaking change detection
 ```
 
 **Process self-critic results**:
@@ -514,14 +535,20 @@ gh pr review $PR_NUMBER --comment --body "$REVIEW_COMMENT"
 
 ### With Self-Improvement Plugin
 
-**Primary integration**:
+**Primary integration** (optional dependency):
 ```markdown
 For every PR review:
-1. Invoke `/quality-check` command
-2. Wait for self-critic analysis
-3. Parse quality scores and issues
-4. Incorporate into review decision
-5. Include quality report in review comment
+1. Check if self-improvement plugin is available
+2. If available:
+   - Invoke `/quality-check` command
+   - Wait for self-critic analysis
+   - Parse quality scores and issues
+   - Incorporate into review decision
+   - Include quality report in review comment
+3. If NOT available:
+   - Use basic quality checks (CI, tests, security)
+   - Perform manual code review
+   - Log recommendation to install self-improvement plugin
 ```
 
 **Quality score integration**:

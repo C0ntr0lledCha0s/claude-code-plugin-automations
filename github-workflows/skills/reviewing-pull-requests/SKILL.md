@@ -142,17 +142,23 @@ Related: #38, #50
 
 ### 5. **Self-Improvement Integration**
 
-**Invoke quality check**:
+**Invoke quality check** (if plugin available):
 ```markdown
 For every PR review:
-1. Run `/quality-check` on PR changes
-2. Analyze quality scores
-3. Identify critical vs minor issues
-4. Make approve/request-changes decision
-5. Include quality report in review
+1. Check if self-improvement plugin is installed
+2. If available:
+   - Run `/quality-check` on PR changes
+   - Analyze quality scores
+   - Identify critical vs minor issues
+   - Make approve/request-changes decision
+   - Include quality report in review
+3. If NOT available:
+   - Use basic quality checks (CI, tests, security)
+   - Perform manual code review
+   - Recommend installing self-improvement plugin
 ```
 
-**Quality score thresholds**:
+**Quality score thresholds** (when self-improvement plugin available):
 - **Auto-approve**: All scores >= 4, no critical issues
 - **Request changes**: Correctness < 3, Security < 3, or critical issues
 - **Comment**: Minor issues only
@@ -505,13 +511,18 @@ PR best practices and guidelines
 
 ### With self-improvement Plugin
 
-**Primary integration**: Quality validation for every PR
+**Optional integration**: Enhanced quality validation for every PR
 ```markdown
 1. PR review triggered
-2. Invoke `/quality-check` with PR changes
-3. Analyze quality scores
-4. Determine approve/request-changes
-5. Include quality report in review
+2. Check if self-improvement plugin is available
+3. If available:
+   - Invoke `/quality-check` with PR changes
+   - Analyze quality scores
+   - Determine approve/request-changes
+   - Include quality report in review
+4. If NOT available:
+   - Use basic quality checks only
+   - Recommend installing self-improvement plugin for enhanced analysis
 ```
 
 ### With managing-commits Skill
