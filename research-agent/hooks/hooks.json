@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Code was just written or modified. If the changes are substantial and the user might benefit from a best practices review, consider suggesting the /best-practice command or researching-best-practices skill (only if contextually relevant - don't be intrusive)."
+          }
+        ]
+      }
+    ]
+  }
+}
