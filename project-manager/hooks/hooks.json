@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "pathMatcher": "(\\.claude-project/(sprints|roadmaps|projects)|sprint.*\\.md|roadmap.*\\.md|backlog.*\\.md)",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "**Project Planning File Modified**\n\nA project planning file was just modified. Consider whether related coordination actions are needed:\n\n1. **If sprint plan modified**: \n   - Should the GitHub Project board be updated?\n   - Do issues need to be added/removed from the sprint?\n   - Should team members be notified?\n\n2. **If roadmap modified**:\n   - Should milestones be created/updated in GitHub?\n   - Do project boards need updates?\n   - Should this be communicated to stakeholders?\n\n3. **If backlog modified**:\n   - Should issue priorities be updated?\n   - Does the sprint plan need adjustment?\n   - Should `/project-manager:prioritize-backlog` be run?\n\n**Suggested actions**:\n- Use `/project-manager:project-status` to see current state\n- Use `/project-manager:delegate-task` to route coordination tasks\n- Use github-workflows commands to sync with GitHub\n\nOnly take action if the user explicitly requests it or if it's clearly needed based on the modifications."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [],
+    "PreToolUse": []
+  }
+}

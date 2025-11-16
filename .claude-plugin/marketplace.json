@@ -10,8 +10,8 @@
     "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
     "pluginRoot": "./",
     "stats": {
-      "totalPlugins": 4,
-      "lastUpdated": "2025-11-15"
+      "totalPlugins": 5,
+      "lastUpdated": "2025-11-16"
     }
   },
   "plugins": [
@@ -119,6 +119,34 @@
       "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
       "license": "MIT",
       "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/research-agent"
+    },
+    {
+      "name": "project-manager",
+      "source": "./project-manager",
+      "description": "Strategic project coordination and planning plugin that orchestrates multi-agent workflows, manages sprints and roadmaps, coordinates tasks across projects, and delegates to specialized agents for execution. Features comprehensive sprint planning, backlog prioritization, task routing, and strategic roadmap creation.",
+      "version": "1.0.0",
+      "category": "productivity",
+      "keywords": [
+        "project-management",
+        "sprint-planning",
+        "task-coordination",
+        "agent-orchestration",
+        "backlog-management",
+        "roadmap-planning",
+        "multi-project",
+        "delegation",
+        "agile",
+        "scrum",
+        "strategic-planning",
+        "github-integration"
+      ],
+      "author": {
+        "name": "C0ntr0lledCha0s",
+        "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
+      },
+      "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
+      "license": "MIT",
+      "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/project-manager"
     }
   ]
 }

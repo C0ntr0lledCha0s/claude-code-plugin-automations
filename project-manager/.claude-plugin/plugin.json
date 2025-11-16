@@ -1,0 +1,27 @@
+{
+  "name": "project-manager",
+  "version": "1.0.0",
+  "description": "Strategic project coordination and planning plugin that orchestrates multi-agent workflows, manages sprints, coordinates tasks across projects, and delegates to specialized agents for execution.",
+  "author": {
+    "name": "Claude Code Automations",
+    "email": "noreply@anthropic.com",
+    "url": "https://github.com/anthropics/claude-code-plugin-automations"
+  },
+  "homepage": "https://github.com/anthropics/claude-code-plugin-automations/tree/main/project-manager",
+  "repository": "https://github.com/anthropics/claude-code-plugin-automations",
+  "license": "MIT",
+  "keywords": [
+    "project-management",
+    "sprint-planning",
+    "task-coordination",
+    "agent-orchestration",
+    "backlog-management",
+    "roadmap-planning",
+    "github-integration"
+  ],
+  "category": "Productivity",
+  "commands": "./commands/",
+  "agents": "./agents/",
+  "skills": "./skills/",
+  "hooks": ["./hooks/hooks.json"]
+}
