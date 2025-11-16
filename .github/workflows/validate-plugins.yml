@@ -115,3 +115,48 @@ jobs:
           echo "  - Command definitions"
           echo "  - Hook configurations"
           echo "  - Security checks"
+
+      - name: Comment on PR with validation results
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `## ❌ Validation Failed
+
+            The plugin validation checks failed. Please fix the errors and push your changes.
+
+            ### How to Fix
+
+            1. **Run validation locally**:
+               \`\`\`bash
+               bash validate-all.sh
+               \`\`\`
+
+            2. **Check the error messages** in the [workflow run logs](${context.payload.repository.html_url}/actions/runs/${context.runId})
+
+            3. **Common issues**:
+               - Commands using short model aliases (\`model: sonnet\`) - only agents can use short aliases
+               - Invalid YAML frontmatter
+               - Missing required fields
+               - Naming convention violations
+
+            4. **Use agent-builder tools** when modifying components:
+               - Invoke \`building-commands\` skill for command changes
+               - Invoke \`building-agents\` skill for agent changes
+               - Run validation scripts before committing
+
+            ### Need Help?
+
+            - Check validation error messages for fix suggestions
+            - See [CLAUDE.md](${context.payload.repository.html_url}/blob/main/CLAUDE.md) for development guidelines
+            - Review templates in \`agent-builder/skills/*/templates/\`
+
+            Once you've fixed the issues, push your changes and validation will run again automatically.
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

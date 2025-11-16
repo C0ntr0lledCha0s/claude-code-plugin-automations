@@ -94,12 +94,25 @@ def validate_command(file_path: str) -> tuple[bool, list[str]]:
 
         # Check if it's a SHORT alias (these DON'T work in commands)
         if model_value in ['haiku', 'sonnet', 'opus', 'inherit']:
+            # Map short aliases to version aliases
+            version_alias_map = {
+                'haiku': 'claude-haiku-4-5',
+                'sonnet': 'claude-sonnet-4-5',
+                'opus': 'claude-opus-4-5'
+            }
+            suggested_version = version_alias_map.get(model_value, 'claude-sonnet-4-5')
+
             errors.append(
                 f"CRITICAL ERROR: Commands cannot use short aliases. "
-                f"Found: '{model_value}' "
-                f"Use version alias like 'claude-haiku-4-5' or full ID like 'claude-haiku-4-5-20251001', "
-                f"or omit field to inherit from conversation. "
-                f"Note: Agents support short aliases, but commands require version aliases or full IDs."
+                f"Found: 'model: {model_value}'\n\n"
+                f"   📝 Quick Fix Options:\n\n"
+                f"   Option 1 (Recommended): Remove the model field entirely\n"
+                f"     sed -i '/^model:/d' {file_path}\n\n"
+                f"   Option 2: Use version alias instead\n"
+                f"     sed -i 's/model: {model_value}/model: {suggested_version}/' {file_path}\n\n"
+                f"   ℹ️  Why? Commands execute in conversation context and must use explicit\n"
+                f"      version aliases. Only agents can use short aliases like '{model_value}'.\n\n"
+                f"   📚 See: agent-builder/skills/building-commands/templates/ for examples"
             )
         # Check if it looks like a valid model ID (basic format check)
         elif not model_value.startswith('claude-'):
