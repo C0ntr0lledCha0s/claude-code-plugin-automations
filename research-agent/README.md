@@ -448,6 +448,140 @@ Recommended completeness thresholds by use case:
 - **External sharing**: 85% (excellent quality)
 - **Publication/training**: 90%+ (comprehensive)
 
+## Research Caching
+
+The Research Agent includes an intelligent caching system to preserve research findings across sessions, build institutional knowledge, and avoid redundant research.
+
+### Why Use Caching?
+
+**Benefits**:
+- **Avoid Redundant Research**: Don't re-research the same topics
+- **Build Knowledge Base**: Accumulate understanding over time
+- **Team Sharing**: Share research findings across team members (optional)
+- **Faster Responses**: Reuse existing research when still valid
+- **Historical Tracking**: See how understanding evolved
+
+### Cache Structure
+
+```
+research-agent/
+└── .research-cache/
+    ├── investigations/      # Codebase investigations
+    ├── best-practices/      # Best practice research
+    ├── patterns/            # Pattern analysis
+    └── comparisons/         # Technology comparisons
+```
+
+### Cache Management
+
+Use `cache-manager.py` to manage cached research:
+
+**List cached research**:
+```bash
+python3 scripts/cache-manager.py list
+
+# Filter by category
+python3 scripts/cache-manager.py list investigations
+
+# Hide expired entries
+python3 scripts/cache-manager.py list --hide-expired
+```
+
+**Search cache**:
+```bash
+python3 scripts/cache-manager.py search "authentication"
+```
+
+**Show cache entry**:
+```bash
+python3 scripts/cache-manager.py show jwt-authentication-2025-01-15
+```
+
+**Add research to cache**:
+```bash
+python3 scripts/cache-manager.py add investigations \
+  "user authentication system" \
+  research-output.md \
+  --tags "auth,jwt,middleware"
+```
+
+**Cache statistics**:
+```bash
+python3 scripts/cache-manager.py stats
+```
+
+**Example Output**:
+```
+============================================================
+Research Cache Statistics
+============================================================
+
+Total entries: 23
+  Active: 18
+  Expired: 5
+
+By Category:
+  investigations: 8
+  best-practices: 10
+  patterns: 3
+  comparisons: 2
+
+Top Tags:
+  react: 7
+  security: 5
+  auth: 4
+```
+
+**Clear expired cache**:
+```bash
+python3 scripts/cache-manager.py clear --expired
+```
+
+### Cache Entry Format
+
+Each cached research includes metadata:
+
+```yaml
+---
+research_type: investigation
+topic: user authentication
+date: 2025-01-15
+expiry: 2025-02-15
+codebase_hash: abc123  # Git commit hash
+tags: [auth, jwt, security]
+related_files:
+  - src/auth/middleware.ts
+  - src/utils/jwt.ts
+---
+
+[Research content here...]
+```
+
+### Cache Workflow
+
+**Before Research**:
+1. Check for existing research: `search <topic>`
+2. Review if found and still valid
+3. Decide: use cached or conduct new research
+
+**After Research**:
+1. Save research output to file
+2. Add to cache with appropriate tags
+3. Cache is available for future lookups
+
+### Cache Invalidation
+
+Automatic invalidation when:
+- **Time-based**: Older than expiry date (default: 30 days)
+- **Code-based**: Referenced files have changed (if codebase_hash provided)
+- **Manual**: User requests cache clear
+
+### Complete Guide
+
+For comprehensive caching documentation, see [assets/caching-guide.md](assets/caching-guide.md).
+
+Example cache entry: [.research-cache/investigations/example-jwt-authentication-2025-01-15.md](.research-cache/investigations/example-jwt-authentication-2025-01-15.md)
+
 ## Usage Examples
 
 ### Example 1: Understanding Unfamiliar Code

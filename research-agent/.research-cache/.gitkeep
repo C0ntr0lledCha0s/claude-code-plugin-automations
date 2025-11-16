@@ -1,0 +1,21 @@
+# Research Cache Directory
+
+This directory stores cached research findings to avoid redundant research and build institutional knowledge over time.
+
+## Structure
+
+- `investigations/` - Cached codebase investigations
+- `best-practices/` - Cached best practice research
+- `patterns/` - Cached pattern analysis
+- `comparisons/` - Cached comparative analyses
+
+Each cached research includes metadata (YAML frontmatter) and the research content.
+
+## Privacy
+
+By default, this directory is tracked in git to enable team knowledge sharing. To make it private:
+
+1. Add to `.gitignore`: `research-agent/.research-cache/`
+2. Each team member maintains their own local cache
+
+See `scripts/cache-manager.py` for cache management commands.
