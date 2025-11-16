@@ -1,0 +1,172 @@
+name: Test Research Agent
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'research-agent/**'
+      - '.github/workflows/test-research-agent.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'research-agent/**'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov pyyaml
+
+      - name: Display test environment
+        run: |
+          python --version
+          pip --version
+          pytest --version
+          echo "Working directory: $(pwd)"
+          echo "Python path: $PYTHONPATH"
+
+      - name: Run unit tests
+        working-directory: ./research-agent
+        run: |
+          pytest tests/ -v -m unit --tb=short
+
+      - name: Run all tests with coverage
+        working-directory: ./research-agent
+        run: |
+          pytest tests/ -v --tb=short --cov=scripts --cov-report=xml --cov-report=term
+
+      - name: Upload coverage reports
+        if: matrix.python-version == '3.10'
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./research-agent/coverage.xml
+          flags: research-agent
+          fail_ci_if_error: false
+          verbose: true
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install linting tools
+        run: |
+          pip install flake8 black isort
+
+      - name: Run flake8
+        working-directory: ./research-agent
+        run: |
+          # Stop the build if there are Python syntax errors or undefined names
+          flake8 tests/ scripts/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Treat all other errors as warnings
+          flake8 tests/ scripts/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Check code formatting with black
+        working-directory: ./research-agent
+        run: |
+          black --check tests/ scripts/ || true
+
+      - name: Check import sorting with isort
+        working-directory: ./research-agent
+        run: |
+          isort --check-only tests/ scripts/ || true
+
+  validate-fixtures:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate sample codebase structure
+        run: |
+          echo "Checking sample codebase structure..."
+
+          # Check directories exist
+          test -d research-agent/tests/fixtures/sample-codebase/src/auth || exit 1
+          test -d research-agent/tests/fixtures/sample-codebase/src/api || exit 1
+          test -d research-agent/tests/fixtures/sample-codebase/src/services || exit 1
+          test -d research-agent/tests/fixtures/sample-codebase/src/factories || exit 1
+
+          # Check key files exist
+          test -f research-agent/tests/fixtures/sample-codebase/package.json || exit 1
+          test -f research-agent/tests/fixtures/sample-codebase/README.md || exit 1
+          test -f research-agent/tests/fixtures/sample-codebase/src/factories/userFactory.ts || exit 1
+          test -f research-agent/tests/fixtures/sample-codebase/src/services/authService.ts || exit 1
+          test -f research-agent/tests/fixtures/sample-codebase/src/auth/userRepository.ts || exit 1
+
+          echo "✓ Sample codebase structure is valid"
+
+      - name: Validate sample codebase contains patterns
+        run: |
+          echo "Checking for design patterns in sample codebase..."
+
+          # Check for Factory pattern
+          grep -q "class UserFactory" research-agent/tests/fixtures/sample-codebase/src/factories/userFactory.ts || exit 1
+          echo "✓ Factory pattern present"
+
+          # Check for Singleton pattern
+          grep -q "private static instance" research-agent/tests/fixtures/sample-codebase/src/services/authService.ts || exit 1
+          grep -q "getInstance" research-agent/tests/fixtures/sample-codebase/src/services/authService.ts || exit 1
+          echo "✓ Singleton pattern present"
+
+          # Check for Repository pattern
+          grep -q "class UserRepository" research-agent/tests/fixtures/sample-codebase/src/auth/userRepository.ts || exit 1
+          grep -q "findById" research-agent/tests/fixtures/sample-codebase/src/auth/userRepository.ts || exit 1
+          echo "✓ Repository pattern present"
+
+          echo "✓ All expected patterns found in sample codebase"
+
+  test-results-summary:
+    runs-on: ubuntu-latest
+    needs: [test, lint, validate-fixtures]
+    if: always()
+
+    steps:
+      - name: Test Summary
+        run: |
+          echo "## Research Agent Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit Tests | ${{ needs.test.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Linting | ${{ needs.lint.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Fixture Validation | ${{ needs.validate-fixtures.result }} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Check if all tests passed
+        if: needs.test.result != 'success' || needs.lint.result != 'success' || needs.validate-fixtures.result != 'success'
+        run: |
+          echo "::error::One or more test jobs failed"
+          exit 1
