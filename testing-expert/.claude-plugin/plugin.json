@@ -23,6 +23,5 @@
   ],
   "commands": "./commands/",
   "agents": ["./agents/test-engineer.md"],
-  "skills": "./skills/",
-  "hooks": "./hooks/hooks.json"
+  "skills": "./skills/"
 }
