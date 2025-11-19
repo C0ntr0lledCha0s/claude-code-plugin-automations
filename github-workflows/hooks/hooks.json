@@ -35,7 +35,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'PLUGIN_PATH=\"${CLAUDE_PLUGIN_ROOT:-${CLAUDE_PROJECT_DIR}/github-workflows}\"; PLUGIN_PATH=\"${PLUGIN_PATH//\\\\/\\/}\"; bash \"${PLUGIN_PATH}/hooks/scripts/update-board-on-merge.sh\" \"$PR_NUMBER\"'"
+            "command": "bash -c 'PLUGIN_PATH=\"${CLAUDE_PLUGIN_ROOT//\\\\/\\/}\"; bash \"${PLUGIN_PATH}/hooks/scripts/update-board-on-merge.sh\" \"$PR_NUMBER\"'"
           }
         ]
       }

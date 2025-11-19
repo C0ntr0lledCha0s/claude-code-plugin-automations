@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'PLUGIN_PATH=\"${CLAUDE_PLUGIN_ROOT:-${CLAUDE_PROJECT_DIR}/self-improvement}\"; PLUGIN_PATH=\"${PLUGIN_PATH//\\\\/\\/}\"; bash \"${PLUGIN_PATH}/hooks/scripts/analyze-conversation.sh\"'"
+            "command": "bash -c 'PLUGIN_PATH=\"${CLAUDE_PLUGIN_ROOT//\\\\/\\/}\"; bash \"${PLUGIN_PATH}/hooks/scripts/analyze-conversation.sh\"'"
           }
         ]
       }
@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'PLUGIN_PATH=\"${CLAUDE_PLUGIN_ROOT:-${CLAUDE_PROJECT_DIR}/self-improvement}\"; PLUGIN_PATH=\"${PLUGIN_PATH//\\\\/\\/}\"; bash \"${PLUGIN_PATH}/hooks/scripts/load-learnings.sh\"'"
+            "command": "bash -c 'PLUGIN_PATH=\"${CLAUDE_PLUGIN_ROOT//\\\\/\\/}\"; bash \"${PLUGIN_PATH}/hooks/scripts/load-learnings.sh\"'"
           }
         ]
       }
