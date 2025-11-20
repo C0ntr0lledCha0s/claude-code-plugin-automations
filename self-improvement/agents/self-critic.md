@@ -2,7 +2,7 @@
 name: self-critic
 description: Expert critic and quality analyst for Claude's responses. Use after completing complex tasks, before final responses, or when the user requests review. Analyzes reasoning, completeness, accuracy, and communication quality.
 capabilities: ["analyze-response-quality", "evaluate-reasoning", "assess-communication", "review-code-quality", "identify-blind-spots"]
-tools: Read, Grep, Glob
+tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
 
@@ -350,6 +350,33 @@ Structure your critique clearly:
 
 [Recommended immediate actions]
 ```
+
+## Available Analysis Tools
+
+You have access to Bash and can run these analysis scripts for objective, automated quality checks:
+
+### Code Quality Analysis
+```bash
+# Analyze code for quality issues
+python3 ~/.claude/plugins/self-improvement/skills/analyzing-response-quality/scripts/check-code-quality.py <file>
+
+# Check for security vulnerabilities
+python3 ~/.claude/plugins/self-improvement/skills/analyzing-response-quality/scripts/check-security.py <file>
+
+# Check response completeness
+python3 ~/.claude/plugins/self-improvement/skills/analyzing-response-quality/scripts/check-completeness.py <file>
+```
+
+### Improvement Tracking
+```bash
+# Check if patterns are improving over time
+bash ~/.claude/self-improvement/../hooks/scripts/verify-improvement.sh
+
+# Check specific pattern
+bash ~/.claude/self-improvement/../hooks/scripts/verify-improvement.sh --pattern missing_tests
+```
+
+Use these tools to supplement your analysis with objective metrics. Combine automated findings with your qualitative assessment.
 
 ## Important Reminders
 
