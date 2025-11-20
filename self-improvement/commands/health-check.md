@@ -63,35 +63,32 @@ for db in patterns.json learnings.json metrics.json; do
 done
 
 echo ""
-echo "📄 Transcript Accessibility:"
+echo "📄 Transcript Storage:"
 
-# Try to find transcript
-transcript_found=false
-possible_paths=(
-    "${CLAUDE_TRANSCRIPT:-}"
-    "${CLAUDE_CONVERSATION_FILE:-}"
-    "${HOME}/.claude/transcripts/current.txt"
-    "${HOME}/.claude/transcripts/latest.txt"
-    "${HOME}/.claude/conversations/current.txt"
-    "${HOME}/.claude/conversations/latest.txt"
-)
+# Check Claude Code's actual transcript storage location
+PROJECTS_DIR="${HOME}/.claude/projects"
 
-for path in "${possible_paths[@]}"; do
-    if [[ -n "${path}" && -f "${path}" ]]; then
-        echo "  ✅ Transcript found: ${path}"
-        transcript_found=true
-        break
-    fi
-done
+if [[ -d "${PROJECTS_DIR}" ]]; then
+    echo "  ✅ Projects directory exists: ${PROJECTS_DIR}"
 
-if [[ "${transcript_found}" == false ]]; then
-    echo "  ❌ Transcript not accessible (automation won't work)"
-    echo "     Searched locations:"
-    for path in "${possible_paths[@]}"; do
-        if [[ -n "${path}" ]]; then
-            echo "     - ${path}"
+    # Count JSONL files
+    jsonl_count=$(find "${PROJECTS_DIR}" -name "*.jsonl" 2>/dev/null | wc -l || echo "0")
+    echo "  📁 Found ${jsonl_count} conversation transcript(s)"
+
+    # Show most recent
+    if [[ ${jsonl_count} -gt 0 ]]; then
+        recent=$(find "${PROJECTS_DIR}" -name "*.jsonl" -type f -printf '%T@ %p\n' 2>/dev/null | sort -n | tail -1 | cut -d' ' -f2- || true)
+        if [[ -n "${recent}" ]]; then
+            echo "  🕐 Most recent: ${recent}"
         fi
-    done
+    fi
+
+    echo ""
+    echo "  ℹ️  Transcripts are provided via hook stdin payload (transcript_path field)"
+    echo "     The SessionEnd hook receives the path automatically"
+else
+    echo "  ⚠️  Projects directory not found: ${PROJECTS_DIR}"
+    echo "     This is normal if Claude Code hasn't been used yet"
 fi
 
 echo ""
@@ -114,9 +111,8 @@ fi
 echo ""
 echo "⚙️  Configuration:"
 echo "  CLAUDE_PLUGIN_ROOT: ${CLAUDE_PLUGIN_ROOT:-not set}"
-echo "  CLAUDE_TRANSCRIPT: ${CLAUDE_TRANSCRIPT:-not set}"
-echo "  CLAUDE_CONVERSATION_FILE: ${CLAUDE_CONVERSATION_FILE:-not set}"
 echo "  LOG_DIR: ${LOG_DIR}"
+echo "  PROJECTS_DIR: ${PROJECTS_DIR}"
 
 echo ""
 echo "📊 Summary Statistics:"
@@ -146,10 +142,11 @@ echo ""
 echo "✅ Health check complete!"
 echo ""
 echo "💡 Troubleshooting Tips:"
-echo "  • If transcript not accessible, set CLAUDE_TRANSCRIPT environment variable"
-echo "  • If databases corrupted, delete and they'll be recreated"
-echo "  • If no analysis runs, check that hooks are properly installed"
-echo "  • See: ${LOG_DIR}/analysis.log for detailed logs"
+echo "  • Transcripts are provided automatically via hook stdin payload"
+echo "  • If databases corrupted, delete them and they'll be recreated"
+echo "  • If no analysis runs, check SessionEnd hook is properly configured"
+echo "  • Check ${LOG_DIR}/analyze-debug.log for detailed debugging info"
+echo "  • See: ${LOG_DIR}/analysis.log for analysis history"
 ```
 
 ## Interpreting Results
@@ -181,23 +178,34 @@ Major problems:
 
 ## Common Issues and Fixes
 
-### Issue: Transcript Not Accessible
+### Issue: No Analysis Runs After Conversation
 
 **Symptoms**:
 ```
-❌ Transcript not accessible (automation won't work)
+⚠️ No analysis log found
 ```
 
+**Possible Causes**:
+1. SessionEnd hook not configured
+2. Hook script has errors
+3. jq or python3 not available
+
 **Fix Options**:
-1. **Set environment variable**:
+1. **Check hook configuration**:
+   - Ensure `hooks/hooks.json` has `SessionEnd` event (not `Stop`)
+   - Verify hook command path is correct
+
+2. **Check dependencies**:
    ```bash
-   export CLAUDE_TRANSCRIPT=/path/to/transcript
+   which jq python3
    ```
 
-2. **Disable automated analysis** if transcripts unavailable:
-   - Remove or disable the Stop hook in `hooks/hooks.json`
+3. **Check debug log for errors**:
+   ```bash
+   cat ~/.claude/self-improvement/analyze-debug.log
+   ```
 
-3. **Manual analysis only**:
+4. **Manual analysis only** (alternative):
    - Use `/quality-check` and `/review-my-work` commands manually
 
 ### Issue: Corrupted JSON Database
@@ -217,28 +225,27 @@ mv ~/.claude/self-improvement/patterns.json ~/.claude/self-improvement/patterns.
 echo '{"patterns": []}' > ~/.claude/self-improvement/patterns.json
 ```
 
-### Issue: No Analysis Runs
+### Issue: Transcript Not Found in Payload
 
 **Symptoms**:
 ```
-⚠️ No analysis log found
+ERROR: No transcript_path in hook payload
 ```
 
 **Possible Causes**:
-1. Hooks not installed correctly
-2. Hook execution failing silently
-3. Plugin never activated
+1. Hook event type is wrong (should be `SessionEnd`)
+2. Claude Code version doesn't support `transcript_path`
 
 **Fix**:
 ```bash
-# Check if hooks exist
-ls ~/.claude/plugins/self-improvement/hooks/hooks.json
+# Check hooks.json configuration
+cat ~/.claude/plugins/self-improvement/hooks/hooks.json | jq '.hooks'
 
-# Check hook syntax
-bash -n ~/.claude/plugins/self-improvement/hooks/scripts/analyze-conversation.sh
+# Verify SessionEnd event is configured (not Stop)
+# The hook should receive transcript_path automatically
 
-# Manually trigger analysis (for testing)
-bash ~/.claude/plugins/self-improvement/hooks/scripts/analyze-conversation.sh
+# Check debug log for received payload
+cat ~/.claude/self-improvement/analyze-debug.log | grep "Received payload"
 ```
 
 ### Issue: Low Data Counts
