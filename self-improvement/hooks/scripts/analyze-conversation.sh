@@ -146,11 +146,76 @@ analyze_transcript() {
         fi
     fi
 
+    # Check compliance with session-start advice
+    check_compliance
+
     # Store metrics with quality indicators
     store_session_metrics "${total_turns}" "${user_turns}" "${assistant_turns}" "${total_lines}" "${code_analysis_result}"
 
     # Clean up temp file
     rm -f "${temp_text}"
+}
+
+# Check compliance with advice given at session start
+check_compliance() {
+    local tracker_script="${SCRIPT_DIR}/compliance-tracker.py"
+
+    if [[ ! -f "${tracker_script}" ]]; then
+        return 0
+    fi
+
+    # Get patterns found in this session
+    local patterns_found
+    patterns_found=$(python3 - "$PATTERNS_DB" "$TIMESTAMP" <<'EOF'
+import json
+import sys
+
+patterns_file = sys.argv[1]
+timestamp = sys.argv[2]
+
+try:
+    with open(patterns_file, 'r') as f:
+        data = json.load(f)
+
+    # Get patterns that were detected today (in this session)
+    today = timestamp[:10]
+    found = []
+    for pattern in data.get('patterns', []):
+        if pattern.get('last_seen', '').startswith(today):
+            found.append(pattern['type'])
+
+    print(json.dumps(found))
+except Exception as e:
+    print('[]')
+EOF
+)
+
+    # Call compliance tracker to check
+    local compliance_result
+    compliance_result=$(python3 "${tracker_script}" check "${SESSION_ID}" "${patterns_found}" 2>/dev/null || echo '{}')
+
+    # Log compliance result
+    local compliance_rate
+    compliance_rate=$(echo "${compliance_result}" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('compliance_rate', 'N/A'))" 2>/dev/null || echo "N/A")
+
+    if [[ "${compliance_rate}" != "N/A" ]]; then
+        log_analysis "COMPLIANCE: Session compliance rate: ${compliance_rate}"
+
+        # Log details
+        local advice_followed
+        advice_followed=$(echo "${compliance_result}" | python3 -c "import json,sys; d=json.load(sys.stdin); print(','.join(d.get('advice_followed', [])))" 2>/dev/null || echo "")
+
+        local advice_ignored
+        advice_ignored=$(echo "${compliance_result}" | python3 -c "import json,sys; d=json.load(sys.stdin); print(','.join(d.get('advice_ignored', [])))" 2>/dev/null || echo "")
+
+        if [[ -n "${advice_followed}" ]]; then
+            log_analysis "COMPLIANCE: Advice followed: ${advice_followed}"
+        fi
+
+        if [[ -n "${advice_ignored}" ]]; then
+            log_analysis "COMPLIANCE: Advice ignored: ${advice_ignored}"
+        fi
+    fi
 }
 
 # Analyze for important keywords

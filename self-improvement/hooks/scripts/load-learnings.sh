@@ -18,6 +18,7 @@ cleanup() {
 trap cleanup EXIT
 
 # Configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_DIR="${HOME}/.claude/self-improvement"
 PATTERNS_DB="${LOG_DIR}/patterns.json"
 LEARNINGS_DB="${LOG_DIR}/learnings.json"
@@ -25,6 +26,9 @@ METRICS_DB="${LOG_DIR}/metrics.json"
 
 # Create directory if it doesn't exist
 mkdir -p "${LOG_DIR}"
+
+# Generate session ID
+SESSION_ID=$(date +%s)
 
 # Function to load and display learnings
 load_learnings() {
@@ -35,14 +39,18 @@ load_learnings() {
     fi
 
     # Pass variables as arguments to Python script
-    python3 - "$LEARNINGS_DB" "$PATTERNS_DB" <<'EOF'
+    python3 - "$LEARNINGS_DB" "$PATTERNS_DB" "$SESSION_ID" "$SCRIPT_DIR" <<'EOF'
 import json
 import sys
+import subprocess
 from datetime import datetime, timedelta
+from pathlib import Path
 
 # Get file paths from arguments
 learnings_file = sys.argv[1]
 patterns_file = sys.argv[2]
+session_id = sys.argv[3] if len(sys.argv) > 3 else str(int(datetime.now().timestamp()))
+script_dir = sys.argv[4] if len(sys.argv) > 4 else ""
 
 # Actionable templates for each pattern type
 # These provide specific guidance instead of generic warnings
@@ -256,6 +264,28 @@ if critical_patterns or important_patterns or actionable_learnings:
                     context_parts.append(template['template'])
 
     context_message = "\n".join(context_parts)
+
+    # Record advice given for compliance tracking
+    advice_given = []
+    for pattern in critical_patterns + important_patterns:
+        advice_given.append(pattern['type'])
+    for learning in actionable_learnings[-3:]:
+        key = learning.get('key')
+        if key and key not in advice_given:
+            advice_given.append(key)
+
+    # Call compliance tracker to record advice
+    if script_dir and advice_given:
+        tracker_path = Path(script_dir) / "compliance-tracker.py"
+        if tracker_path.exists():
+            try:
+                subprocess.run(
+                    ["python3", str(tracker_path), "record", session_id, json.dumps(advice_given)],
+                    capture_output=True,
+                    timeout=5
+                )
+            except Exception:
+                pass  # Don't fail session start if tracking fails
 
     # Output for Claude to use
     result = {
