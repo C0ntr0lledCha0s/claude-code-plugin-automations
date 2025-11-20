@@ -26,71 +26,22 @@ jobs:
           pip install jsonschema pyyaml
 
       - name: Validate all plugins
+        id: validate
         run: |
-          echo "🔍 Validating all plugins..."
+          echo "🔍 Running comprehensive plugin validation..."
           bash validate-all.sh
-
-      - name: Validate JSON files
-        run: |
-          echo "🔍 Validating JSON syntax..."
-          for file in $(find . -name "*.json" -not -path "*/node_modules/*" -not -path "*/.git/*"); do
-            echo "Validating $file"
-            python3 -m json.tool "$file" > /dev/null || exit 1
-          done
-          echo "✓ All JSON files valid"
-
-      - name: Validate agent definitions
-        run: |
-          echo "🔍 Validating agent definitions..."
-          for agent in */agents/*.md; do
-            if [ -f "$agent" ]; then
-              echo "Validating $agent"
-              python3 agent-builder/skills/building-agents/scripts/validate-agent.py "$agent" || exit 1
-            fi
-          done
-          echo "✓ All agents valid"
-
-      - name: Validate skill definitions
-        run: |
-          echo "🔍 Validating skill definitions..."
-          for skill_dir in */skills/*/; do
-            if [ -f "${skill_dir}SKILL.md" ]; then
-              echo "Validating $skill_dir"
-              python3 agent-builder/skills/building-skills/scripts/validate-skill.py "$skill_dir" || exit 1
-            fi
-          done
-          echo "✓ All skills valid"
-
-      - name: Validate command definitions
-        run: |
-          echo "🔍 Validating command definitions..."
-          for cmd in */commands/*.md; do
-            if [ -f "$cmd" ]; then
-              echo "Validating $cmd"
-              python3 agent-builder/skills/building-commands/scripts/validate-command.py "$cmd" || exit 1
-            fi
-          done
-          echo "✓ All commands valid"
-
-      - name: Validate hooks
-        run: |
-          echo "🔍 Validating hook definitions..."
-          for hooks_file in */hooks/hooks.json; do
-            if [ -f "$hooks_file" ]; then
-              echo "Validating $hooks_file"
-              python3 agent-builder/skills/building-hooks/scripts/validate-hooks.py "$hooks_file" || exit 1
-            fi
-          done
-          echo "✓ All hooks valid"
+        continue-on-error: true
 
       - name: Check for security issues
+        id: security
         run: |
           echo "🔍 Checking for security issues..."
+          ERRORS=0
 
           # Check for hardcoded paths (should use ${PLUGIN_DIR})
           if grep -r "github-workflows/hooks" --include="hooks.json" .; then
             echo "❌ Found hardcoded plugin paths in hooks"
-            exit 1
+            ERRORS=$((ERRORS + 1))
           fi
 
           # Check for secrets in code
@@ -100,21 +51,44 @@ jobs:
             echo "⚠️  Warning: Potential secrets found in code"
           fi
 
+          if [ $ERRORS -gt 0 ]; then
+            echo "❌ Security checks failed with $ERRORS error(s)"
+            exit 1
+          fi
           echo "✓ Security checks passed"
+        continue-on-error: true
 
-      - name: Validation summary
-        if: success()
+      - name: Check validation results
         run: |
-          echo "✅ All validations passed!"
           echo ""
-          echo "Validated:"
-          echo "  - Plugin manifests"
-          echo "  - JSON syntax"
-          echo "  - Agent definitions"
-          echo "  - Skill definitions"
-          echo "  - Command definitions"
-          echo "  - Hook configurations"
-          echo "  - Security checks"
+          echo "════════════════════════════════════════"
+          echo "Validation Results Summary"
+          echo "════════════════════════════════════════"
+
+          FAILED=0
+
+          if [ "${{ steps.validate.outcome }}" == "failure" ]; then
+            echo "❌ Plugin validation: FAILED"
+            FAILED=1
+          else
+            echo "✅ Plugin validation: PASSED"
+          fi
+
+          if [ "${{ steps.security.outcome }}" == "failure" ]; then
+            echo "❌ Security checks: FAILED"
+            FAILED=1
+          else
+            echo "✅ Security checks: PASSED"
+          fi
+
+          echo ""
+
+          if [ $FAILED -gt 0 ]; then
+            echo "❌ Overall validation FAILED - see logs above for details"
+            exit 1
+          else
+            echo "✅ All validations passed!"
+          fi
 
       - name: Comment on PR with validation results
         if: failure() && github.event_name == 'pull_request'
