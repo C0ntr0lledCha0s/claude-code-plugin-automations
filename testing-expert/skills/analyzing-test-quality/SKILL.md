@@ -1,8 +1,17 @@
 ---
 name: analyzing-test-quality
-description: Automatically activated when user asks about test quality, code coverage, test reliability, test maintainability, or wants to analyze their test suite. Provides framework-agnostic test quality analysis and improvement recommendations.
-version: 1.0.0
+description: Automatically activated when user asks about test quality, code coverage, test reliability, test maintainability, or wants to analyze their test suite. Provides framework-agnostic test quality analysis and improvement recommendations. Does NOT provide framework-specific patterns - use jest-testing or playwright-testing for those.
+version: 1.1.0
 allowed-tools: Read, Grep, Glob, Bash
+capabilities:
+  - quality-metrics
+  - anti-pattern-detection
+  - coverage-analysis
+  - mutation-testing
+  - test-pyramid-balance
+  - reliability-assessment
+  - maintainability-scoring
+  - flakiness-detection
 ---
 
 # Analyzing Test Quality
@@ -106,49 +115,62 @@ Tests run efficiently:
 ## Common Anti-Patterns
 
 ### Test Pollution
-```javascript
+```typescript
 // BAD: Shared mutable state
 let count = 0;
 beforeEach(() => count++);
 
 // GOOD: Reset in setup
-let count;
+let count: number;
 beforeEach(() => { count = 0; });
 ```
 
 ### Over-Mocking
-```javascript
-// BAD: Mock everything
+
+Mocking too much hides bugs and makes tests brittle.
+
+```typescript
+// BAD: Mock everything - test only verifies mocks
+// Jest
 jest.mock('./dep1');
 jest.mock('./dep2');
 jest.mock('./dep3');
-// Test only verifies mocks
+
+// Vitest
+vi.mock('./dep1');
+vi.mock('./dep2');
+vi.mock('./dep3');
 
 // GOOD: Mock boundaries only
-jest.mock('./api'); // External service
+// Mock external services, keep internal logic real
+mock('./api'); // External service only
 // Test actual business logic
 ```
 
 ### Flaky Assertions
-```javascript
+```typescript
 // BAD: Timing dependent
 await delay(100);
 expect(element).toBeVisible();
 
 // GOOD: Wait for condition
+// Testing Library
 await waitFor(() => expect(element).toBeVisible());
+
+// Playwright
+await expect(element).toBeVisible();
 ```
 
 ### Mystery Guest
-```javascript
+```typescript
 // BAD: Hidden dependencies
-it('should process', () => {
+test('should process', () => {
   const result = process(); // Uses global data
   expect(result).toBe(42);
 });
 
 // GOOD: Explicit setup
-it('should process input', () => {
+test('should process input', () => {
   const input = createInput({ value: 21 });
   const result = process(input);
   expect(result).toBe(42);
@@ -156,22 +178,126 @@ it('should process input', () => {
 ```
 
 ### Assertion Roulette
-```javascript
+```typescript
 // BAD: Multiple unrelated assertions
-it('should work', () => {
+test('should work', () => {
   expect(user.name).toBe('John');
   expect(items.length).toBe(3);
   expect(total).toBe(100);
 });
 
 // GOOD: Focused assertions
-it('should set user name', () => {
+test('should set user name', () => {
   expect(user.name).toBe('John');
 });
 
-it('should have correct item count', () => {
-  expect(items.length).toBe(3);
+test('should have correct item count', () => {
+  expect(items).toHaveLength(3);
 });
+```
+
+## Mutation Testing
+
+Mutation testing validates test effectiveness by modifying code and checking if tests catch the changes.
+
+### Concept
+
+1. **Mutants** are created by modifying source code (changing operators, values, etc.)
+2. **Tests run** against each mutant
+3. **Killed mutants** = tests caught the change (good!)
+4. **Survived mutants** = tests missed the change (weak tests)
+
+### Stryker Setup
+
+```bash
+# Install Stryker
+npm install -D @stryker-mutator/core
+
+# For specific frameworks
+npm install -D @stryker-mutator/jest-runner      # Jest
+npm install -D @stryker-mutator/vitest-runner    # Vitest
+npm install -D @stryker-mutator/mocha-runner     # Mocha
+
+# Initialize configuration
+npx stryker init
+```
+
+### Stryker Configuration
+
+```javascript
+// stryker.conf.js
+module.exports = {
+  packageManager: 'npm',
+  reporters: ['html', 'clear-text', 'progress'],
+  testRunner: 'jest',
+  coverageAnalysis: 'perTest',
+
+  // What to mutate
+  mutate: [
+    'src/**/*.ts',
+    '!src/**/*.test.ts',
+    '!src/**/*.spec.ts',
+  ],
+
+  // Mutation types to use
+  mutator: {
+    excludedMutations: [
+      'StringLiteral', // Skip string mutations
+    ],
+  },
+
+  // Thresholds
+  thresholds: {
+    high: 80,
+    low: 60,
+    break: 50, // Fail CI if below this
+  },
+};
+```
+
+### Interpreting Results
+
+```
+Mutation score: 85%
+Killed: 170 | Survived: 30 | Timeout: 5 | No coverage: 10
+```
+
+**High score (>80%)**: Tests are effective
+**Medium score (60-80%)**: Some weak areas
+**Low score (<60%)**: Tests need significant improvement
+
+### Common Surviving Mutations
+
+**Boundary mutations**: `<` changed to `<=`
+```typescript
+// Mutation survives if tests don't check boundary
+if (value < 10) { ... }  // Changed to: value <= 10
+```
+
+**Arithmetic mutations**: `+` changed to `-`
+```typescript
+// Mutation survives if result isn't precisely checked
+return a + b;  // Changed to: a - b
+```
+
+**Boolean mutations**: `&&` changed to `||`
+```typescript
+// Mutation survives if both conditions aren't tested
+if (a && b) { ... }  // Changed to: a || b
+```
+
+### CI Integration
+
+```yaml
+# GitHub Actions
+- name: Run mutation tests
+  run: npx stryker run
+
+- name: Upload Stryker report
+  uses: actions/upload-artifact@v3
+  with:
+    name: stryker-report
+    path: reports/mutation/
 ```
 
 ## Coverage Metrics
