@@ -1,5 +1,16 @@
 {
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'PLUGIN_PATH=\"${CLAUDE_PLUGIN_ROOT//\\\\//}\"; if [[ -n \"${PLUGIN_PATH}\" ]]; then bash \"${PLUGIN_PATH}/hooks/scripts/analyze-before-write.sh\"; else echo \"{\\\"decision\\\": \\\"approve\\\"}\"; fi'"
+          }
+        ]
+      }
+    ],
     "SessionEnd": [
       {
         "hooks": [
