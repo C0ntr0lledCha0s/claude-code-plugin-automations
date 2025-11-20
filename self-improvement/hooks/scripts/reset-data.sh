@@ -9,13 +9,20 @@ set -euo pipefail
 
 LOG_DIR="${HOME}/.claude/self-improvement"
 
-echo "⚠️  WARNING: This will delete ALL tracked self-improvement data!"
-echo "   - Patterns database"
-echo "   - Learnings database"
-echo "   - Metrics database"
-echo "   - Analysis logs"
-echo ""
-read -p "Are you sure you want to continue? (type 'yes' to confirm): " confirmation
+# Check for --force flag
+if [[ "${1:-}" == "--force" || "${1:-}" == "-f" ]]; then
+    confirmation="yes"
+else
+    echo "⚠️  WARNING: This will delete ALL tracked self-improvement data!"
+    echo "   - Patterns database"
+    echo "   - Learnings database"
+    echo "   - Metrics database"
+    echo "   - Analysis logs"
+    echo ""
+    echo "Use --force or -f to skip this prompt."
+    echo ""
+    read -p "Are you sure you want to continue? (type 'yes' to confirm): " confirmation
+fi
 
 if [[ "${confirmation}" != "yes" ]]; then
     echo "Cancelled. No data was deleted."

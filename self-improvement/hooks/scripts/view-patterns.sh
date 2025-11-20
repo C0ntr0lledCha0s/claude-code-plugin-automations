@@ -14,11 +14,12 @@ if [[ ! -f "${PATTERNS_DB}" ]]; then
     exit 0
 fi
 
-python3 - <<'EOF'
+python3 - "$PATTERNS_DB" <<'EOF'
 import json
+import sys
 from datetime import datetime
 
-patterns_file = "${PATTERNS_DB}"
+patterns_file = sys.argv[1]
 
 with open(patterns_file, 'r') as f:
     data = json.load(f)

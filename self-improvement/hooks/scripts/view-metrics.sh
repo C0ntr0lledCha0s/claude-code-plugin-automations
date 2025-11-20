@@ -14,12 +14,13 @@ if [[ ! -f "${METRICS_DB}" ]]; then
     exit 0
 fi
 
-python3 - <<'EOF'
+python3 - "$METRICS_DB" <<'EOF'
 import json
+import sys
 from datetime import datetime
 from statistics import mean, median
 
-metrics_file = "${METRICS_DB}"
+metrics_file = sys.argv[1]
 
 with open(metrics_file, 'r') as f:
     data = json.load(f)

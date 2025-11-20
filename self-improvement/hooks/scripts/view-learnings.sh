@@ -14,10 +14,11 @@ if [[ ! -f "${LEARNINGS_DB}" ]]; then
     exit 0
 fi
 
-python3 - <<'EOF'
+python3 - "$LEARNINGS_DB" <<'EOF'
 import json
+import sys
 
-learnings_file = "${LEARNINGS_DB}"
+learnings_file = sys.argv[1]
 
 with open(learnings_file, 'r') as f:
     data = json.load(f)
