@@ -22,16 +22,5 @@
     "pattern-tracking",
     "trend-detection"
   ],
-  "commands": [
-    "./commands/review-my-work.md",
-    "./commands/quality-check.md",
-    "./commands/analyze-component.md",
-    "./commands/improve-component.md",
-    "./commands/show-patterns.md",
-    "./commands/show-learnings.md",
-    "./commands/show-metrics.md",
-    "./commands/health-check.md"
-  ],
-  "agents": ["./agents/self-critic.md"],
-  "skills": "./skills/"
+  "agents": ["./agents/self-critic.md"]
 }

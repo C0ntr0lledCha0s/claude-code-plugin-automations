@@ -22,7 +22,5 @@
     "agent-maintenance",
     "agent-updates"
   ],
-  "commands": "./commands/",
-  "agents": ["./agents/meta-architect.md"],
-  "skills": "./skills/"
+  "agents": ["./agents/meta-architect.md"]
 }

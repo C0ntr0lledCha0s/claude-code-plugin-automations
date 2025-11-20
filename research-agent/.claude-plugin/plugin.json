@@ -19,7 +19,5 @@
     "knowledge-discovery",
     "comparative-research"
   ],
-  "commands": "./commands/",
-  "agents": ["./agents/investigator.md"],
-  "skills": "./skills/"
+  "agents": ["./agents/investigator.md"]
 }

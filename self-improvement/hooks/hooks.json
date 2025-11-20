@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'PLUGIN_PATH=\"${CLAUDE_PLUGIN_ROOT//\\\\//}\"; bash \"${PLUGIN_PATH}/hooks/scripts/analyze-conversation.sh\"'"
+            "command": "bash -c 'PLUGIN_PATH=\"${CLAUDE_PLUGIN_ROOT//\\\\//}\"; if [[ -n \"${PLUGIN_PATH}\" ]]; then bash \"${PLUGIN_PATH}/hooks/scripts/analyze-conversation.sh\"; else echo \"{\\\"decision\\\": \\\"approve\\\", \\\"suppressOutput\\\": true}\"; fi'"
           }
         ]
       }

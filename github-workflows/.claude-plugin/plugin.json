@@ -22,21 +22,8 @@
     "issues",
     "code-review"
   ],
-  "commands": [
-    "./commands/project-create.md",
-    "./commands/project-sync.md",
-    "./commands/label-sync.md",
-    "./commands/milestone-create.md",
-    "./commands/commit-review.md",
-    "./commands/commit-smart.md",
-    "./commands/issue-triage.md",
-    "./commands/pr-review-request.md",
-    "./commands/pr-quality-check.md",
-    "./commands/workflow-status.md"
-  ],
   "agents": [
     "./agents/workflow-orchestrator.md",
     "./agents/pr-reviewer.md"
-  ],
-  "skills": "./skills/"
+  ]
 }
