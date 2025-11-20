@@ -10,6 +10,10 @@ import sys
 from pathlib import Path
 from typing import Tuple, List, Dict, Any
 
+# Ensure UTF-8 output for Unicode characters on Windows
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+
 
 def validate_plugin(plugin_dir: str) -> Tuple[bool, List[str], List[str]]:
     """

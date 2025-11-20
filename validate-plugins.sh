@@ -2,8 +2,6 @@
 # Comprehensive plugin validation script
 # Validates all plugins in the repository
 
-set -e
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
@@ -30,14 +28,14 @@ validate_plugin() {
     # Check if plugin.json exists
     if [ ! -f "$plugin_dir/.claude-plugin/plugin.json" ]; then
         echo -e "   ${RED}✗${NC} Missing plugin.json manifest"
-        ((ERRORS++))
+        ERRORS=$((ERRORS + 1))
         return
     fi
 
     # Validate plugin.json syntax
     if ! python3 -m json.tool "$plugin_dir/.claude-plugin/plugin.json" >/dev/null 2>&1; then
         echo -e "   ${RED}✗${NC} Invalid JSON in plugin.json"
-        ((ERRORS++))
+        ERRORS=$((ERRORS + 1))
         return
     fi
 
@@ -63,7 +61,7 @@ validate_plugin() {
                 else
                     echo -e "   ${RED}✗${NC} Agent: $agent_name (validation failed with exit code $validation_exit_code)"
                     echo "      Validation output: $validation_output"
-                    ((ERRORS++))
+                    ERRORS=$((ERRORS + 1))
                 fi
             fi
         done
@@ -75,7 +73,7 @@ validate_plugin() {
             echo -e "   ${GREEN}✓${NC} hooks.json is valid"
         else
             echo -e "   ${RED}✗${NC} hooks.json validation failed"
-            ((ERRORS++))
+            ERRORS=$((ERRORS + 1))
         fi
     fi
 
@@ -88,7 +86,7 @@ validate_plugin() {
                     echo -e "   ${GREEN}✓${NC} Skill: $skill_name"
                 else
                     echo -e "   ${YELLOW}⚠${NC}  Skill: $skill_name (validation warnings)"
-                    ((WARNINGS++))
+                    WARNINGS=$((WARNINGS + 1))
                 fi
             fi
         done
@@ -103,7 +101,7 @@ validate_plugin() {
                     echo -e "   ${GREEN}✓${NC} Command: $command_name"
                 else
                     echo -e "   ${YELLOW}⚠${NC}  Command: $command_name (validation warnings)"
-                    ((WARNINGS++))
+                    WARNINGS=$((WARNINGS + 1))
                 fi
             fi
         done
@@ -129,18 +127,20 @@ if [ -f ".claude-plugin/marketplace.json" ]; then
         # Check that all plugins in marketplace exist
         while IFS= read -r plugin_source; do
             plugin_dir="${plugin_source#./}"
+            # Remove carriage return if present (Windows line endings)
+            plugin_dir="${plugin_dir%$'\r'}"
             if [ ! -d "$plugin_dir" ]; then
                 echo -e "   ${RED}✗${NC} Plugin directory not found: $plugin_dir"
-                ((ERRORS++))
+                ERRORS=$((ERRORS + 1))
             fi
-        done < <(python3 -c "import json; data=json.load(open('.claude-plugin/marketplace.json')); print('\n'.join([p['source'] for p in data.get('plugins', [])]))")
+        done < <(python3 -c "import json; data=json.load(open('.claude-plugin/marketplace.json', encoding='utf-8')); print('\n'.join([p['source'] for p in data.get('plugins', [])]))")
     else
         echo -e "   ${RED}✗${NC} marketplace.json is invalid JSON"
-        ((ERRORS++))
+        ERRORS=$((ERRORS + 1))
     fi
 else
     echo -e "   ${RED}✗${NC} marketplace.json not found"
-    ((ERRORS++))
+    ERRORS=$((ERRORS + 1))
 fi
 
 echo ""

@@ -9,6 +9,10 @@ import sys
 import yaml
 from pathlib import Path
 
+# Ensure UTF-8 output for Unicode characters on Windows
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+
 
 def validate_skill(skill_dir: str) -> tuple[bool, list[str]]:
     """
@@ -35,7 +39,7 @@ def validate_skill(skill_dir: str) -> tuple[bool, list[str]]:
 
     # Read SKILL.md
     try:
-        content = skill_md.read_text()
+        content = skill_md.read_text(encoding='utf-8')
     except Exception as e:
         return False, [f"Failed to read SKILL.md: {e}"]
 
