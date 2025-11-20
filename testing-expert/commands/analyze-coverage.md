@@ -1,0 +1,155 @@
+---
+description: Analyze test coverage reports, identify gaps, and recommend tests for uncovered code paths
+allowed-tools: Read, Grep, Glob, Bash
+argument-hint: "[coverage-report-path]"
+---
+
+# Analyze Coverage
+
+Analyze code coverage reports to identify gaps and recommend specific tests for uncovered code.
+
+## Arguments
+
+- **`$1`**: (Optional) Path to coverage report or directory. Defaults to common locations:
+  - `coverage/lcov-report/`
+  - `coverage/`
+  - `.nyc_output/`
+
+## Workflow
+
+When this command is invoked with `/testing-expert:analyze-coverage [path]`:
+
+1. **Locate Coverage Data**
+   - Find coverage reports (lcov.info, coverage-final.json)
+   - Parse coverage summary
+   - Identify coverage tool (Istanbul/nyc, c8, Jest)
+
+2. **Analyze Metrics**
+   - Statement coverage
+   - Branch coverage
+   - Function coverage
+   - Line coverage
+
+3. **Identify Gaps**
+   - Uncovered functions
+   - Uncovered branches
+   - Complex uncovered code
+   - Critical path gaps
+
+4. **Prioritize by Risk**
+   - Error handling code
+   - Validation logic
+   - Business-critical paths
+   - Edge case handlers
+
+5. **Generate Test Suggestions**
+   For each significant gap:
+   - Describe what needs testing
+   - Provide test outline
+   - Suggest test data
+
+## Report Format
+
+```markdown
+## Coverage Analysis Report
+
+### Overall Coverage
+| Metric     | Coverage | Target | Status |
+|------------|----------|--------|--------|
+| Statements | 85%      | 80%    | ✅      |
+| Branches   | 72%      | 75%    | ⚠️      |
+| Functions  | 90%      | 80%    | ✅      |
+| Lines      | 85%      | 80%    | ✅      |
+
+### Critical Gaps
+
+#### 1. [File:Function] - 0% covered
+**Risk**: High - handles error scenarios
+**Suggested test**:
+```javascript
+it('should handle network error', async () => {
+  // Test outline
+});
+```
+
+### Recommendations
+1. [Prioritized list of tests to add]
+```
+
+## Examples
+
+### Analyze Default Coverage
+```
+/testing-expert:analyze-coverage
+```
+
+Finds and analyzes coverage in default locations.
+
+### Analyze Specific Report
+```
+/testing-expert:analyze-coverage coverage/lcov.info
+```
+
+Analyzes specific coverage file.
+
+### Analyze After Test Run
+```bash
+npm test -- --coverage
+/testing-expert:analyze-coverage
+```
+
+Run tests with coverage then analyze results.
+
+## Coverage Priorities
+
+### High Priority Gaps
+- Error handling (catch blocks)
+- Validation functions
+- Authentication/authorization
+- Data transformation
+- API boundaries
+
+### Medium Priority
+- Edge cases
+- Conditional branches
+- Utility functions
+- Event handlers
+
+### Lower Priority
+- Simple getters/setters
+- Debug/logging code
+- Configuration
+
+## Important Notes
+
+- High coverage ≠ good tests
+- Focus on meaningful coverage
+- Consider mutation testing for quality
+- Branch coverage often reveals logic gaps
+- Some code may be intentionally uncovered
+
+## Generating Coverage
+
+If no coverage exists, suggest running:
+
+### Jest
+```bash
+npx jest --coverage
+```
+
+### Vitest
+```bash
+npx vitest --coverage
+```
+
+### Node.js (c8)
+```bash
+npx c8 node script.js
+```
+
+## Error Handling
+
+If coverage reports are not found:
+- Suggest running tests with coverage flag
+- Check for correct coverage tool
+- Verify output directory configuration
