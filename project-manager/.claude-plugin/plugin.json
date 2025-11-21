@@ -18,10 +18,5 @@
     "backlog-management",
     "roadmap-planning",
     "github-integration"
-  ],
-  "category": "Productivity",
-  "commands": "./commands/",
-  "agents": "./agents/",
-  "skills": "./skills/",
-  "hooks": ["./hooks/hooks.json"]
+  ]
 }

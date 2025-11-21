@@ -2,7 +2,6 @@
   "name": "testing-expert",
   "version": "1.1.0",
   "description": "Expert plugin for quality code reviews focused on testing. Provides specialized expertise for Jest, Playwright, and general test quality analysis with automated review and improvement suggestions.",
-  "category": "Development Tools",
   "author": {
     "name": "C0ntr0lledCha0s",
     "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
@@ -21,16 +20,5 @@
     "e2e-tests",
     "integration-tests"
   ],
-  "agents": ["./agents/test-reviewer.md"],
-  "skills": [
-    "./skills/jest-testing/",
-    "./skills/playwright-testing/",
-    "./skills/analyzing-test-quality/"
-  ],
-  "commands": [
-    "./commands/review-tests.md",
-    "./commands/analyze-coverage.md",
-    "./commands/suggest-tests.md"
-  ],
-  "hooks": ["./hooks/hooks.json"]
+  "agents": ["./agents/test-reviewer.md"]
 }
