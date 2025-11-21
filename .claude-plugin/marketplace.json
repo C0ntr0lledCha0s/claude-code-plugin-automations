@@ -10,8 +10,8 @@
     "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
     "pluginRoot": "./",
     "stats": {
-      "totalPlugins": 5,
-      "lastUpdated": "2025-11-16"
+      "totalPlugins": 6,
+      "lastUpdated": "2025-11-21"
     }
   },
   "plugins": [
@@ -147,6 +147,34 @@
       "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
       "license": "MIT",
       "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/project-manager"
+    },
+    {
+      "name": "testing-expert",
+      "source": "./testing-expert",
+      "description": "Expert plugin for quality code reviews focused on testing. Provides comprehensive expertise for Jest, Playwright, and test quality analysis with automated test review, coverage analysis, and test suggestions. Includes cheatsheets, templates, and validation scripts.",
+      "version": "1.1.0",
+      "category": "development-tools",
+      "keywords": [
+        "testing",
+        "jest",
+        "playwright",
+        "test-quality",
+        "code-review",
+        "coverage-analysis",
+        "react-testing-library",
+        "msw",
+        "e2e-testing",
+        "unit-testing",
+        "test-automation",
+        "quality-assurance"
+      ],
+      "author": {
+        "name": "C0ntr0lledCha0s",
+        "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
+      },
+      "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
+      "license": "MIT",
+      "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/testing-expert"
     }
   ]
 }
