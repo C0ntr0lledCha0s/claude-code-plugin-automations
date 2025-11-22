@@ -1,7 +1,7 @@
 ---
 name: building-agents
-description: Expert at creating and modifying Claude Code agents (subagents). Auto-invokes when the user wants to create, update, modify, enhance, validate, or standardize agents, or when modifying agent YAML frontmatter fields (especially 'model', 'tools', 'description'), needs help designing agent architecture, or wants to understand agent capabilities.
-version: 1.2.0
+description: Expert at creating and modifying Claude Code agents (subagents). Auto-invokes when the user wants to create, update, modify, enhance, validate, or standardize agents, or when modifying agent YAML frontmatter fields (especially 'model', 'tools', 'description'), needs help designing agent architecture, or wants to understand agent capabilities. Also auto-invokes proactively when Claude is about to write agent files (*/agents/*.md), create modular agent architectures, or implement tasks that involve creating agent components.
+version: 1.3.0
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 

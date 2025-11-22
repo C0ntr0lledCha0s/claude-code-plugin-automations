@@ -1,7 +1,7 @@
 ---
 name: building-commands
-description: Expert at creating and modifying Claude Code slash commands. Auto-invokes when the user wants to create, update, modify, enhance, validate, or standardize slash commands, or when modifying command YAML frontmatter fields (especially 'model', 'allowed-tools', 'description'), needs help designing command workflows, or wants to understand command arguments and parameters.
-version: 1.2.0
+description: Expert at creating and modifying Claude Code slash commands. Auto-invokes when the user wants to create, update, modify, enhance, validate, or standardize slash commands, or when modifying command YAML frontmatter fields (especially 'model', 'allowed-tools', 'description'), needs help designing command workflows, or wants to understand command arguments and parameters. Also auto-invokes proactively when Claude is about to write command files (*/commands/*.md), or implement tasks that involve creating slash command components.
+version: 1.3.0
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
