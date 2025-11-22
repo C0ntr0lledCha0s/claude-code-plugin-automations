@@ -463,20 +463,6 @@ python {baseDir}/scripts/pr-manager.py auto-assign --pr 123
 python {baseDir}/scripts/pr-manager.py sync-board --pr 123
 ```
 
-### Review Automation
-
-**{baseDir}/scripts/review-automation.sh**:
-```bash
-# Run full review
-bash {baseDir}/scripts/review-automation.sh review --pr 123
-
-# Check merge readiness
-bash {baseDir}/scripts/review-automation.sh check-merge --pr 123
-
-# Auto-merge if ready
-bash {baseDir}/scripts/review-automation.sh auto-merge --pr 123
-```
-
 ### Quality Gates
 
 **{baseDir}/scripts/quality-gates.sh**:

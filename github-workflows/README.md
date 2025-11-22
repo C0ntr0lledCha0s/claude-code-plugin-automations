@@ -133,13 +133,13 @@ Creates standard labels:
 - Priorities: priority:high, priority:medium, priority:low
 - Scopes: scope:frontend, scope:backend, scope:docs
 
-### 3. Interactive Commit
+### 3. Smart Commit
 
 ```bash
-/commit-interactive
+/github-workflows:commit-smart
 ```
 
-Guides you through creating a conventional commit with GitHub context.
+Intelligently analyzes and commits changes with automatic file grouping and conventional commit formatting.
 
 ### 4. Create PR with Quality Check
 
@@ -265,10 +265,10 @@ Extends commit-helper with GitHub context:
 
 ### Commits
 
-**`/commit-interactive`**
-- Interactive conventional commit workflow
-- Analyzes staged changes
-- Generates formatted commit message
+**`/commit-smart [mode]`**
+- Intelligent commit workflow with file grouping
+- Modes: all, staged, context, scope, interactive
+- Analyzes changes and generates conventional commits
 
 **`/commit-review`**
 - Reviews commit history for issues

@@ -1,7 +1,7 @@
 {
   "name": "github-workflows",
-  "version": "1.1.0",
-  "description": "Comprehensive GitHub workflow automation including project boards, labels, milestones, commits, issues, and pull requests. Optional integration with self-improvement plugin for enhanced PR reviews and quality gates.",
+  "version": "1.3.0",
+  "description": "Comprehensive GitHub workflow automation including project boards, labels, milestones, commits, issues, and pull requests. Features automatic issue tracking, commit integration, and session environment setup. Optional integration with self-improvement plugin for enhanced PR reviews and quality gates.",
   "author": {
     "name": "C0ntr0lledCha0s",
     "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
@@ -20,7 +20,10 @@
     "pull-requests",
     "commits",
     "issues",
-    "code-review"
+    "code-review",
+    "issue-tracking",
+    "session-setup",
+    "environment"
   ],
   "agents": [
     "./agents/workflow-orchestrator.md",

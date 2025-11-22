@@ -1,41 +1,60 @@
 {
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/github-workflows/hooks/check-init.sh"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
-        "matcher": "git commit",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Before approving this git commit, validate that the commit message follows conventional commits format. If it doesn't, suggest the correct format and ask the user to confirm or revise."
+            "prompt": "If this Bash command is 'git commit', validate that the commit message follows conventional commits format (type(scope): description). Check for: 1) Valid type prefix (feat, fix, docs, style, refactor, perf, test, chore, ci, build), 2) Optional scope in parentheses, 3) Colon and space after type/scope, 4) Imperative mood description. If the format is incorrect, suggest the correct format and ask the user to confirm or revise before proceeding."
           }
         ]
       },
       {
-        "matcher": "gh pr create|gh pr merge",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Before creating or merging this PR, run quality gates to ensure: 1) All CI checks pass, 2) Tests have adequate coverage, 3) No security issues detected, 4) Code quality scores are acceptable. If any gates fail, warn the user and ask for confirmation before proceeding."
+            "prompt": "If this Bash command is 'gh pr create' or 'gh pr merge', run quality gates to ensure: 1) All CI checks pass (check with 'gh pr checks'), 2) Tests have adequate coverage, 3) No security issues detected, 4) Code quality scores are acceptable. If any gates fail, warn the user with specific details and ask for confirmation before proceeding. For merges, also verify the PR has required approvals."
           }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "gh issue create",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "After creating this issue, suggest running /issue-triage to properly classify, label, and check for duplicates."
+            "prompt": "If this Bash command was 'gh issue create' and it succeeded, suggest running /github-workflows:issue-triage with the new issue number to properly classify, label, and check for duplicates. Extract the issue number from the command output."
           }
         ]
       },
       {
-        "matcher": "gh pr merge",
+        "matcher": "Bash",
         "hooks": [
           {
-            "type": "command",
-            "command": "bash -c 'PLUGIN_PATH=\"${CLAUDE_PLUGIN_ROOT//\\\\//}\"; if [[ -n \"${PLUGIN_PATH}\" ]]; then bash \"${PLUGIN_PATH}/hooks/scripts/update-board-on-merge.sh\" \"$PR_NUMBER\"; else echo \"{\\\"decision\\\": \\\"approve\\\", \\\"suppressOutput\\\": true}\"; fi'"
+            "type": "prompt",
+            "prompt": "If this Bash command was 'gh pr merge' and it succeeded, suggest updating any related project boards to move the PR/issue to 'Done' status. You can use /github-workflows:workflow-status to check the current state or manually update the board using 'gh project item-edit'."
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "If this Bash command was 'git commit' and it succeeded, check the commit message for issue references (Closes #N, Fixes #N, Refs #N, Progresses #N). If found: 1) Offer to add a comment to the referenced GitHub issue with the commit SHA and summary using 'gh issue comment <number> --body \"Commit <sha>: <subject>\"', 2) For 'Progresses #N', suggest adding an 'in-progress' label to the issue, 3) Remind user that 'Closes/Fixes' will auto-close the issue when the PR is merged. If no issue reference was found but the issue cache exists at .claude/github-workflows/active-issues.json, suggest running /github-workflows:issue-track to sync issues for better commit-issue integration."
           }
         ]
       }
