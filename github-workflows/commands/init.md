@@ -23,13 +23,14 @@ Set up the GitHub workflow environment for the current session. This command gat
 
 1. **Detect Repository**: Get owner/repo from git remote
 2. **Get User Info**: Current GitHub username
-3. **Label Stocktake**: Check and report missing standard labels
-4. **Analyze Project Scopes**: Suggest scope labels based on project structure
-5. **Find Project Board**: Detect active project board for repository
-6. **Get Current Milestone**: Find active milestone/sprint
-7. **Sync Issues**: Fetch assigned issues to cache
-8. **Create Environment**: Save context to `.claude/github-workflows/env.json`
-9. **Show Summary**: Display workflow status and setup recommendations
+3. **Determine Project Type**: Ask if personal or team project (affects issue filtering)
+4. **Select Project Board**: Let user choose from existing boards or create new one
+5. **Label Stocktake**: Check and report missing standard labels
+6. **Analyze Project Scopes**: Suggest scope labels based on project structure
+7. **Get Current Milestone**: Find active milestone/sprint
+8. **Sync Issues**: Fetch issues based on project type preference
+9. **Create Environment**: Save context to `.claude/github-workflows/env.json`
+10. **Show Summary**: Display workflow status and setup recommendations
 
 ## Environment File
 
@@ -75,6 +76,11 @@ Creates `.claude/github-workflows/env.json`:
     "labelsComplete": false,
     "projectBoardExists": true,
     "milestonesExist": true
+  },
+  "preferences": {
+    "projectType": "personal",
+    "defaultIssueFilter": "all",
+    "defaultProject": null
   }
 }
 ```
@@ -102,7 +108,32 @@ When this command is invoked:
    gh api repos/{owner}/{repo}/milestones --jq '.[0]'
    ```
 
-3. **Label stocktake**:
+3. **Determine project type** (if not previously set):
+   - Check if `env.json` already has preferences set
+   - If not, ask: "Is this a personal project (you're the only contributor) or a team project?"
+   - **Personal project**: Set `defaultIssueFilter` to `"all"` (fetch all open issues)
+   - **Team project**: Set `defaultIssueFilter` to `"assigned"` (fetch only issues assigned to you)
+   - Store in `preferences` section of `env.json`
+
+4. **Select project board** (if not previously set):
+   - List available project boards from `gh project list`
+   - Display options:
+     ```
+     Found 3 project boards:
+     [1] Agent Plugin Development (29 items)
+     [2] Logseq AI Memory & Ontology (2 items)
+     [3] Other Project (10 items)
+     [0] None - don't use a project board
+     [N] Create a new project board
+
+     Select project: _
+     ```
+   - If user selects a number: Store project number in `preferences.defaultProject`
+   - If user selects 0: Set `defaultProject` to null
+   - If user selects N: Create new project using `/github-workflows:project-create`
+   - Store selection in `preferences.defaultProject` for use with `/issue-track project`
+
+5. **Label stocktake**:
    ```bash
    # Get existing labels
    gh label list --json name,color,description
@@ -135,7 +166,7 @@ When this command is invoked:
    done
    ```
 
-4. **Analyze project scopes**:
+6. **Analyze project scopes**:
    ```bash
    # Check for configured scopes in git-conventional-commits.json
    if [[ -f "git-conventional-commits.json" ]]; then
@@ -158,21 +189,23 @@ When this command is invoked:
    echo "Suggested scopes: $SCOPES"
    ```
 
-5. **Sync issues**:
+7. **Sync issues** (using preference):
    ```bash
-   python {baseDir}/scripts/issue-tracker.py sync assigned
+   # Use defaultIssueFilter from preferences (defaults to "assigned" for backward compatibility)
+   FILTER=$(jq -r '.preferences.defaultIssueFilter // "assigned"' .claude/github-workflows/env.json 2>/dev/null || echo "assigned")
+   python {baseDir}/scripts/issue-tracker.py sync $FILTER
    ```
 
-6. **Detect branch context**:
+8. **Detect branch context**:
    - Get current branch name
    - Extract issue number if present
    - Match to cached issues
 
-5. **Write environment file**:
-   - Save all context to `.github-workflows/env.json`
+9. **Write environment file**:
+   - Save all context to `.claude/github-workflows/env.json`
    - This file is read by other commands
 
-6. **Display summary**:
+10. **Display summary**:
    ```
    ✅ GitHub Workflow Environment Initialized
 
@@ -284,6 +317,9 @@ After initialization, these are available in `env.json`:
 | `labels.missing` | List of missing standard labels | `["priority:high"]` |
 | `labels.suggestedScopes` | Scope labels suggested from project analysis | `["agent-builder"]` |
 | `setup.labelsComplete` | Whether all standard labels exist | `false` |
+| `preferences.projectType` | Personal or team project | `"personal"` |
+| `preferences.defaultIssueFilter` | Default filter for issue-track | `"all"` |
+| `preferences.defaultProject` | Default project board number | `3` |
 
 ## Error Handling
 
