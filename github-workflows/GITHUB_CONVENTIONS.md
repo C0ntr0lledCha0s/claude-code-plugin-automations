@@ -138,14 +138,16 @@ This document defines conventions for project status management, label usage, is
 | `bug` | Something isn't working as expected |
 | `enhancement` | Improving existing functionality |
 | `feature` | Adding new functionality |
-| `documentation` | Documentation changes only |
+| `docs` | Documentation changes only |
 | `refactor` | Code improvement without behavior change |
+| `test` | Testing related changes |
 | `chore` | Maintenance tasks (dependencies, CI, etc.) |
 
 #### Priority Labels (How urgent?) - REQUIRED for open issues
 | Label | Use When |
 |-------|----------|
-| `priority:high` | Critical path, blocking others, security issue |
+| `priority:critical` | Immediate action required, production down, security vulnerability |
+| `priority:high` | Critical path, blocking others, this sprint |
 | `priority:medium` | Important but not blocking, should do this sprint |
 | `priority:low` | Nice to have, can defer |
 
@@ -201,7 +203,7 @@ gh label create "branch:<branch-name>" --color "c5def5" --description "Work for 
    Labels: feature, priority:high
 
 ✅ Update README with examples
-   Labels: documentation, priority:low
+   Labels: docs, priority:low
 ```
 
 #### DON'T: Use multiple type labels
@@ -415,8 +417,8 @@ When a branch is merged or deleted, consider:
 ### Creating a New Issue Checklist
 
 1. [ ] Write clear, descriptive title (no type prefixes)
-2. [ ] Add type label (bug, feature, enhancement, documentation)
-3. [ ] Add priority label (high, medium, low)
+2. [ ] Add type label (bug, feature, enhancement, docs)
+3. [ ] Add priority label (critical, high, medium, low)
 4. [ ] Add scope label if applicable
 5. [ ] Add branch label if related to specific feature branch
 6. [ ] Assign to milestone if part of a phase/release
