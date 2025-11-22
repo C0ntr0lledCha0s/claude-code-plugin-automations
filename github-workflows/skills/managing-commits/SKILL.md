@@ -1,7 +1,7 @@
 ---
 name: managing-commits
-description: Git commit quality and conventional commits expertise. Auto-invokes when the user explicitly asks about commit message format, commit quality, conventional commits, commit history analysis, or requests help writing commit messages. Integrates with existing commit-helper skill.
-version: 1.1.0
+description: Git commit quality and conventional commits expertise with automatic issue tracking integration. Auto-invokes when the user explicitly asks about commit message format, commit quality, conventional commits, commit history analysis, issue references in commits, or requests help writing commit messages. Integrates with existing commit-helper skill and issue cache.
+version: 1.2.0
 allowed-tools: Bash, Read, Grep, Glob
 ---
 
@@ -175,6 +175,80 @@ git log -- path/to/file
 4. Add co-authors if applicable
 5. Validate format
 6. Execute commit
+```
+
+### 6. **Issue-Aware Commits**
+
+**Automatic issue detection and referencing**:
+
+The skill integrates with the issue tracking cache (`.claude/github-workflows/active-issues.json`) to automatically detect and suggest issue references.
+
+**Issue detection methods**:
+
+1. **Branch name parsing**:
+   ```bash
+   # Extracts issue numbers from branch names
+   feature/issue-42  → #42
+   feature/42-auth   → #42
+   fix/123           → #123
+   ```
+
+2. **Keyword matching**:
+   - Compares file paths to issue titles/bodies
+   - Scores relevance by keyword overlap
+   - Higher scores for branch matches
+
+3. **Label correlation**:
+   - Matches file patterns to issue labels
+   - auth files → auth-labeled issues
+   - test files → test-labeled issues
+
+**Using the issue tracker script**:
+
+```bash
+# Sync issues before committing
+python {baseDir}/scripts/issue-tracker.py sync assigned
+
+# Find related issues for staged changes
+python {baseDir}/scripts/issue-tracker.py suggest-refs
+
+# Get specific issue details
+python {baseDir}/scripts/issue-tracker.py get 42
+
+# Show all cached issues
+python {baseDir}/scripts/issue-tracker.py show
+```
+
+**Issue reference types**:
+
+- `Closes #N`: Auto-closes issue when PR merges (GitHub feature)
+- `Fixes #N`: Same as Closes, preferred for bugs
+- `Refs #N`: References issue without closing
+- `Progresses #N`: Indicates partial progress
+
+**Best practices for issue references**:
+
+1. **Use `Closes` for completion**: When the commit fully resolves the issue
+2. **Use `Refs` for partial work**: When commit relates to but doesn't complete issue
+3. **One issue per commit**: Match atomic commits to single issues
+4. **Include in footer**: Place after blank line for proper parsing
+
+**Example with issue detection**:
+
+```markdown
+Staged files: src/auth/jwt.ts, tests/auth/jwt.test.ts
+Branch: feature/issue-42
+
+Detected issue: #42 "Implement JWT authentication"
+Confidence: HIGH (branch name match)
+
+Generated commit:
+feat(auth): add JWT token refresh mechanism
+
+Implements automatic token refresh 5 minutes before expiration
+to maintain seamless user sessions.
+
+Closes #42
 ```
 
 ## Your Capabilities
@@ -448,6 +522,31 @@ python {baseDir}/scripts/conventional-commits.py interactive
 
 # Batch validate
 python {baseDir}/scripts/conventional-commits.py validate-branch feature/auth
+```
+
+### Issue Tracker
+
+**{baseDir}/scripts/issue-tracker.py**:
+```bash
+# Sync issues from GitHub to local cache
+python {baseDir}/scripts/issue-tracker.py sync assigned
+python {baseDir}/scripts/issue-tracker.py sync labeled priority:high
+python {baseDir}/scripts/issue-tracker.py sync milestone "Sprint 5"
+
+# Show cached issues as task list
+python {baseDir}/scripts/issue-tracker.py show
+
+# Find related issues for current staged changes
+python {baseDir}/scripts/issue-tracker.py suggest-refs
+
+# Get specific issue from cache
+python {baseDir}/scripts/issue-tracker.py get 42
+
+# Clear the cache
+python {baseDir}/scripts/issue-tracker.py clear
+
+# Output cache as JSON
+python {baseDir}/scripts/issue-tracker.py json
 ```
 
 ## Assets
