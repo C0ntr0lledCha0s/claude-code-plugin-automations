@@ -22,9 +22,9 @@ Apply a predefined label taxonomy to the repository.
 
 ## Presets
 
-**Standard** (10 labels): Types, priorities, basic scopes
-**Comprehensive** (28 labels): Full taxonomy with all categories
-**Minimal** (6 labels): Essential labels only
+**Standard** (13 labels): Types, priorities, basic scopes
+**Comprehensive** (23+ labels): Full taxonomy with types, priorities, sizes, and special labels. Scope labels should be customized per project based on codebase analysis.
+**Minimal** (3 labels): Essential type labels only (bug, feature, docs)
 
 ## What This Does
 
