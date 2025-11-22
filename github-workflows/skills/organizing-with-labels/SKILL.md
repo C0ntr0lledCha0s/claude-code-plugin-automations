@@ -1,7 +1,7 @@
 ---
 name: organizing-with-labels
-description: GitHub label and milestone management expertise. Auto-invokes when labels, milestones, taxonomies, issue organization, or sprint planning are mentioned. Handles label CRUD, bulk operations, and milestone tracking.
-version: 1.1.0
+description: GitHub label and milestone management expertise. Auto-invokes when labels, milestones, taxonomies, issue organization, sprint planning, or phase tracking are mentioned. Handles label CRUD, bulk operations, milestone creation/tracking/progress, and issue grouping for releases and sprints.
+version: 1.2.0
 allowed-tools: Bash, Read, Grep, Glob
 ---
 
