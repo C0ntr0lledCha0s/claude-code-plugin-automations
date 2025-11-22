@@ -70,7 +70,7 @@ triage_batch() {
         elif echo "$title" | grep -iq "feature\|add\|implement\|new"; then
             labels="feature"
         elif echo "$title" | grep -iq "doc\|readme\|guide"; then
-            labels="documentation"
+            labels="docs"
         fi
 
         if [ -n "$labels" ]; then
