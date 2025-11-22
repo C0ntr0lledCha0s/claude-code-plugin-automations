@@ -80,19 +80,22 @@ create_standard_labels() {
 
     # Type labels
     ensure_label "bug" "d73a4a" "Something isn't working"
-    ensure_label "enhancement" "a2eeef" "New feature or request"
-    ensure_label "documentation" "0075ca" "Improvements or additions to documentation"
-    ensure_label "plugin" "7057ff" "Claude Code plugin"
+    ensure_label "feature" "0075ca" "New feature or request"
+    ensure_label "enhancement" "a2eeef" "Improvement to existing functionality"
+    ensure_label "docs" "0075ca" "Documentation changes"
+    ensure_label "refactor" "fbca04" "Code refactoring"
+    ensure_label "test" "1d76db" "Testing related changes"
 
     # Priority labels
-    ensure_label "priority:high" "b60205" "High priority"
+    ensure_label "priority:critical" "b60205" "Critical priority - immediate action required"
+    ensure_label "priority:high" "d93f0b" "High priority"
     ensure_label "priority:medium" "fbca04" "Medium priority"
     ensure_label "priority:low" "0e8a16" "Low priority"
 
-    # Status labels
-    ensure_label "status:in-progress" "1d76db" "Currently being worked on"
-    ensure_label "status:blocked" "e11d21" "Blocked by dependencies"
-    ensure_label "status:review" "fbca04" "Ready for review"
+    # Scope labels
+    ensure_label "scope:frontend" "c2e0c6" "Frontend/UI related"
+    ensure_label "scope:backend" "c5def5" "Backend/API related"
+    ensure_label "scope:docs" "d4c5f9" "Documentation related"
 
     success "Standard labels created"
 }
