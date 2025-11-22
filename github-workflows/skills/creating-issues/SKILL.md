@@ -335,9 +335,9 @@ python {baseDir}/scripts/issue-helpers.py create \
 
 ### Issue Body Templates
 
-**Standard**: `{baseDir}/templates/issue-body-template.md`
-**Bug Report**: `{baseDir}/templates/bug-report-template.md`
-**Feature Request**: `{baseDir}/templates/feature-request-template.md`
+**Standard**: `{baseDir}/assets/issue-body-template.md`
+**Bug Report**: `{baseDir}/assets/bug-report-template.md`
+**Feature Request**: `{baseDir}/assets/feature-request-template.md`
 
 ## References
 
