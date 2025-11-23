@@ -74,10 +74,19 @@ gh auth login
 
 More info: https://github.com/cli/cli#installation
 
-**Optional Dependencies**:
-The plugin will auto-install these if missing:
-- **jq**: JSON processor for advanced operations
-- **python3**: For validation and analysis scripts
+**System Dependencies**:
+- **jq**: JSON processor for advanced operations (required for relationship management, some scripts)
+  ```bash
+  # Debian/Ubuntu/WSL
+  sudo apt update && sudo apt install jq -y
+
+  # macOS
+  brew install jq
+
+  # Fedora/RHEL
+  sudo dnf install jq
+  ```
+- **python3**: For validation and analysis scripts (usually pre-installed)
 
 ### Robustness Features
 
