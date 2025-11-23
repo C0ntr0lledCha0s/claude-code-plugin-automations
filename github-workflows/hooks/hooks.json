@@ -37,6 +37,15 @@
             "prompt": "If this Bash command creates a git branch (git checkout -b, git branch, git switch -c), validate the branch name against branching conventions. Check: 1) Starts with valid prefix (feature/, bugfix/, hotfix/, release/, docs/, refactor/), 2) Uses lowercase and hyphens only (no underscores or uppercase), 3) Maximum 64 characters, 4) Descriptive name after prefix. If the branch name doesn't follow conventions, suggest the correct format (e.g., 'my_feature' should be 'feature/my-feature') and ask the user to confirm before proceeding. If a branching config exists at .claude/github-workflows/branching-config.json, use its naming rules."
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "If this Bash command is 'gh issue create', validate that all THREE required label categories are present: 1) Type label (bug, feature, enhancement, documentation, refactor, chore), 2) Priority label (priority:high, priority:medium, priority:low, or priority:critical), 3) Scope label (scope:*). Check the --label argument for these. If scope label is missing: a) Check .claude/github-workflows/env.json for branch.scopeLabel to auto-detect, b) Check .claude/github-workflows/env.json labels.suggestedScopes for available options, c) WARN the user that scope is REQUIRED and suggest available scopes, d) Ask user to add scope label before proceeding. Do NOT allow issue creation without a scope label unless user explicitly confirms bypass."
+          }
+        ]
       }
     ],
     "PostToolUse": [

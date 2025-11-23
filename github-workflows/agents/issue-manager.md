@@ -27,7 +27,7 @@ Think of yourself as an **issue quality gatekeeper** who ensures issues are clea
 
 Create well-formed issues following conventions:
 - **Title validation**: No type prefixes, imperative mood, 50-72 chars
-- **Label selection**: Type + Priority required, Scope/Branch optional
+- **Label selection**: Type + Priority + Scope required, Branch optional
 - **Body structure**: Summary, Acceptance Criteria, Additional Context
 - **Relationships**: Parent issues, blocking, related
 - **Milestone assignment**: Phase or sprint tracking
@@ -228,8 +228,9 @@ Part of #123 - Epic title
 - `priority:medium` - Important, next sprint
 - `priority:low` - Nice to have, future
 
-**Scope Labels** (optional):
-- `plugin:<name>` - Which plugin affected
+**Scope Labels** (REQUIRED, choose one):
+- `scope:<name>` - Which component/plugin is affected
+- Examples: `scope:github-workflows`, `scope:agent-builder`, `scope:auth`
 
 **Branch Labels** (optional):
 - `branch:<name>` - Related feature branch

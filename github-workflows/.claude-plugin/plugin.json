@@ -41,5 +41,15 @@
     "./agents/pr-reviewer.md",
     "./agents/issue-manager.md",
     "./agents/release-manager.md"
+  ],
+  "skills": [
+    "./skills/creating-issues/",
+    "./skills/managing-branches/",
+    "./skills/managing-commits/",
+    "./skills/managing-projects/",
+    "./skills/managing-relationships/",
+    "./skills/organizing-with-labels/",
+    "./skills/reviewing-pull-requests/",
+    "./skills/triaging-issues/"
   ]
 }

@@ -32,6 +32,31 @@ Creates an issue with all factors properly configured:
 
 ## Workflow
 
+### Step 0: Load Environment and Detect Scope
+
+Before any prompts, load the environment and attempt scope detection:
+
+```bash
+# Load environment
+ENV_FILE=".claude/github-workflows/env.json"
+if [[ -f "$ENV_FILE" ]]; then
+    DETECTED_SCOPE=$(jq -r '.branch.scopeLabel // empty' "$ENV_FILE")
+    SUGGESTED_SCOPES=$(jq -r '.labels.suggestedScopes[]? // empty' "$ENV_FILE")
+fi
+
+# If no scope from env, try branch name
+if [[ -z "$DETECTED_SCOPE" ]]; then
+    BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+    # Match branch against suggested scopes
+    for scope in $SUGGESTED_SCOPES; do
+        if [[ "${BRANCH,,}" == *"${scope,,}"* ]]; then
+            DETECTED_SCOPE="scope:$scope"
+            break
+        fi
+    done
+fi
+```
+
 ### Step 1: Title Validation
 
 Check title follows conventions:
@@ -72,17 +97,32 @@ Select priority:
 Your choice: _
 ```
 
-**Scope** (optional):
+**Scope** (REQUIRED - auto-detected or prompted):
 ```
-Select scope (or skip):
-1. plugin:agent-builder
-2. plugin:self-improvement
-3. plugin:github-workflows
-4. plugin:testing-expert
-5. [Skip]
+Detecting scope from context...
+
+✓ Auto-detected: scope:github-workflows (from branch: plugin/github-workflows)
+
+Confirm this scope? [Y/n/other]: _
+
+# OR if not detected:
+
+Select scope (REQUIRED):
+Available scopes (from project analysis):
+1. scope:agent-builder
+2. scope:self-improvement
+3. scope:github-workflows
+4. scope:testing-expert
+5. scope:research-agent
+6. [Other - enter custom scope]
 
 Your choice: _
 ```
+
+**Scope Detection Sources**:
+1. Branch context from `env.json` (`branch.scopeLabel`)
+2. Branch name parsing (e.g., `feature/auth` → `scope:auth`)
+3. Suggested scopes from initialization (`labels.suggestedScopes`)
 
 **Branch** (optional):
 ```
@@ -169,7 +209,37 @@ Part of #<parent-number> (if specified)
 [User provides context]
 ```
 
-### Step 7: Create Issue
+### Step 7: Validate Required Labels
+
+Before creating, verify all required labels are present:
+
+```
+Validating required labels...
+
+✅ Type: enhancement
+✅ Priority: priority:high
+✅ Scope: scope:github-workflows
+
+All required labels present. Proceeding with issue creation...
+```
+
+**If scope is missing**:
+```
+⚠️ VALIDATION FAILED
+
+Missing required labels:
+❌ Scope: Not set
+
+You MUST specify a scope label. Available scopes:
+1. scope:agent-builder
+2. scope:self-improvement
+3. scope:github-workflows
+...
+
+Select scope: _
+```
+
+### Step 8: Create Issue
 
 Execute creation with all metadata:
 
@@ -177,7 +247,7 @@ Execute creation with all metadata:
 gh issue create \
   --title "Add validation for hook matchers" \
   --body "$BODY" \
-  --label "enhancement,priority:high,plugin:agent-builder" \
+  --label "enhancement,priority:high,scope:github-workflows" \
   --milestone "Phase: Hooks Validation" \
   --project "Agent Plugin Development"
 ```
@@ -237,10 +307,19 @@ For scripting, pass all options:
 This command enforces the conventions from [GITHUB_CONVENTIONS.md](../GITHUB_CONVENTIONS.md):
 
 - **No type prefixes** in titles
-- **Required labels**: Type + Priority
+- **Required labels**: Type + Priority + Scope (ALL THREE)
+- **Scope auto-detection** from branch context
 - **Status via project board**, not labels
 - **Phases via milestones**, not labels
 - **Structured body** with acceptance criteria
+
+### Why Scope is Required
+
+Scope labels are mandatory because they:
+1. Enable context-aware issue filtering (`/issue-track context`)
+2. Allow automatic issue detection in commits (`/commit-smart`)
+3. Improve project organization and searchability
+4. Prevent "orphan" issues that don't belong to any component
 
 ## Integration
 

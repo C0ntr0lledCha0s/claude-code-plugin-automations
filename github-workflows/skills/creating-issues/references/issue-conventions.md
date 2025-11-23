@@ -139,17 +139,19 @@ Is something broken?
 - Nice-to-have feature
 - Non-critical documentation
 
-### Optional Labels
+### Required Labels
 
 #### Scope Labels
 
-Indicate which component/plugin the issue affects:
+Indicate which component/plugin the issue affects (REQUIRED):
 
 ```
-plugin:agent-builder
-plugin:github-workflows
-plugin:self-improvement
+scope:agent-builder
+scope:github-workflows
+scope:self-improvement
 ```
+
+### Optional Labels
 
 #### Branch Labels
 

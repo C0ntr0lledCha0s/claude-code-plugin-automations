@@ -48,13 +48,51 @@ python {baseDir}/scripts/validate-issue-title.py "Issue title here"
 
 ### 2. **Label Selection**
 
-**Required Labels**:
+**Required Labels** (ALL THREE MUST BE PRESENT):
 - **Type** (one): `bug`, `feature`, `enhancement`, `documentation`, `refactor`, `chore`
-- **Priority** (one): `priority:high`, `priority:medium`, `priority:low`
+- **Priority** (one): `priority:critical`, `priority:high`, `priority:medium`, `priority:low`
+- **Scope** (one): `scope:component-name` - identifies which part of the system is affected
 
 **Optional Labels**:
-- **Scope**: `plugin:agent-builder`, `plugin:github-workflows`, etc.
 - **Branch**: `branch:feature/auth`, `branch:release/v2.0`, etc.
+
+### 3. **Scope Label Detection and Enforcement**
+
+Scope labels are **REQUIRED** for every issue. They enable:
+- Context-aware filtering in `/issue-track context`
+- Automatic issue detection in `/commit-smart`
+- Better project organization and searchability
+
+**Automatic Detection Sources** (in priority order):
+1. **Explicit user input**: User specifies scope directly
+2. **Branch context**: Detect from `env.json` `branch.scopeLabel`
+3. **Branch name parsing**: Extract from branch name (e.g., `feature/auth` → `scope:auth`)
+4. **Project structure**: Match against `labels.suggestedScopes` from initialization
+
+**Detection Logic**:
+```python
+def detect_scope():
+    # 1. Check environment for detected scope
+    env = load_env(".claude/github-workflows/env.json")
+    if env and env.get("branch", {}).get("scopeLabel"):
+        return env["branch"]["scopeLabel"]
+
+    # 2. Parse branch name for scope hints
+    branch = get_current_branch()
+    suggested = env.get("labels", {}).get("suggestedScopes", [])
+    for scope in suggested:
+        if scope.lower() in branch.lower():
+            return f"scope:{scope}"
+
+    # 3. Cannot detect - MUST prompt user
+    return None
+```
+
+**Enforcement**:
+- If scope cannot be auto-detected, **ALWAYS prompt the user**
+- Do NOT create issues without a scope label
+- Show available scopes from project analysis
+- Warn if skipping scope (require explicit confirmation)
 
 **Selection Guide**:
 
@@ -67,11 +105,12 @@ python {baseDir}/scripts/validate-issue-title.py "Issue title here"
 - Maintenance? → `chore`
 
 **Priority Selection**:
-- Critical path/blocking? → `priority:high`
+- Security/data loss/complete failure? → `priority:critical`
+- Critical path/blocking others? → `priority:high`
 - Important but not blocking? → `priority:medium`
 - Nice to have? → `priority:low`
 
-### 3. **Issue Body Structure**
+### 4. **Issue Body Structure**
 
 Use structured templates for consistent, complete issues:
 
@@ -150,7 +189,7 @@ Use structured templates for consistent, complete issues:
 [What this does NOT include]
 ```
 
-### 4. **Milestone Assignment**
+### 5. **Milestone Assignment**
 
 **When to Assign**:
 - Issue is part of a planned release
@@ -163,7 +202,7 @@ Use structured templates for consistent, complete issues:
 - `Sprint <number>` - Sprints
 - `Q<n> <year>` - Quarters
 
-### 5. **Issue Relationships**
+### 6. **Issue Relationships**
 
 **Parent Issue**:
 ```markdown
@@ -186,7 +225,7 @@ Part of #<number> - <Parent title>
 - #<number> - <Related title>
 ```
 
-### 6. **Project Board Placement**
+### 7. **Project Board Placement**
 
 New issues typically go to **Backlog** status in project board.
 
@@ -227,8 +266,10 @@ Recommended labels:
 - **Type**: `enhancement` (improving existing feature)
 - **Priority**: `priority:medium` (important but not blocking)
 
+Required:
+- **Scope**: `scope:agent-builder` (identifies component)
+
 Optional:
-- **Scope**: `plugin:agent-builder` (if specific to that plugin)
 - **Branch**: `branch:plugin/agent-builder` (if on feature branch)
 ```
 
@@ -326,7 +367,7 @@ python {baseDir}/scripts/issue-helpers.py create \
   --title "Add validation for hook matchers" \
   --type enhancement \
   --priority high \
-  --scope plugin:agent-builder \
+  --scope scope:agent-builder \
   --milestone "Phase: Hooks Validation" \
   --body-file /tmp/issue-body.md
 ```
@@ -445,7 +486,21 @@ Covers:
 - **Status is NOT a label** - managed via project board columns
 - **Phases are milestones** - not labels
 - **One type label only** - choose the primary type
-- **Required: Type + Priority** - every issue needs these
+- **Required: Type + Priority + Scope** - every issue needs ALL THREE
+- **Scope is MANDATORY** - auto-detect from branch or prompt user
 - **Acceptance criteria matter** - define done clearly
+
+## Label Checklist
+
+Before creating ANY issue, verify:
+
+1. ✅ **Type label** (bug/feature/enhancement/docs/refactor/chore)
+2. ✅ **Priority label** (priority:critical/high/medium/low)
+3. ✅ **Scope label** (scope:component-name)
+
+If scope cannot be auto-detected:
+- List available scopes from `labels.suggestedScopes`
+- Prompt user to select one
+- Require explicit confirmation if skipping (strongly discouraged)
 
 When you encounter issue creation, use this expertise to help users create well-formed issues that follow project conventions!

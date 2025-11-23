@@ -61,7 +61,7 @@ def list_labels():
             categories['Type'].append(label)
         elif name.startswith('priority:'):
             categories['Priority'].append(label)
-        elif name.startswith('plugin:') or name == 'plugin':
+        elif name.startswith('scope:'):
             categories['Scope'].append(label)
         elif name.startswith('branch:'):
             categories['Branch'].append(label)
@@ -161,8 +161,8 @@ def create_issue(
 
     # Build labels list
     labels = [issue_type, f"priority:{priority}"]
-    if scope:
-        labels.append(scope if scope.startswith('plugin:') else f"plugin:{scope}")
+    # Scope is required - enforce scope: prefix
+    labels.append(scope if scope.startswith('scope:') else f"scope:{scope}")
     if branch:
         labels.append(branch if branch.startswith('branch:') else f"branch:{branch}")
 
@@ -251,7 +251,7 @@ def main():
                                help='Issue priority')
     create_parser.add_argument('--body', help='Issue body')
     create_parser.add_argument('--body-file', help='File containing issue body')
-    create_parser.add_argument('--scope', help='Scope label (e.g., plugin:agent-builder)')
+    create_parser.add_argument('--scope', required=True, help='Scope label (REQUIRED, e.g., scope:github-workflows)')
     create_parser.add_argument('--branch', help='Branch label (e.g., branch:feature/auth)')
     create_parser.add_argument('--milestone', help='Milestone title')
     create_parser.add_argument('--project', help='Project name')
