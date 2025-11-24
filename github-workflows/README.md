@@ -70,14 +70,47 @@ winget install --id GitHub.cli
 
 # Authenticate after installation
 gh auth login
-
-# Add project scope for GitHub Projects v2 features
-gh auth refresh -s read:project
 ```
 
-> **Note**: The `read:project` scope is required for GitHub Projects v2 operations (creating boards, syncing items, managing fields). Without it, project-related commands will fail with "INSUFFICIENT_SCOPES" errors.
-
 More info: https://github.com/cli/cli#installation
+
+**Token Setup**:
+
+The plugin requires specific GitHub token scopes for full functionality:
+
+| Scope | Required For | Commands |
+|-------|-------------|----------|
+| `repo` | Issues, PRs, commits | All commands |
+| `read:project` | GitHub Projects v2 | `/project-create`, `/project-sync` |
+| `read:org` | Organization projects | Org-level project boards |
+
+**Setup with GitHub CLI** (recommended):
+```bash
+# Initial authentication with required scopes
+gh auth login -s repo,read:project,read:org
+
+# Or add scopes to existing auth
+gh auth refresh -s read:project,read:org
+
+# Verify your scopes
+gh auth status
+```
+
+**Setup with Personal Access Token**:
+1. Go to https://github.com/settings/tokens
+2. Create token with scopes: `repo`, `read:project`, `read:org`
+3. Set as environment variable: `export GH_TOKEN=ghp_xxxx`
+
+**Verify Setup**:
+```bash
+# Check authentication and scopes
+gh auth status
+
+# Test project access
+gh api graphql -f query='query { viewer { projectsV2(first: 1) { nodes { title } } } }'
+```
+
+> **Note**: Without `read:project` scope, project-related commands will fail with "INSUFFICIENT_SCOPES" errors.
 
 **System Dependencies**:
 - **jq**: JSON processor for advanced operations (required for relationship management, some scripts)
