@@ -43,18 +43,22 @@ When this command is invoked:
 3. **Analyze changes**: Run git status and diff to identify all modified files
 
 4. **Detect related issues**:
-   - Check branch name for issue number (e.g., `feature/issue-42`)
-   - Match files to issue keywords
-   - Score issues by relevance
+   - Load `relatedIssues` array from `env.json` (set via `/issue-track select`)
+   - Check branch name for issue numbers (e.g., `feature/issue-42`)
+   - Detect branch scope and match against issue labels
+   - Score issues by relevance:
+     - **+100**: Branch-selected issue (in `relatedIssues` array)
+     - **+50**: Scope match (issue has branch's detected scope label)
+     - **+10-30**: Keyword/file matches
 
 5. **Invoke managing-commits skill**: Delegate to skill for intelligent grouping
 
 6. **Group files**: Skill groups files by scope, type, and relationships
 
 7. **Generate commit messages**: Create conventional commit messages with issue refs:
-   - Use `Closes #N` for branch-related issue
-   - Use `Refs #N` for related issues
-   - Add to commit footer automatically
+   - Use `Closes #N` for ALL branch-selected issues (from `relatedIssues` array)
+   - Use `Refs #N` for scope-matched or keyword-matched issues
+   - Add to commit footer automatically with multiple refs when appropriate
 
 8. **Present plan**: Show user the proposed commits with file lists and issue refs
 
@@ -122,12 +126,13 @@ This command automatically integrates with tracked GitHub issues:
 ### Example with Issue Integration
 
 ```bash
-# On branch feature/issue-42
+# On branch feature/auth (with issues #42, #43 selected via /issue-track select)
 /commit-smart
 
 # Output:
 Analyzing changes...
-Branch appears related to issue #42: "Implement user authentication"
+Branch scope: auth (scope:auth)
+Selected issues: #42 "Implement user authentication", #43 "Add JWT validation"
 
 Found 3 files changed:
   - src/auth/jwt.ts
@@ -141,16 +146,18 @@ Implements automatic token refresh 5 minutes before expiration
 to maintain seamless user sessions.
 
 Closes #42
+Closes #43
 
 Create this commit? [y/n]
 ```
 
 ### Sync Issues First
 
-For best results, sync issues before committing:
+For best results, sync issues and select branch issues before committing:
 ```bash
-/issue-track sync
-/commit-smart
+/issue-track sync              # Sync issues from GitHub
+/issue-track select 42 43      # Select issues for this branch
+/commit-smart                  # Commit with auto-refs
 ```
 
 ## Important Notes

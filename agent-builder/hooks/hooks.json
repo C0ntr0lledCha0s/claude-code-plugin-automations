@@ -1,0 +1,35 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Analyze the user's prompt to detect if they are asking to CREATE, BUILD, ADD, or IMPLEMENT any Claude Code components (skills, commands, agents, hooks, or plugins). Look for keywords like: 'create a skill', 'build an agent', 'add a command', 'implement a hook', 'make a plugin', 'new skill', 'new command', etc. If component creation is detected, you MUST invoke the appropriate agent-builder skill BEFORE doing any work: Use 'agent-builder:building-skills' for skills, 'agent-builder:building-commands' for commands, 'agent-builder:building-agents' for agents, 'agent-builder:building-hooks' for hooks, 'agent-builder:building-plugins' for plugins. Do NOT proceed with creating component files until you have loaded the skill's guidance, templates, and best practices."
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $CLAUDE_PROJECT_DIR/agent-builder/hooks/scripts/check-skill-invoked.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "IMPORTANT: Before writing to this file path, check if it is a Claude Code component file. Component patterns: */skills/*/SKILL.md (skills), */commands/*.md (commands), */agents/*.md (agents), */hooks/hooks.json (hooks), */.claude-plugin/plugin.json (plugins). If writing to a component file: 1) STOP and verify you have invoked the appropriate agent-builder skill (building-skills, building-commands, building-agents, building-hooks, building-plugins). 2) If you have NOT invoked the skill yet, do so NOW before proceeding. 3) Use the skill's templates from agent-builder/skills/*/templates/ as your starting point. 4) Follow the skill's schema and validation rules. This check ensures components are created correctly with proper structure, security, and best practices."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": []
+  }
+}

@@ -1,7 +1,7 @@
 ---
 name: building-plugins
-description: Expert at creating and managing Claude Code plugins that bundle agents, skills, commands, and hooks into cohesive packages. Auto-invokes when the user wants to create, structure, validate, or publish a complete plugin, or needs help with plugin architecture and best practices.
-version: 1.0.0
+description: Expert at creating and managing Claude Code plugins that bundle agents, skills, commands, and hooks into cohesive packages. Auto-invokes when the user wants to create, structure, validate, or publish a complete plugin, or needs help with plugin architecture and best practices. Also auto-invokes proactively when Claude is about to create plugin directory structures, write plugin.json manifests, or implement tasks that involve bundling components into a plugin package.
+version: 1.1.0
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 

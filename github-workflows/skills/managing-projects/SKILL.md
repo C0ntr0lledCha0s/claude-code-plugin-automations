@@ -19,6 +19,15 @@ Auto-invoke this skill when the conversation involves:
 - GraphQL operations for GitHub Projects v2
 - Keywords: "project board", "sprint", "kanban", "roadmap", "project view"
 
+## Your Capabilities
+
+1. **Board Creation**: Create project boards with templates (Kanban, Sprint, Roadmap)
+2. **Field Management**: Configure custom fields (Status, Priority, Sprint, etc.)
+3. **View Configuration**: Set up Table, Board, and Roadmap views
+4. **Item Management**: Add/move issues and PRs across project items
+5. **GraphQL Operations**: Execute complex project queries and mutations
+6. **Automation**: Configure auto-add, auto-archive, and field update rules
+
 ## Your Expertise
 
 ### 1. **Prerequisites and Setup**

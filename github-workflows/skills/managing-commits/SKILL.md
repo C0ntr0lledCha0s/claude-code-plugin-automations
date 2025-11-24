@@ -21,6 +21,15 @@ Auto-invoke this skill when the user explicitly:
 
 **Do NOT auto-invoke** for casual mentions of "commit" in conversation (e.g., "I committed to finishing this feature"). Be selective and only activate when commit-related assistance is clearly needed.
 
+## Your Capabilities
+
+1. **Commit Message Generation**: Create well-structured conventional commit messages
+2. **Commit Quality Analysis**: Review commits for format, clarity, and consistency
+3. **History Analysis**: Analyze git history for patterns and issues
+4. **Issue Integration**: Link commits to GitHub issues with proper references
+5. **Breaking Change Detection**: Identify and document breaking changes
+6. **Changelog Generation**: Generate changelogs from commit history
+
 ## Your Expertise
 
 ### 1. **Conventional Commits Format**

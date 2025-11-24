@@ -5,7 +5,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/github-workflows/hooks/check-init.sh"
+            "command": "${PLUGIN_DIR}/hooks/scripts/check-dependencies.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${PLUGIN_DIR}/hooks/check-init.sh"
           }
         ]
       }
@@ -26,6 +34,24 @@
           {
             "type": "prompt",
             "prompt": "If this Bash command is 'gh pr create' or 'gh pr merge', run quality gates to ensure: 1) All CI checks pass (check with 'gh pr checks'), 2) Tests have adequate coverage, 3) No security issues detected, 4) Code quality scores are acceptable. If any gates fail, warn the user with specific details and ask for confirmation before proceeding. For merges, also verify the PR has required approvals."
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "If this Bash command creates a git branch (git checkout -b, git branch, git switch -c), validate the branch name against branching conventions. Check: 1) Starts with valid prefix (feature/, bugfix/, hotfix/, release/, docs/, refactor/), 2) Uses lowercase and hyphens only (no underscores or uppercase), 3) Maximum 64 characters, 4) Descriptive name after prefix. If the branch name doesn't follow conventions, suggest the correct format (e.g., 'my_feature' should be 'feature/my-feature') and ask the user to confirm before proceeding. If a branching config exists at .claude/github-workflows/branching-config.json, use its naming rules."
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "If this Bash command is 'gh issue create', validate that all THREE required label categories are present: 1) Type label (bug, feature, enhancement, documentation, refactor, chore), 2) Priority label (priority:high, priority:medium, priority:low, or priority:critical), 3) Scope label (scope:*). Check the --label argument for these. If scope label is missing: a) Check .claude/github-workflows/env.json for branch.scopeLabel to auto-detect, b) Check .claude/github-workflows/env.json labels.suggestedScopes for available options, c) WARN the user that scope is REQUIRED and suggest available scopes, d) Ask user to add scope label before proceeding. Do NOT allow issue creation without a scope label unless user explicitly confirms bypass."
           }
         ]
       }
@@ -55,6 +81,15 @@
           {
             "type": "prompt",
             "prompt": "If this Bash command was 'git commit' and it succeeded, check the commit message for issue references (Closes #N, Fixes #N, Refs #N, Progresses #N). If found: 1) Offer to add a comment to the referenced GitHub issue with the commit SHA and summary using 'gh issue comment <number> --body \"Commit <sha>: <subject>\"', 2) For 'Progresses #N', suggest adding an 'in-progress' label to the issue, 3) Remind user that 'Closes/Fixes' will auto-close the issue when the PR is merged. If no issue reference was found but the issue cache exists at .claude/github-workflows/active-issues.json, suggest running /github-workflows:issue-track to sync issues for better commit-issue integration."
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "If this Bash command was a git merge (git merge) that completed successfully, check if branch cleanup is appropriate. If the merged branch was a feature/, bugfix/, hotfix/, or release/ branch: 1) Suggest deleting the local branch with 'git branch -d <branch>', 2) Suggest deleting the remote branch with 'git push origin --delete <branch>', 3) If a worktree exists for this branch, suggest removing it with 'git worktree remove <path>'. For hotfix and release branches, remind about tagging if not already done. Reference the branching strategy in .claude/github-workflows/branching-config.json if available."
           }
         ]
       }

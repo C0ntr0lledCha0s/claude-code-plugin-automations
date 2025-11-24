@@ -14,7 +14,8 @@
     "version:minor": "standard-version --release-as minor",
     "version:patch": "standard-version --release-as patch",
     "build": "npm run validate",
-    "test": "npm run validate"
+    "test": "npm run validate",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,8 @@
     "@commitlint/config-conventional": "^19.0.0",
     "conventional-changelog-cli": "^5.0.0",
     "git-conventional-commits": "^2.6.7",
+    "husky": "9.1.7",
+    "node-jq": "^6.0.0",
     "standard-version": "^9.5.0"
   },
   "engines": {

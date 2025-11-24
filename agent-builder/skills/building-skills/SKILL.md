@@ -1,7 +1,7 @@
 ---
 name: building-skills
-description: Expert at creating and modifying Claude Code skills. Auto-invokes when the user wants to create, update, modify, enhance, validate, or standardize skills, or when modifying skill YAML frontmatter fields (especially 'model', 'allowed-tools', 'description'), needs help designing skill architecture, or wants to understand when to use skills vs agents.
-version: 1.2.0
+description: Expert at creating and modifying Claude Code skills. Auto-invokes when the user wants to create, update, modify, enhance, validate, or standardize skills, or when modifying skill YAML frontmatter fields (especially 'model', 'allowed-tools', 'description'), needs help designing skill architecture, or wants to understand when to use skills vs agents. Also auto-invokes proactively when Claude is about to write skill files (*/skills/*/SKILL.md), create skill directory structures, or implement tasks that involve creating skill components.
+version: 1.3.0
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 

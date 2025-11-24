@@ -1,7 +1,7 @@
 {
   "name": "github-workflows",
-  "version": "1.3.0",
-  "description": "Comprehensive GitHub workflow automation including project boards, labels, milestones, commits, issues, and pull requests. Features automatic issue tracking, commit integration, and session environment setup. Optional integration with self-improvement plugin for enhanced PR reviews and quality gates.",
+  "version": "1.7.0",
+  "description": "Comprehensive GitHub workflow automation including project boards, labels, milestones, commits, issues, pull requests, branching strategies, and worktrees. Features automatic issue tracking, commit integration, milestone management with progress tracking, branching flow automation (gitflow, GitHub Flow, trunk-based), worktree management for parallel development, and session environment setup. Optional integration with self-improvement plugin for enhanced PR reviews and quality gates.",
   "author": {
     "name": "C0ntr0lledCha0s",
     "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
@@ -17,16 +17,39 @@
     "project-boards",
     "labels",
     "milestones",
+    "milestone-management",
+    "progress-tracking",
     "pull-requests",
     "commits",
     "issues",
     "code-review",
     "issue-tracking",
+    "issue-creation",
+    "issue-conventions",
     "session-setup",
-    "environment"
+    "environment",
+    "branching",
+    "gitflow",
+    "github-flow",
+    "trunk-based",
+    "worktrees",
+    "release-management",
+    "hotfix"
   ],
   "agents": [
     "./agents/workflow-orchestrator.md",
-    "./agents/pr-reviewer.md"
+    "./agents/pr-reviewer.md",
+    "./agents/issue-manager.md",
+    "./agents/release-manager.md"
+  ],
+  "skills": [
+    "./skills/creating-issues/",
+    "./skills/managing-branches/",
+    "./skills/managing-commits/",
+    "./skills/managing-projects/",
+    "./skills/managing-relationships/",
+    "./skills/organizing-with-labels/",
+    "./skills/reviewing-pull-requests/",
+    "./skills/triaging-issues/"
   ]
 }

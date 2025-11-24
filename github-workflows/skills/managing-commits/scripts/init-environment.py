@@ -162,32 +162,158 @@ def get_milestone(owner, repo):
 
     return None
 
-def get_branch_info():
-    """Get current branch and detect related issue."""
+def detect_branch_scope(branch_name, suggested_scopes):
+    """Detect scope from branch name matching suggested scopes."""
+    if not branch_name or not suggested_scopes:
+        return None, None
+
+    branch_lower = branch_name.lower()
+
+    # Check each suggested scope
+    for scope in suggested_scopes:
+        scope_lower = scope.lower()
+        # Match scope anywhere in branch name
+        if scope_lower in branch_lower:
+            return scope, f"scope:{scope}"
+        # Also check hyphenated versions
+        if scope_lower.replace("-", "") in branch_lower.replace("-", ""):
+            return scope, f"scope:{scope}"
+
+    # Try to extract scope from common patterns
+    # e.g., feature/auth-login, fix/api-error, plugin/github-workflows
+    patterns = [
+        r"^(?:feature|fix|plugin|bugfix|hotfix)/([a-z0-9-]+)",
+        r"^([a-z0-9-]+)/",
+    ]
+
+    for pattern in patterns:
+        match = re.search(pattern, branch_lower)
+        if match:
+            potential_scope = match.group(1).split("-")[0]
+            # Check if this matches a suggested scope
+            for scope in suggested_scopes:
+                if potential_scope == scope.lower():
+                    return scope, f"scope:{scope}"
+
+    return None, None
+
+
+def get_branch_info(suggested_scopes=None):
+    """Get current branch and detect related issues and scope."""
     branch_name = run_git_command(["rev-parse", "--abbrev-ref", "HEAD"])
 
     if not branch_name:
         return None
 
-    # Extract issue number from branch name
-    issue_number = None
+    # Extract issue numbers from branch name (can have multiple)
+    issue_numbers = []
     patterns = [
         r"issue-(\d+)",
         r"/(\d+)-",
         r"^(\d+)-",
-        r"-(\d+)$"
+        r"-(\d+)(?:$|-)"
     ]
 
     for pattern in patterns:
-        match = re.search(pattern, branch_name)
-        if match:
-            issue_number = int(match.group(1))
-            break
+        matches = re.findall(pattern, branch_name)
+        for match in matches:
+            num = int(match)
+            if num not in issue_numbers:
+                issue_numbers.append(num)
+
+    # Detect scope from branch name
+    detected_scope = None
+    scope_label = None
+    if suggested_scopes:
+        detected_scope, scope_label = detect_branch_scope(branch_name, suggested_scopes)
 
     return {
         "name": branch_name,
-        "relatedIssue": issue_number
+        "relatedIssues": issue_numbers if issue_numbers else [],
+        "detectedScope": detected_scope,
+        "scopeLabel": scope_label
     }
+
+def get_suggested_scopes():
+    """Get suggested scopes from git-conventional-commits.json or project structure."""
+    scopes = []
+
+    # First check for configured scopes in git-conventional-commits.json
+    config_path = Path("git-conventional-commits.json")
+    if config_path.exists():
+        try:
+            with open(config_path) as f:
+                data = json.load(f)
+                configured_scopes = data.get("convention", {}).get("commitScopes", [])
+                if configured_scopes:
+                    return configured_scopes
+        except Exception:
+            pass
+
+    # Check for plugin directories
+    try:
+        plugin_dirs = []
+        for item in Path(".").iterdir():
+            if item.is_dir() and (item / "plugin.json").exists():
+                plugin_dirs.append(item.name)
+            elif item.is_dir() and (item / ".claude-plugin" / "plugin.json").exists():
+                plugin_dirs.append(item.name)
+
+        if plugin_dirs:
+            return plugin_dirs
+    except Exception:
+        pass
+
+    # Fall back to top-level directories (excluding common non-scopes)
+    exclude = {"node_modules", "dist", "build", "coverage", ".git", ".claude", "__pycache__", ".venv", "venv"}
+    try:
+        scopes = [
+            d.name for d in Path(".").iterdir()
+            if d.is_dir() and d.name not in exclude and not d.name.startswith(".")
+        ]
+    except Exception:
+        pass
+
+    return scopes
+
+
+def get_label_stocktake():
+    """Get existing labels and identify missing standard labels."""
+    # Standard labels we expect
+    standard_labels = {
+        # Type labels
+        "bug", "feature", "enhancement", "documentation", "refactor", "chore",
+        # Priority labels
+        "priority:critical", "priority:high", "priority:medium", "priority:low"
+    }
+
+    # Get existing labels
+    output = run_gh_command([
+        "label", "list",
+        "--json", "name",
+        "--limit", "100"
+    ])
+
+    existing_labels = set()
+    if output:
+        try:
+            data = json.loads(output)
+            existing_labels = {label.get("name", "") for label in data}
+        except json.JSONDecodeError:
+            pass
+
+    # Find missing labels
+    missing = sorted(list(standard_labels - existing_labels))
+
+    # Recommended labels (the type labels)
+    recommended = ["bug", "feature", "enhancement", "documentation", "refactor", "chore"]
+
+    return {
+        "existing": len(existing_labels),
+        "missing": missing,
+        "recommended": recommended
+    }
+
 
 def get_issue_cache_info():
     """Get information about the issue cache."""
@@ -305,13 +431,41 @@ def initialize_environment(force=False):
     else:
         print("- None active")
 
+    # Get suggested scopes for branch detection
+    print("  Analyzing project scopes...", end=" ")
+    suggested_scopes = get_suggested_scopes()
+    if suggested_scopes:
+        print(f"✓ {len(suggested_scopes)} scopes")
+    else:
+        print("- None detected")
+
+    # Get label stocktake
+    print("  Checking labels...", end=" ")
+    label_stocktake = get_label_stocktake()
+    env["labels"] = {
+        "existing": label_stocktake["existing"],
+        "missing": label_stocktake["missing"],
+        "recommended": label_stocktake["recommended"],
+        "suggestedScopes": suggested_scopes if suggested_scopes else []
+    }
+    if label_stocktake["missing"]:
+        print(f"✓ {label_stocktake['existing']} labels ({len(label_stocktake['missing'])} missing)")
+    else:
+        print(f"✓ {label_stocktake['existing']} labels (all standard present)")
+
     # Branch info
     print("  Detecting branch...", end=" ")
-    branch = get_branch_info()
+    branch = get_branch_info(suggested_scopes)
     if branch:
         env["branch"] = branch
-        issue_str = f" → Issue #{branch['relatedIssue']}" if branch.get('relatedIssue') else ""
-        print(f"✓ {branch['name']}{issue_str}")
+        issues_str = ""
+        if branch.get('relatedIssues'):
+            issue_nums = ", #".join(str(n) for n in branch['relatedIssues'])
+            issues_str = f" → Issues #{issue_nums}"
+        scope_str = ""
+        if branch.get('detectedScope'):
+            scope_str = f" [{branch['detectedScope']}]"
+        print(f"✓ {branch['name']}{issues_str}{scope_str}")
     else:
         print("- Not in git repo")
 
@@ -326,6 +480,20 @@ def initialize_environment(force=False):
             print("✓ Done")
     else:
         print("- Sync failed")
+
+    # Add preferences section
+    env["preferences"] = {
+        "projectType": "personal",  # Default to personal project
+        "defaultIssueFilter": "all",  # Default to all issues for personal projects
+        "defaultProject": project.get("number") if project else None
+    }
+
+    # Add setup section
+    env["setup"] = {
+        "labelsComplete": len(label_stocktake["missing"]) == 0,
+        "projectBoardExists": project is not None,
+        "milestonesExist": milestone is not None
+    }
 
     # Save environment
     env_path = get_env_path()
@@ -367,11 +535,57 @@ def show_summary(env):
         print(f"Milestone: {env['milestone']['title']}{due}")
 
     if env.get("branch"):
-        issue = f" → Issue #{env['branch']['relatedIssue']}" if env['branch'].get('relatedIssue') else ""
-        print(f"Branch: {env['branch']['name']}{issue}")
+        issues = ""
+        if env['branch'].get('relatedIssues'):
+            issue_nums = ", #".join(str(n) for n in env['branch']['relatedIssues'])
+            issues = f" → Issues #{issue_nums}"
+        print(f"Branch: {env['branch']['name']}{issues}")
+        if env['branch'].get('detectedScope'):
+            print(f"  Scope: {env['branch']['detectedScope']} ({env['branch'].get('scopeLabel', '')})")
+
+    if env.get("labels", {}).get("suggestedScopes"):
+        print(f"Suggested Scopes: {', '.join(env['labels']['suggestedScopes'][:5])}")
 
     if env.get("issueCache"):
         print(f"Cached Issues: {env['issueCache']['count']}")
+
+    # Display label stocktake
+    if env.get("labels"):
+        labels = env["labels"]
+        print(f"\n📋 Label Stocktake:")
+        print(f"  Existing: {labels.get('existing', 0)} labels")
+        if labels.get("missing"):
+            print(f"  Missing: {len(labels['missing'])} standard labels")
+            for label in labels["missing"][:5]:
+                print(f"    - {label}")
+            if len(labels["missing"]) > 5:
+                print(f"    ... and {len(labels['missing']) - 5} more")
+
+    # Display preferences
+    if env.get("preferences"):
+        prefs = env["preferences"]
+        print(f"\n⚙️  Preferences:")
+        print(f"  Project Type: {prefs.get('projectType', 'personal')}")
+        print(f"  Default Issue Filter: {prefs.get('defaultIssueFilter', 'all')}")
+        if prefs.get("defaultProject"):
+            print(f"  Default Project: #{prefs['defaultProject']}")
+
+    # Display setup recommendations
+    if env.get("setup"):
+        setup = env["setup"]
+        print(f"\n🔧 Setup Recommendations:")
+        if setup.get("labelsComplete"):
+            print("  ✅ All standard labels present")
+        else:
+            print("  ⚠️  Missing labels - run /github-workflows:label-sync standard to create")
+        if setup.get("projectBoardExists"):
+            print("  ✅ Project board exists")
+        else:
+            print("  ⚠️  No project board - run /github-workflows:project-create to create")
+        if setup.get("milestonesExist"):
+            print("  ✅ Active milestone found")
+        else:
+            print("  ⚠️  No active milestone - run /github-workflows:milestone-create to create")
 
     print("\n💡 Tips:")
     print("  - Use /commit-smart to commit with auto issue refs")

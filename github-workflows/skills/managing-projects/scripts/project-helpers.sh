@@ -244,13 +244,43 @@ create_single_select_field() {
 
     echo "Creating field: $field_name"
 
-    # Convert comma-separated options to JSON array
+    # Convert comma-separated options to JSON array for GraphQL
     local options_json
     options_json=$(echo "$options" | jq -R 'split(",") | map({name: ., color: "GRAY"})')
 
-    # Note: Actual implementation would use GraphQL mutation
-    # This is a simplified version
-    warn "Field creation requires GraphQL (not fully implemented in this script)"
+    local mutation
+    mutation=$(cat <<'EOF'
+mutation($projectId: ID!, $fieldName: String!, $options: [ProjectV2SingleSelectFieldOptionInput!]!) {
+  createProjectV2Field(input: {
+    projectId: $projectId
+    dataType: SINGLE_SELECT
+    name: $fieldName
+    singleSelectOptions: $options
+  }) {
+    projectV2Field {
+      ... on ProjectV2SingleSelectField {
+        id
+        name
+      }
+    }
+  }
+}
+EOF
+)
+
+    local result
+    result=$(gh api graphql -f query="$mutation" \
+        -f projectId="$project_id" \
+        -f fieldName="$field_name" \
+        --input - <<< "{\"options\": $options_json}" 2>&1)
+
+    if echo "$result" | jq -e '.data.createProjectV2Field.projectV2Field.id' >/dev/null 2>&1; then
+        success "Created field: $field_name"
+        return 0
+    else
+        warn "Failed to create field $field_name: $(echo "$result" | jq -r '.errors[0].message // "unknown error"')"
+        return 1
+    fi
 }
 
 # Bulk add items to project
@@ -288,9 +318,49 @@ update_item_status() {
 
     echo "Updating item $item_id to status: $status"
 
-    # This requires GraphQL mutation
-    # Simplified implementation
-    warn "Status update requires GraphQL (use graphql-queries.sh)"
+    # Get graphql-queries.sh location
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    local graphql_script="$script_dir/graphql-queries.sh"
+
+    if [[ ! -f "$graphql_script" ]]; then
+        error "graphql-queries.sh not found at $graphql_script"
+    fi
+
+    # First, get the Status field ID and option ID
+    local project_number
+    project_number=$(gh project list --owner "$owner" --format json | \
+        jq -r --arg id "$project_id" '.projects[] | select(.id == $id) | .number')
+
+    if [[ -z "$project_number" ]]; then
+        error "Could not find project number for ID: $project_id"
+    fi
+
+    # Get field options
+    local field_info
+    field_info=$(bash "$graphql_script" get_options "$owner" "$project_number" "Status" 2>/dev/null)
+
+    local option_id
+    option_id=$(echo "$field_info" | grep -i "$status" | awk '{print $1}')
+
+    if [[ -z "$option_id" ]]; then
+        error "Could not find option ID for status: $status"
+    fi
+
+    # Get Status field ID
+    local field_id
+    field_id=$(bash "$graphql_script" list_fields "$owner" "$project_number" 2>/dev/null | \
+        grep -i "Status" | awk '{print $1}')
+
+    if [[ -z "$field_id" ]]; then
+        error "Could not find Status field ID"
+    fi
+
+    # Update the field
+    if bash "$graphql_script" update_field_select "$project_id" "$item_id" "$field_id" "$option_id"; then
+        success "Updated item status to: $status"
+    else
+        error "Failed to update item status"
+    fi
 }
 
 # Archive completed items
@@ -301,8 +371,95 @@ archive_done_items() {
 
     echo "Archiving items older than $days_old days in Done status..."
 
-    # This requires querying project items and archiving them
-    warn "Archival requires GraphQL queries (use graphql-queries.sh)"
+    ensure_gh_cli || return 1
+
+    # Get graphql-queries.sh location
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    local graphql_script="$script_dir/graphql-queries.sh"
+
+    # Get project ID
+    local project_id
+    project_id=$(bash "$graphql_script" get_project_id "$owner" "$project_number" 2>/dev/null)
+
+    if [[ -z "$project_id" || "$project_id" == "null" ]]; then
+        error "Could not get project ID for project #$project_number"
+    fi
+
+    # Query for done items with their updated dates
+    local query
+    query=$(cat <<'EOF'
+query($projectId: ID!) {
+  node(id: $projectId) {
+    ... on ProjectV2 {
+      items(first: 100) {
+        nodes {
+          id
+          updatedAt
+          fieldValues(first: 10) {
+            nodes {
+              ... on ProjectV2ItemFieldSingleSelectValue {
+                name
+                field { ... on ProjectV2SingleSelectField { name } }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+EOF
+)
+
+    local result
+    result=$(gh api graphql -f query="$query" -f projectId="$project_id" 2>/dev/null)
+
+    # Filter for Done items older than N days
+    local cutoff_date
+    cutoff_date=$(date -d "-$days_old days" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || \
+                  date -v-${days_old}d +%Y-%m-%dT%H:%M:%SZ)
+
+    local items_to_archive
+    items_to_archive=$(echo "$result" | jq -r --arg cutoff "$cutoff_date" '
+        .data.node.items.nodes[] |
+        select(
+            .updatedAt < $cutoff and
+            (.fieldValues.nodes[] | select(.field.name == "Status" and .name == "Done"))
+        ) | .id
+    ')
+
+    if [[ -z "$items_to_archive" ]]; then
+        echo "No items to archive"
+        return 0
+    fi
+
+    local archive_count=0
+    while IFS= read -r item_id; do
+        [[ -z "$item_id" ]] && continue
+
+        local archive_mutation
+        archive_mutation=$(cat <<'EOF'
+mutation($projectId: ID!, $itemId: ID!) {
+  archiveProjectV2Item(input: {
+    projectId: $projectId
+    itemId: $itemId
+  }) {
+    item { id }
+  }
+}
+EOF
+)
+
+        if gh api graphql -f query="$archive_mutation" \
+            -f projectId="$project_id" \
+            -f itemId="$item_id" >/dev/null 2>&1; then
+            ((archive_count++))
+            echo -n "."
+        fi
+    done <<< "$items_to_archive"
+
+    echo ""
+    success "Archived $archive_count items"
 }
 
 # Generate project report
@@ -312,12 +469,22 @@ generate_report() {
 
     echo "Generating report for project #$project_number..."
 
-    # Get project details
-    local project_data
-    project_data=$(gh project view "$project_number" --owner "$owner" --format json)
+    ensure_gh_cli || return 1
+
+    # Get graphql-queries.sh location
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    local graphql_script="$script_dir/graphql-queries.sh"
+
+    # Get full project data via GraphQL
+    local result
+    result=$(bash "$graphql_script" get_project "$owner" "$project_number" 2>/dev/null)
+
+    if [[ -z "$result" ]]; then
+        error "Could not fetch project data"
+    fi
 
     local title
-    title=$(echo "$project_data" | jq -r '.title')
+    title=$(echo "$result" | jq -r '.data.organization.projectV2.title // "Unknown"')
 
     echo ""
     echo "========================================="
@@ -325,10 +492,56 @@ generate_report() {
     echo "========================================="
     echo ""
 
-    # Note: Full implementation would query items and calculate statistics
-    echo "Total items: (requires GraphQL query)"
-    echo "By status: (requires GraphQL query)"
-    echo "Completion: (requires GraphQL query)"
+    # Calculate statistics
+    local total_items
+    total_items=$(echo "$result" | jq '.data.organization.projectV2.items.nodes | length')
+
+    echo "Total items: $total_items"
+    echo ""
+
+    # Count by status
+    echo "By Status:"
+    echo "$result" | jq -r '
+        .data.organization.projectV2.items.nodes |
+        map(
+            .fieldValues.nodes[] |
+            select(.field.name == "Status") |
+            .name // "No Status"
+        ) |
+        group_by(.) |
+        map({status: .[0], count: length}) |
+        sort_by(-.count) |
+        .[] |
+        "  \(.status): \(.count)"
+    '
+
+    echo ""
+
+    # Calculate completion rate
+    local done_count
+    done_count=$(echo "$result" | jq '[
+        .data.organization.projectV2.items.nodes[] |
+        select(.fieldValues.nodes[] | select(.field.name == "Status" and .name == "Done"))
+    ] | length')
+
+    if [[ "$total_items" -gt 0 ]]; then
+        local completion_pct
+        completion_pct=$(echo "scale=1; $done_count * 100 / $total_items" | bc)
+        echo "Completion: $done_count/$total_items ($completion_pct%)"
+    else
+        echo "Completion: 0/0 (0%)"
+    fi
+
+    # Show open vs closed issues
+    echo ""
+    echo "Item States:"
+    echo "$result" | jq -r '
+        .data.organization.projectV2.items.nodes |
+        group_by(.content.state // "unknown") |
+        map({state: .[0].content.state // "unknown", count: length}) |
+        .[] |
+        "  \(.state): \(.count)"
+    '
 
     echo ""
 }
