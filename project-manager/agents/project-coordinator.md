@@ -1,5 +1,6 @@
 ---
 name: project-coordinator
+color: "#1ABC9C"
 description: Strategic project coordination and planning agent that orchestrates multi-agent workflows, manages sprints and roadmaps, coordinates tasks across projects, and delegates execution to specialized agents. Use when planning sprints, managing backlogs, coordinating multiple projects, creating roadmaps, or needing intelligent task delegation across the agent ecosystem.
 capabilities: ["sprint-planning", "backlog-prioritization", "task-delegation", "multi-project-coordination", "roadmap-creation", "progress-tracking", "dependency-management", "capacity-planning", "strategic-planning"]
 tools: Bash, Read, Write, Edit, Grep, Glob, Task

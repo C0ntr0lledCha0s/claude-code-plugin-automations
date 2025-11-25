@@ -9,6 +9,13 @@ allowed-tools: Read, Grep, Glob
 
 You are an expert in [domain]. This skill provides [type of expertise] to enhance Claude's capabilities.
 
+## Critical Rules
+
+[Document any critical rules or constraints this skill must enforce]
+
+1. **Critical Rule 1**: [Description and why it matters]
+2. **Critical Rule 2**: [Description and why it matters]
+
 ## Your Capabilities
 
 1. **Capability 1**: Description of what you can do
@@ -76,6 +83,25 @@ When encountering [specific situation]:
 3. Use scripts from `{baseDir}/scripts/` if needed
 4. Deliver results with context
 
+### Example 3: [Error Scenario]
+When [error condition] is detected:
+
+**Detection**: How you identify the issue
+**Response**: How you handle it
+**Guidance**: What you tell the user
+
+## Important Constraints
+
+### DO:
+- ✅ [What the skill should always do]
+- ✅ [What the skill should always do]
+- ✅ [What the skill should always do]
+
+### DON'T:
+- ❌ [What the skill should never do]
+- ❌ [What the skill should never do]
+- ❌ [What the skill should never do]
+
 ## Best Practices
 
 - Always [important guideline]
@@ -83,9 +109,12 @@ When encountering [specific situation]:
 - Avoid [what to avoid]
 - Consider [important considerations]
 
-## Important Notes
+## Maintenance Notes
+
+**Critical Rule Reminder**: Skills cannot have a `model:` field. Only agents support model specification.
 
 - This skill is automatically invoked by Claude when relevant
 - Resources are discovered progressively as needed
 - Use `{baseDir}` variable to reference skill resources
 - Scripts should be executable and well-documented
+- Templates are starting points - expand with specific details

@@ -1,5 +1,6 @@
 ---
 name: investigator
+color: "#F39C12"
 description: Use this agent when you need to perform deep investigation of codebases, research best practices, analyze architectural patterns, or conduct comparative analysis across multiple implementations. Ideal for answering "how does X work?", "what's the best way to Y?", or "compare approaches to Z"
 capabilities: ["codebase-investigation", "best-practice-research", "pattern-analysis", "comparative-research", "architecture-analysis", "documentation-discovery"]
 tools: Read, Grep, Glob, WebSearch, WebFetch, Task

@@ -1,7 +1,7 @@
 {
   "name": "agent-builder",
-  "version": "1.6.0",
-  "description": "Meta-agent plugin for building Claude Code agents, skills, slash commands, hooks, and complete plugins. Provides automated scaffolding, validation, templates, best practices guidance, and enforcement hooks to ensure skills are invoked when creating components.",
+  "version": "2.0.0",
+  "description": "Orchestrator-based meta-agent plugin for building Claude Code components. Features a meta-architect orchestrator that delegates to specialized builders (agent-builder, skill-builder, command-builder, hook-builder) for creating, updating, auditing, and maintaining agents, skills, commands, hooks, and complete plugins.",
   "author": {
     "name": "C0ntr0lledCha0s",
     "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
@@ -11,6 +11,7 @@
   "license": "MIT",
   "keywords": [
     "meta-agent",
+    "orchestrator",
     "agent-builder",
     "skill-builder",
     "command-builder",
@@ -19,10 +20,32 @@
     "scaffolding",
     "automation",
     "development-tools",
-    "agent-maintenance",
-    "agent-updates",
-    "enforcement",
-    "skill-enforcement"
+    "parallel-execution",
+    "delegation-pattern"
   ],
-  "agents": ["./agents/meta-architect.md"]
+  "agents": [
+    "./agents/meta-architect.md",
+    "./agents/agent-builder.md",
+    "./agents/skill-builder.md",
+    "./agents/command-builder.md",
+    "./agents/hook-builder.md"
+  ],
+  "skills": [
+    "./skills/building-agents",
+    "./skills/building-skills",
+    "./skills/building-commands",
+    "./skills/building-hooks",
+    "./skills/building-plugins"
+  ],
+  "commands": [
+    "./commands/new.md",
+    "./commands/update.md",
+    "./commands/audit.md",
+    "./commands/enhance.md",
+    "./commands/migrate.md",
+    "./commands/compare.md",
+    "./commands/validate.md",
+    "./commands/plugin.md"
+  ],
+  "hooks": "./hooks/hooks.json"
 }

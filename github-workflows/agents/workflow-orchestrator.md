@@ -1,5 +1,6 @@
 ---
 name: workflow-orchestrator
+color: "#3498DB"
 description: Cross-domain workflow coordinator for complex operations spanning multiple GitHub features. Use when coordinating project boards, issues, PRs, commits, and releases together in multi-step workflows. Delegates to specialized agents (issue-manager, pr-reviewer, release-manager).
 capabilities: ["coordinate-multi-step-workflows", "delegate-to-specialized-agents", "validate-prerequisites", "track-workflow-state", "handle-cross-domain-operations"]
 tools: Bash, Read, Write, Edit, Grep, Glob, WebFetch

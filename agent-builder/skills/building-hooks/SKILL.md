@@ -1,7 +1,7 @@
 ---
 name: building-hooks
 description: Expert at creating and modifying Claude Code event hooks for automation and policy enforcement. Auto-invokes when the user wants to create, update, modify, enhance, validate, or standardize hooks, or when modifying hooks.json configuration, needs help with event-driven automation, or wants to understand hook patterns. Also auto-invokes proactively when Claude is about to write hooks.json files, or implement tasks that involve creating event hook configurations.
-version: 1.3.0
+version: 2.0.0
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
@@ -439,182 +439,39 @@ Ask the user:
 - Check blocking/approving works
 - Test error handling
 
-## Generator Scripts
+## Validation Script
 
-This skill includes a helper script to streamline hook creation:
+This skill includes a validation script:
 
-### create-hook.py - Interactive Hook Generator
+### validate-hooks.py - Schema Validator
 
-Full-featured interactive script that creates complete hook configuration and bash scripts.
+Python script for validating hooks.json files.
 
 **Usage:**
 ```bash
-python3 {baseDir}/scripts/create-hook.py
+python3 {baseDir}/scripts/validate-hooks.py <hooks.json>
 ```
 
-**Features:**
-- Interactive prompts for hook name, event type, matcher, purpose
-- Event selection menu (PreToolUse, PostToolUse, UserPromptSubmit, Stop, etc.)
-- Matcher pattern configuration for tool events
-- Generates complete hooks.json entries
-- Creates hook bash scripts with proper structure
-- Automatic validation and setup
-- Makes scripts executable
+**What It Checks:**
+- JSON syntax validity
+- Event name validity (PreToolUse, PostToolUse, etc.)
+- Matcher requirements (tool events need matchers)
+- Hook type validity (command, prompt)
+- Script existence (referenced scripts exist)
+- Security patterns (dangerous commands, injection risks)
 
-**Example Session:**
-```
-🪝 CLAUDE CODE HOOK GENERATOR
-========================================
+**Returns:**
+- Exit code 0 if valid
+- Exit code 1 with error messages if invalid
 
-Hook name: validate-writes
-
-📌 Hook Event Type
-  1. PreToolUse   - Before a tool executes (needs matcher)
-  2. PostToolUse  - After a tool completes (needs matcher)
-  3. UserPromptSubmit - When user submits prompt
-  4. Stop - When conversation ends
-  5. SessionStart - When session begins
-  ...
-Select event [1]: 1
-
-🎯 Tool Matcher
-  1. Specific tool (e.g., 'Write', 'Bash')
-  2. Multiple tools (e.g., 'Write|Edit')
-  3. All tools ('*')
-Select matcher type [1]: 2
-Enter tools separated by | : Write|Edit
-
-Hook purpose: Validate file writes for security
-
-✅ Hook created successfully!
-
-Files created:
-  📄 .claude/hooks.json (updated)
-  📜 .claude/scripts/validate-writes.sh
-
-Hook configuration:
-  Event: PreToolUse
-  Matcher: Write|Edit
-  Script: .claude/scripts/validate-writes.sh
-```
-
-**What It Creates:**
-
-1. **hooks.json Entry** - Adds configuration to hooks.json:
-```json
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/validate-writes.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-2. **Hook Bash Script** - Complete template with:
-   - Proper shebang and error handling (`set -euo pipefail`)
-   - Logging function and log file setup
-   - Input parameter documentation
-   - Example validation functions (approve/block)
-   - Placeholder for custom logic
-   - Proper JSON return format
-
-**Generated Script Structure:**
+**Example:**
 ```bash
-#!/usr/bin/env bash
-#
-# Hook: validate-writes
-# Event: PreToolUse
-# Purpose: Validate file writes for security
-#
+python3 validate-hooks.py .claude/hooks.json
 
-set -euo pipefail
-
-# Configuration
-HOOK_NAME="validate-writes"
-LOG_FILE="${HOME}/.claude/hooks/validate-writes.log"
-
-# Logging function
-log_hook() {
-    echo "[$(date -Iseconds)] $*" >> "${LOG_FILE}"
-}
-
-log_hook "=== Hook triggered ==="
-
-# Input parameters for Tool events:
-#   $1 = Tool name (e.g., "Write", "Bash")
-#   $2 = Tool parameters (varies by tool)
-
-TOOL_NAME="$1"
-TOOL_PARAM="$2"
-
-log_hook "Event: PreToolUse, Tool: ${TOOL_NAME}"
-
-# TODO: Implement your hook logic here
-
-# Example: Validation that approves operation
-validate_operation() {
-    # Add your validation logic
-
-    # Return success (approve operation)
-    echo '{"decision": "approve", "reason": "Validation passed"}'
-    exit 0
-}
-
-# Main logic
-validate_operation
-
-# Exit successfully
-exit 0
-```
-
-**When to Use:**
-- Creating new event hooks
-- Need guided configuration for event types
-- Want proper hook structure with logging
-- Building validation or policy enforcement
-
-**After Creation:**
-1. Edit the generated hook script
-2. Implement your custom validation/processing logic
-3. Test by triggering the event
-4. Check logs in `~/.claude/hooks/{hook-name}.log`
-5. Validate with standard validation tools
-6. Iterate based on testing
-
-**Event-Specific Behavior:**
-
-The generator customizes the script based on the event:
-
-- **PreToolUse/PostToolUse**: Includes tool name and parameters handling
-- **UserPromptSubmit**: Includes prompt text handling
-- **Stop/SessionStart**: Includes lifecycle event documentation
-- **Others**: Generic event parameter handling
-
-**Directory Structure Created:**
-```
-.claude/
-├── hooks.json              # Updated with new hook entry
-└── hooks/
-    └── scripts/
-        └── validate-writes.sh  # Executable hook script (755)
-```
-
-Or if using plugin structure:
-```
-plugin-dir/
-└── hooks/
-    ├── hooks.json          # Hook configuration
-    └── scripts/
-        └── hook-name.sh    # Hook script
+✅ Hooks validation passed
+   Events configured: PreToolUse, PostToolUse
+   Total hooks: 3
+   Scripts verified: 2
 ```
 
 ## Hook Script Best Practices
@@ -813,292 +670,11 @@ Your goal is to help users create secure, reliable event hooks that automate wor
 
 ## Maintaining and Updating Hooks
 
-Once hooks are created, they require ongoing maintenance to ensure security, correctness, and effectiveness. This skill includes comprehensive tools for hook lifecycle management with a strong security focus.
+Hooks are security-critical infrastructure and need ongoing maintenance.
 
-### Maintenance Tools
+### Security-First Principles
 
-All maintenance scripts are located in `{baseDir}/scripts/`:
-
-#### 1. update-hook.py - Interactive Hook Updater
-
-Interactive tool for modifying hook configuration with security validation.
-
-**Usage:**
-```bash
-python3 {baseDir}/scripts/update-hook.py hooks.json
-```
-
-**Features:**
-- Lists all hooks in hooks.json
-- Interactive selection and modification
-- Update event types, matchers, hook types, commands/prompts
-- Security validation for dangerous patterns
-- Regex validation for matchers
-- Shows colored diff before applying
-- Creates automatic backup
-
-**When to Use:**
-- Changing hook event types or matchers
-- Updating hook commands or prompts
-- Migrating hooks between events
-- Security hardening existing hooks
-
-**Security Checks:**
-- Command injection patterns (eval, command substitution)
-- Dangerous commands (rm -rf, dd, mkfs, etc.)
-- Parameter usage without validation
-- Relative vs absolute paths
-
-**Slash Command:** `/agent-builder:hooks:update path/to/hooks.json`
-
-#### 2. enhance-hook.py - Security-Focused Quality Analyzer
-
-Comprehensive 7-category analysis with security priority.
-
-**Usage:**
-```bash
-python3 {baseDir}/scripts/enhance-hook.py hooks.json
-```
-
-**Analysis Categories:**
-1. **Schema Compliance** (0-10): JSON structure, event names, matcher requirements
-2. **Security** (0-10) ⚠️ CRITICAL: Dangerous patterns, injection risks, validation
-3. **Matcher Validity** (0-10): Regex patterns, appropriate wildcards
-4. **Script Existence** (0-10): Referenced scripts exist and are executable
-5. **Hook Types** (0-10): Valid types, required fields present
-6. **Documentation** (0-10): Clarity, decision keywords
-7. **Maintainability** (0-10): Hook count, duplicates, consistency
-
-**Output:**
-- Score for each category (0-10)
-- Overall percentage and grade (A/B/C)
-- Prioritized recommendations
-- Critical security findings highlighted
-
-**Exit Codes:**
-- 0: No critical issues
-- 1: Critical security issues found
-
-**When to Use:**
-- Pre-commit security audits
-- Quality gates in PR reviews
-- Identifying improvement opportunities
-- Learning security best practices
-
-**Slash Command:** `/agent-builder:hooks:enhance path/to/hooks.json`
-
-#### 3. migrate-hook.py - Schema Migration Tool
-
-Automated migrations for schema evolution and fixes.
-
-**Usage:**
-```bash
-# Preview changes
-python3 {baseDir}/scripts/migrate-hook.py hooks.json --dry-run
-
-# Apply migrations
-python3 {baseDir}/scripts/migrate-hook.py hooks.json
-```
-
-**Migrations:**
-1. Remove invalid event names
-2. Remove empty matchers from lifecycle events
-3. Add missing matchers to tool events (defaults to '*')
-4. Validate and fix hook types
-5. Recommend ${CLAUDE_PLUGIN_ROOT} for relative paths
-
-**Safety Features:**
-- Automatic backup creation
-- Dry-run mode for preview
-- Error recovery (restores from backup on failure)
-- Validation before saving
-
-**When to Use:**
-- Upgrading Claude Code versions
-- Fixing validation errors
-- Cleaning up deprecated patterns
-- Preparing hooks for production
-
-**Slash Command:** `/agent-builder:hooks:migrate path/to/hooks.json [--dry-run]`
-
-#### 4. audit-hooks.py - Bulk Security Auditor
-
-Repository-wide security audit of all hooks.json files.
-
-**Usage:**
-```bash
-# Audit current directory
-python3 {baseDir}/scripts/audit-hooks.py .
-
-# Verbose output
-python3 {baseDir}/scripts/audit-hooks.py . --verbose
-```
-
-**Features:**
-- Finds all hooks.json files in directory tree
-- Validates each file for security and schema
-- Categorizes: Valid, Warnings, Errors, Parse Errors
-- Summary report with counts
-- Exit code 1 if errors found (CI/CD friendly)
-
-**When to Use:**
-- Repository-wide security audits
-- CI/CD pipelines
-- Pre-commit hooks
-- Regular security reviews
-- Onboarding inherited codebases
-
-**Slash Command:** `/agent-builder:hooks:audit [directory] [--verbose]`
-
-#### 5. compare-hooks.py - Hook Comparison Tool
-
-Side-by-side comparison of hooks.json files.
-
-**Usage:**
-```bash
-python3 {baseDir}/scripts/compare-hooks.py hooks1.json hooks2.json
-
-# Detailed diff
-python3 {baseDir}/scripts/compare-hooks.py hooks1.json hooks2.json --verbose
-```
-
-**Comparison Dimensions:**
-- Structure (event counts, hook counts, types)
-- Event-by-event hook counts
-- Detailed line-by-line diff (verbose mode)
-- Similarity percentage
-
-**When to Use:**
-- Version comparison (before/after updates)
-- Migration validation
-- Pull request reviews
-- Merge conflict resolution
-- Understanding changes between branches
-
-**Slash Command:** `/agent-builder:hooks:compare hooks1.json hooks2.json [--verbose]`
-
-### Common Maintenance Scenarios
-
-#### Scenario 1: Adding Security to Existing Hook
-
-**Context:** Existing Bash hook lacks input validation
-
-**Steps:**
-1. Analyze current security:
-   ```bash
-   python3 {baseDir}/scripts/enhance-hook.py hooks.json
-   ```
-
-2. Review security findings, note validation issues
-
-3. Update hook to add validation:
-   ```bash
-   python3 {baseDir}/scripts/update-hook.py hooks.json
-   # Select the hook
-   # Update command to include validation script
-   ```
-
-4. Verify improvement:
-   ```bash
-   python3 {baseDir}/scripts/enhance-hook.py hooks.json
-   # Security score should increase to ≥8/10
-   ```
-
-#### Scenario 2: Migrating Hook to Different Event
-
-**Context:** Move validation from PostToolUse to PreToolUse
-
-**Steps:**
-1. Backup current state:
-   ```bash
-   cp hooks.json hooks.json.before
-   ```
-
-2. Update event type interactively:
-   ```bash
-   python3 {baseDir}/scripts/update-hook.py hooks.json
-   # Select hook to migrate
-   # Change event to PreToolUse
-   # Verify/update matcher
-   ```
-
-3. Compare and validate:
-   ```bash
-   python3 {baseDir}/scripts/compare-hooks.py hooks.json.before hooks.json
-   python3 {baseDir}/scripts/enhance-hook.py hooks.json
-   ```
-
-4. Test by triggering PreToolUse event
-
-#### Scenario 3: Repository-Wide Security Audit
-
-**Context:** Audit all hooks across multiple plugins
-
-**Steps:**
-1. Run bulk audit:
-   ```bash
-   python3 {baseDir}/scripts/audit-hooks.py . --verbose > audit-report.txt
-   ```
-
-2. For each file with errors, analyze:
-   ```bash
-   python3 {baseDir}/scripts/enhance-hook.py plugin/hooks/hooks.json
-   ```
-
-3. Fix critical issues:
-   ```bash
-   python3 {baseDir}/scripts/update-hook.py plugin/hooks/hooks.json
-   # Address each critical finding
-   ```
-
-4. Apply automated migrations:
-   ```bash
-   python3 {baseDir}/scripts/migrate-hook.py plugin/hooks/hooks.json
-   ```
-
-5. Re-audit to verify:
-   ```bash
-   python3 {baseDir}/scripts/audit-hooks.py .
-   ```
-
-#### Scenario 4: Preparing for Production
-
-**Context:** Ensure hooks meet production quality standards
-
-**Steps:**
-1. Run comprehensive analysis:
-   ```bash
-   python3 {baseDir}/scripts/enhance-hook.py hooks.json
-   ```
-   Target: Grade A (≥80%), Security ≥8/10
-
-2. Apply migrations:
-   ```bash
-   python3 {baseDir}/scripts/migrate-hook.py hooks.json
-   ```
-
-3. Fix remaining issues interactively:
-   ```bash
-   python3 {baseDir}/scripts/update-hook.py hooks.json
-   ```
-
-4. Final validation:
-   ```bash
-   python3 {baseDir}/scripts/enhance-hook.py hooks.json
-   python3 {baseDir}/scripts/validate-hooks.py hooks.json
-   ```
-
-5. Test all hooks by triggering events
-
-6. Document any special considerations
-
-### Security-First Maintenance
-
-Hooks execute with privileges, making security paramount. Always prioritize security over convenience.
-
-**Critical Security Principles:**
-
-1. **Never Trust Input:** All parameters are potentially malicious
+1. **Never Trust Input**: All parameters are potentially malicious
    ```bash
    # WRONG
    eval "$1"
@@ -1109,129 +685,80 @@ Hooks execute with privileges, making security paramount. Always prioritize secu
    fi
    ```
 
-2. **Validate Everything:** Check parameters, paths, commands
+2. **Validate Everything**: Check parameters, paths, commands
    ```bash
    set -euo pipefail  # Strict error handling
    [[ ! "$PATH" =~ \.\. ]]  # No directory traversal
    ```
 
-3. **Use Safe Defaults:** Block by default, approve explicitly
+3. **Use Safe Defaults**: Block by default, approve explicitly
    ```bash
    echo '{"decision": "block", "reason": "Validation failed"}' >&2
    exit 2
    ```
 
-4. **Block Dangerous Patterns:**
+4. **Block Dangerous Patterns**:
    - `eval`, command substitution without validation
    - `rm -rf /`, `dd if=`, `mkfs`
    - Piping wget/curl to bash
    - Overly permissive permissions (chmod 777)
 
-**Security Checklist Before Commit:**
-- [ ] Run `enhance-hook.py` - no critical errors
-- [ ] Security score ≥8/10
-- [ ] All scripts exist and are executable
-- [ ] Input validation present for all parameters
-- [ ] No dangerous command patterns
-- [ ] Matchers are valid regex
-- [ ] Using ${CLAUDE_PLUGIN_ROOT} for paths
-- [ ] Bash scripts use `set -euo pipefail`
-- [ ] Tested by triggering events
+### Maintenance Checklist
+
+When reviewing hooks for updates:
+
+- [ ] **JSON syntax valid**: Valid JSON structure
+- [ ] **Event names correct**: PreToolUse, PostToolUse, etc.
+- [ ] **Matchers appropriate**: Specific tools, not wildcards
+- [ ] **Scripts exist**: Referenced scripts are present
+- [ ] **Scripts executable**: chmod +x on script files
+- [ ] **Input validation**: Scripts validate parameters
+- [ ] **No dangerous patterns**: No eval, rm -rf, etc.
+
+### Common Maintenance Scenarios
+
+#### Scenario 1: Hook Script Not Executing
+
+**Problem**: Hook script not running when expected
+**Solutions**:
+- Verify script exists at the path specified
+- Make script executable: `chmod +x script.sh`
+- Check hook event name matches expected trigger
+- Verify matcher pattern matches the tool
+
+#### Scenario 2: Security Hardening
+
+**Problem**: Hook lacks input validation
+**Solution**: Add parameter validation at start of script:
+```bash
+#!/bin/bash
+set -euo pipefail
+
+# Validate input
+if [[ ! "$1" =~ ^[a-zA-Z0-9_/-]+$ ]]; then
+    echo '{"decision": "block", "reason": "Invalid input"}'
+    exit 2
+fi
+```
+
+#### Scenario 3: Change Hook Event
+
+**Problem**: Need to move from PostToolUse to PreToolUse
+**Solution**: Edit hooks.json to change the event key:
+```json
+{
+  "hooks": {
+    "PreToolUse": [...]  // Changed from PostToolUse
+  }
+}
+```
 
 ### Best Practices
 
-1. **Always Backup:** Maintenance tools create backups, but manual backups don't hurt
-2. **Test Locally:** Trigger events to test hooks before committing
-3. **Use Dry-Run:** Preview migrations before applying
-4. **Validate Often:** Run enhance-hook.py frequently during development
-5. **Review Diffs:** Always review changes before saving
-6. **Security First:** When in doubt, block and investigate
-7. **Document Changes:** Note why hooks were modified
-8. **Version Control:** Commit hooks.json changes with clear messages
-9. **Audit Regularly:** Run repository-wide audits monthly
-10. **Update Incrementally:** Make small, tested changes
-
-### Integration with Development Workflow
-
-#### Pre-Commit Hook
-```bash
-#!/bin/bash
-# .git/hooks/pre-commit
-
-for file in $(git diff --cached --name-only | grep 'hooks.json'); do
-    python3 agent-builder/skills/building-hooks/scripts/enhance-hook.py "$file"
-    if [ $? -ne 0 ]; then
-        echo "❌ Hook validation failed for $file"
-        exit 1
-    fi
-done
-```
-
-#### CI/CD Pipeline
-```yaml
-# .github/workflows/validate.yml
-- name: Audit Hooks
-  run: |
-    python3 agent-builder/skills/building-hooks/scripts/audit-hooks.py .
-```
-
-### Decision Matrix: Which Tool to Use?
-
-| Goal | Tool | Command |
-|------|------|---------|
-| Fix specific hook | update-hook.py | `/agent-builder:hooks:update` |
-| Security audit | enhance-hook.py | `/agent-builder:hooks:enhance` |
-| Automated fixes | migrate-hook.py | `/agent-builder:hooks:migrate` |
-| Repository scan | audit-hooks.py | `/agent-builder:hooks:audit` |
-| Version comparison | compare-hooks.py | `/agent-builder:hooks:compare` |
-
-### Reference Documentation
-
-- **Maintenance Guide:** `{baseDir}/references/hook-maintenance-guide.md`
-  Comprehensive security-focused maintenance guide with scenarios and troubleshooting
-
-- **Security Checklist:** `{baseDir}/references/hook-checklist.md`
-  Pre-commit, PR review, and production deployment checklists
-
-### Your Role in Maintenance
-
-When the user asks to maintain or update hooks:
-
-1. **Assess the Need:**
-   - What is being changed and why?
-   - Are there security implications?
-   - Is this a one-time fix or systematic issue?
-
-2. **Choose the Right Tool:**
-   - Specific hook: Use update-hook.py
-   - Security audit: Use enhance-hook.py
-   - Schema issues: Use migrate-hook.py
-   - Multiple files: Use audit-hooks.py
-   - Comparison: Use compare-hooks.py
-
-3. **Prioritize Security:**
-   - Always run security analysis first
-   - Fix critical issues before other improvements
-   - Validate dangerous patterns
-   - Test thoroughly
-
-4. **Validate Changes:**
-   - Run enhance-hook.py after modifications
-   - Use compare-hooks.py to review changes
-   - Test by triggering events
-   - Verify security score ≥8/10
-
-5. **Document and Test:**
-   - Note why changes were made
-   - Test all affected events
-   - Update documentation if needed
-   - Commit with clear message
-
-Be proactive in:
-- Identifying security risks during maintenance
-- Recommending security improvements
-- Preventing regression in quality scores
-- Ensuring hooks remain maintainable
-- Educating users on security best practices
-
-Remember: Hooks are security-critical infrastructure. Maintain them with the same rigor as production code.
+1. **Use specific matchers**: `"Write|Edit"` instead of `"*"`
+2. **Validate all inputs**: Never trust parameters
+3. **Use absolute paths**: For script references
+4. **Log security events**: Audit sensitive operations
+5. **Test thoroughly**: Try to bypass your own hooks
+6. **Backup before changes**: Keep original hooks.json
+7. **Version control**: Commit hooks.json changes

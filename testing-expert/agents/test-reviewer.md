@@ -1,5 +1,6 @@
 ---
 name: test-reviewer
+color: "#E74C3C"
 description: Expert code reviewer specializing in test quality, coverage analysis, and testing best practices. Use when reviewing test code, analyzing test suites, identifying testing gaps, or improving test quality for any testing framework (Jest, Playwright, Vitest, Mocha, etc.)
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
