@@ -20,45 +20,45 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "Bash.*git commit",
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "If this Bash command is 'git commit', validate that the commit message follows conventional commits format (type(scope): description). Check for: 1) Valid type prefix (feat, fix, docs, style, refactor, perf, test, chore, ci, build), 2) Optional scope in parentheses, 3) Colon and space after type/scope, 4) Imperative mood description. If the format is incorrect, suggest the correct format and ask the user to confirm or revise before proceeding."
+            "prompt": "If this is a 'git commit' command, validate that the commit message follows conventional commits format (type(scope): description). Check for: 1) Valid type prefix (feat, fix, docs, style, refactor, perf, test, chore, ci, build), 2) Optional scope in parentheses, 3) Colon and space after type/scope, 4) Imperative mood description. If the format is incorrect, suggest the correct format and ask the user to confirm or revise before proceeding."
           }
         ]
       },
       {
-        "matcher": "Bash",
+        "matcher": "Bash.*gh pr (create|merge)",
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "If this Bash command is 'gh pr create' or 'gh pr merge', run quality gates to ensure: 1) All CI checks pass (check with 'gh pr checks'), 2) Tests have adequate coverage, 3) No security issues detected, 4) Code quality scores are acceptable. If any gates fail, warn the user with specific details and ask for confirmation before proceeding. For merges, also verify the PR has required approvals."
+            "prompt": "If this is a 'gh pr create' or 'gh pr merge' command, run quality gates to ensure: 1) All CI checks pass (check with 'gh pr checks'), 2) Tests have adequate coverage, 3) No security issues detected, 4) Code quality scores are acceptable. If any gates fail, warn the user with specific details and ask for confirmation before proceeding. For merges, also verify the PR has required approvals."
           }
         ]
       },
       {
-        "matcher": "Bash",
+        "matcher": "Bash.*git (checkout -b|branch|switch -c)",
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "If this Bash command creates a git branch (git checkout -b, git branch, git switch -c), validate the branch name against branching conventions. Check: 1) Starts with valid prefix (feature/, bugfix/, hotfix/, release/, docs/, refactor/), 2) Uses lowercase and hyphens only (no underscores or uppercase), 3) Maximum 64 characters, 4) Descriptive name after prefix. If the branch name doesn't follow conventions, suggest the correct format (e.g., 'my_feature' should be 'feature/my-feature') and ask the user to confirm before proceeding. If a branching config exists at .claude/github-workflows/branching-config.json, use its naming rules."
+            "prompt": "If this creates a git branch (git checkout -b, git branch, git switch -c), validate the branch name against branching conventions. Check: 1) Starts with valid prefix (feature/, bugfix/, hotfix/, release/, docs/, refactor/), 2) Uses lowercase and hyphens only (no underscores or uppercase), 3) Maximum 64 characters, 4) Descriptive name after prefix. If the branch name doesn't follow conventions, suggest the correct format (e.g., 'my_feature' should be 'feature/my-feature') and ask the user to confirm before proceeding. If a branching config exists at .claude/github-workflows/branching-config.json, use its naming rules."
           }
         ]
       },
       {
-        "matcher": "Bash",
+        "matcher": "Bash.*gh issue create",
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "If this Bash command is 'gh issue create', validate that all THREE required label categories are present: 1) Type label (bug, feature, enhancement, documentation, refactor, chore), 2) Priority label (priority:high, priority:medium, priority:low, or priority:critical), 3) Scope label (scope:*). Check the --label argument for these. If scope label is missing: a) Check .claude/github-workflows/env.json for branch.scopeLabel to auto-detect, b) Check .claude/github-workflows/env.json labels.suggestedScopes for available options, c) WARN the user that scope is REQUIRED and suggest available scopes, d) Ask user to add scope label before proceeding. Do NOT allow issue creation without a scope label unless user explicitly confirms bypass."
+            "prompt": "If this is a 'gh issue create' command, validate that all THREE required label categories are present: 1) Type label (bug, feature, enhancement, documentation, refactor, chore), 2) Priority label (priority:high, priority:medium, priority:low, or priority:critical), 3) Scope label (scope:*). Check the --label argument for these. If scope label is missing: a) Check .claude/github-workflows/env.json for branch.scopeLabel to auto-detect, b) Check .claude/github-workflows/env.json labels.suggestedScopes for available options, c) WARN the user that scope is REQUIRED and suggest available scopes, d) Ask user to add scope label before proceeding. Do NOT allow issue creation without a scope label unless user explicitly confirms bypass."
           }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "Bash.*gh issue create",
         "hooks": [
           {
             "type": "prompt",
@@ -67,7 +67,7 @@
         ]
       },
       {
-        "matcher": "Bash",
+        "matcher": "Bash.*gh pr merge",
         "hooks": [
           {
             "type": "prompt",
@@ -76,7 +76,7 @@
         ]
       },
       {
-        "matcher": "Bash",
+        "matcher": "Bash.*git commit",
         "hooks": [
           {
             "type": "prompt",
@@ -85,7 +85,7 @@
         ]
       },
       {
-        "matcher": "Bash",
+        "matcher": "Bash.*git merge",
         "hooks": [
           {
             "type": "prompt",
