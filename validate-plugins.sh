@@ -143,6 +143,21 @@ else
     ERRORS=$((ERRORS + 1))
 fi
 
+# Run agent invocation tests
+echo ""
+echo "🧪 Running agent invocation tests..."
+if [ -f "tests/run_tests.py" ]; then
+    if python3 tests/run_tests.py 2>&1; then
+        echo -e "   ${GREEN}✓${NC} Agent invocation tests passed"
+    else
+        echo -e "   ${RED}✗${NC} Agent invocation tests failed"
+        ERRORS=$((ERRORS + 1))
+    fi
+else
+    echo -e "   ${YELLOW}⚠${NC}  tests/run_tests.py not found, skipping tests"
+    WARNINGS=$((WARNINGS + 1))
+fi
+
 echo ""
 echo "════════════════════════════════════════"
 echo "Validation Summary:"

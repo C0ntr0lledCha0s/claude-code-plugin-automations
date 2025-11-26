@@ -2,225 +2,239 @@
 
 **A comprehensive meta-agent plugin for building Claude Code agents, skills, slash commands, hooks, and plugins.**
 
-This plugin provides automated scaffolding, validation, and best practices guidance for creating Claude Code extensions. It's essentially a Claude meta-agent - a system that helps Claude build other Claude agents and components.
+This plugin provides an orchestrator-based architecture for creating Claude Code extensions. The meta-architect coordinates specialized builder agents that handle component creation, validation, and maintenance.
+
+## Version 2.0.0 - Orchestrator Architecture
+
+This major release introduces an orchestrator pattern with parallel execution:
+
+- **Meta-Architect Orchestrator**: Plans operations and delegates to specialized builders
+- **4 Specialized Builders**: Dedicated agents for agents, skills, commands, and hooks
+- **8 Unified Commands**: Simplified interface replacing the previous 28 type-specific commands
+- **Parallel Execution**: Independent operations execute simultaneously for better performance
 
 ## Features
 
-- **Automated Component Creation**: Quickly scaffold agents, skills, commands, hooks, and plugins
+- **Orchestrator Pattern**: Meta-architect plans and delegates to specialized builders
+- **Parallel Execution**: Independent component operations run simultaneously
+- **Automated Scaffolding**: Quickly create agents, skills, commands, hooks, and plugins
 - **Best Practices Guidance**: Built-in expertise on Claude Code architecture and conventions
 - **Validation Tools**: Python scripts to validate schema compliance and naming conventions
 - **Template Library**: Pre-built templates for all component types
-- **Expert Skills**: Auto-invoked skills that provide specialized knowledge when building components
-- **Slash Commands**: Quick commands for creating new components
+- **Expert Skills**: Auto-invoked skills that provide specialized knowledge
+- **Unified Commands**: Simple interface for all component operations
+
+## Architecture
+
+```
+User Request
+    |
+    v
+/agent-builder:new agent code-reviewer
+    |
+    v
+meta-architect (Orchestrator)
+    |
+    +---> agent-builder agent (for agents)
+    +---> skill-builder agent (for skills)
+    +---> command-builder agent (for commands)
+    +---> hook-builder agent (for hooks)
+    |
+    v
+Component Created & Validated
+```
 
 ## Components
 
-### Meta-Architect Agent
+### Agents (5)
 
-**`meta-architect`**: Expert Claude Code architect specializing in designing and building all types of Claude Code components. Provides comprehensive guidance on architecture, schema validation, and best practices.
+| Agent | Purpose |
+|-------|---------|
+| **meta-architect** | Orchestrator that plans operations and delegates to specialized builders |
+| **agent-builder** | Specialized builder for creating/maintaining Claude Code agents |
+| **skill-builder** | Specialized builder for creating/maintaining skills (directories + SKILL.md) |
+| **command-builder** | Specialized builder for creating/maintaining slash commands |
+| **hook-builder** | Specialized builder for creating/maintaining event hooks (security-focused) |
 
-### Skills
+### Skills (5)
 
-1. **`building-agents`**: Expert at creating Claude Code agents (subagents). Auto-invoked when you want to create a new agent or need help with agent architecture.
+| Skill | Auto-Invokes When |
+|-------|-------------------|
+| **building-agents** | User mentions creating/building agents |
+| **building-skills** | User mentions creating/building skills |
+| **building-commands** | User mentions creating/building commands |
+| **building-hooks** | User mentions creating/building hooks |
+| **building-plugins** | User mentions creating/building plugins |
 
-2. **`building-skills`**: Expert at creating Claude Code skills. Auto-invoked when you need help designing skill architecture or understanding when to use skills vs agents.
+### Unified Commands (8)
 
-3. **`building-commands`**: Expert at creating slash commands. Auto-invoked when you want to create user-triggered workflows with parameters.
+| Command | Description |
+|---------|-------------|
+| `/agent-builder:new [type] [name]` | Create a new component |
+| `/agent-builder:update [type] [name]` | Update an existing component |
+| `/agent-builder:audit [type\|--all]` | Audit components for quality/compliance |
+| `/agent-builder:enhance [type] [name]` | Get quality analysis and improvements |
+| `/agent-builder:migrate [type] [name\|--all]` | Migrate to current schema |
+| `/agent-builder:compare [type] [n1] [n2]` | Compare two components |
+| `/agent-builder:validate [path]` | Validate a component file/directory |
+| `/agent-builder:plugin [action] [name]` | Plugin operations (create, validate) |
 
-4. **`building-hooks`**: Expert at creating event hooks for automation and validation. Auto-invoked when you need help with event-driven automation.
-
-### Slash Commands
-
-- **`/agent-builder:agents:new [name]`**: Create a new Claude Code agent with proper schema and structure
-- **`/agent-builder:skills:new [name]`**: Create a new skill with directory structure and resources
-- **`/agent-builder:commands:new [name]`**: Create a new slash command for user-triggered workflows
-- **`/agent-builder:hooks:new [name]`**: Create a new event hook for automation and validation
-- **`/agent-builder:plugins:new [name]`**: Create a new plugin with complete directory structure
+**Types**: `agent`, `skill`, `command`, `hook`, `plugin`
 
 ## Installation
 
 ### As a Local Plugin
 
-1. Clone or copy this plugin to your plugins directory:
-   ```bash
-   cd ~/.claude/plugins/
-   git clone <repository-url> agent-builder
-   ```
-
-2. The plugin will be automatically loaded by Claude Code
+```bash
+cd ~/.claude/plugins/
+git clone <repository-url> agent-builder
+```
 
 ### For a Specific Project
 
-1. Copy the plugin to your project:
-   ```bash
-   cp -r agent-builder /path/to/your/project/
-   ```
-
-2. Link the components to your `.claude` directory:
-   ```bash
-   cd /path/to/your/project
-   ln -s $(pwd)/agent-builder/agents ~/.claude/agents
-   ln -s $(pwd)/agent-builder/skills ~/.claude/skills
-   ln -s $(pwd)/agent-builder/commands ~/.claude/commands
-   ```
+```bash
+cp -r agent-builder /path/to/your/project/
+cd /path/to/your/project
+ln -s $(pwd)/agent-builder/agents ~/.claude/agents
+ln -s $(pwd)/agent-builder/skills ~/.claude/skills
+ln -s $(pwd)/agent-builder/commands ~/.claude/commands
+```
 
 ## Usage
 
-### Quick Start: Creating Components
+### Creating Components
 
-#### Create a New Agent
 ```bash
-/agent-builder:agents:new code-reviewer
-```
-Claude will guide you through:
-- Defining the agent's purpose
-- Selecting appropriate tools
-- Structuring the agent prompt
-- Validating the schema
+# Create an agent
+/agent-builder:new agent code-reviewer
 
-#### Create a New Skill
+# Create a skill
+/agent-builder:new skill analyzing-performance
+
+# Create a command
+/agent-builder:new command run-tests
+
+# Create a hook
+/agent-builder:new hook validate-writes
+
+# Create a complete plugin
+/agent-builder:new plugin my-custom-tools
+```
+
+### Auditing Components
+
 ```bash
-/agent-builder:skills:new analyzing-performance
-```
-Claude will help you:
-- Design the skill structure
-- Set up directory with scripts and docs
-- Write auto-invocation triggers
-- Create supporting resources
+# Audit all components (parallel execution)
+/agent-builder:audit --all
 
-#### Create a New Command
+# Audit specific type
+/agent-builder:audit agent
+/agent-builder:audit skill
+```
+
+### Updating Components
+
 ```bash
-/agent-builder:commands:new run-tests
-```
-Claude will assist with:
-- Defining arguments and parameters
-- Selecting necessary tools
-- Creating the command workflow
-- Adding usage examples
+# Update a component interactively
+/agent-builder:update agent code-reviewer
 
-#### Create a New Hook
+# Enhance with quality analysis
+/agent-builder:enhance skill analyzing-code
+```
+
+### Comparing Components
+
 ```bash
-/agent-builder:hooks:new validate-writes
+# Compare two agents
+/agent-builder:compare agent code-reviewer security-reviewer
 ```
-Claude will guide you through:
-- Choosing the event type
-- Writing validation logic
-- Creating the hook script
-- Testing the hook behavior
 
-#### Create a New Plugin
+### Validating Components
+
 ```bash
-/agent-builder:plugins:new my-custom-tools
-```
-Claude will help you:
-- Design the plugin structure
-- Create the manifest file
-- Set up component directories
-- Write documentation
+# Validate a specific file
+/agent-builder:validate .claude/agents/my-agent.md
 
-### Expert Guidance
+# Validate a skill directory
+/agent-builder:validate .claude/skills/my-skill/
 
-Simply ask Claude for help, and the relevant skills will automatically activate:
-
-- "I want to create an agent that reviews security vulnerabilities"
-- "Help me build a skill for analyzing CSV files"
-- "I need a command to commit and push changes"
-- "How do I create a hook to prevent writes to certain directories?"
-
-The skills will auto-invoke and provide expert guidance based on best practices.
-
-### Using the Meta-Architect Agent
-
-For complex architectural decisions or comprehensive guidance:
-
-```
-Use the meta-architect agent to help me design a plugin for data analysis
+# Validate a plugin
+/agent-builder:validate my-plugin/
 ```
 
-The meta-architect has deep knowledge of:
-- Component selection (agent vs skill vs command)
-- Schema requirements and validation
-- Naming conventions and best practices
-- Security considerations
-- Tool permission strategies
+### Plugin Operations
 
-## Component Structure Reference
+```bash
+# Create a new plugin
+/agent-builder:plugin create my-plugin
 
-### Agents
-```
-.claude/agents/agent-name.md
-
----
-name: agent-name
-description: Brief description and when to use
-tools: Read, Grep, Glob, Bash
-model: sonnet
----
-
-Agent body content...
+# Validate a plugin
+/agent-builder:plugin validate my-plugin/
 ```
 
-### Skills
+## How the Orchestrator Works
+
+### Single Component Creation
+
 ```
-.claude/skills/skill-name/
-├── SKILL.md
-├── scripts/
-├── references/
-└── assets/
-
----
-name: skill-name
-description: What it does and when to auto-invoke
-version: 1.0.0
-allowed-tools: Read, Grep, Glob, Bash
----
-
-Skill body content...
-```
-
-### Commands
-```
-.claude/commands/command-name.md
-
----
-description: What the command does
-allowed-tools: Read, Grep, Bash
-argument-hint: [arg1] [arg2]
-model: sonnet
----
-
-Command body with $1, $2, $ARGUMENTS...
+/agent-builder:new agent code-reviewer
+    |
+    v
+meta-architect
+    |-- Validates name: "code-reviewer" (lowercase-hyphens)
+    |-- Determines type: agent
+    |-- Delegates to: agent-builder agent
+    |
+    v
+agent-builder agent
+    |-- Uses building-agents skill resources
+    |-- Creates: agents/code-reviewer.md
+    |-- Runs validation
+    |
+    v
+Success: Agent created and validated
 ```
 
-### Hooks
-```json
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash /path/to/script.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
+### Multi-Component Plugin Creation
+
+```
+/agent-builder:new plugin code-review-suite
+    |
+    v
+meta-architect
+    |-- Creates plugin structure (sequential)
+    |-- Delegates components (PARALLEL):
+    |   +---> agent-builder: Create reviewer agent
+    |   +---> agent-builder: Create security-auditor agent
+    |   +---> command-builder: Create review command
+    |   +---> command-builder: Create scan command
+    |-- Generates README (sequential)
+    |-- Validates plugin (sequential)
+    |
+    v
+Success: Plugin with 2 agents, 2 commands created
+```
+
+### Project-Wide Audit
+
+```
+/agent-builder:audit --all
+    |
+    v
+meta-architect
+    |-- Delegates to all builders (PARALLEL):
+    |   +---> agent-builder: Audit all agents
+    |   +---> skill-builder: Audit all skills
+    |   +---> command-builder: Audit all commands
+    |   +---> hook-builder: Audit all hooks
+    |
+    v
+Consolidated Report with all findings
 ```
 
 ## Validation Scripts
 
-The plugin includes validation scripts for all component types:
-
-- **`validate-agent.py`**: Validates agent YAML frontmatter and schema
-- **`validate-skill.py`**: Validates skill directory structure and SKILL.md
-- **`validate-command.py`**: Validates command schema and arguments
-- **`validate-hooks.py`**: Validates hooks.json structure and events
-
-### Running Validation
+Located in each skill's `scripts/` directory:
 
 ```bash
 # Validate an agent
@@ -232,123 +246,67 @@ python agent-builder/skills/building-skills/scripts/validate-skill.py .claude/sk
 # Validate a command
 python agent-builder/skills/building-commands/scripts/validate-command.py .claude/commands/my-command.md
 
-# Validate hooks configuration
+# Validate hooks
 python agent-builder/skills/building-hooks/scripts/validate-hooks.py .claude/hooks.json
 ```
 
 ## Templates
 
-Pre-built templates are available for all component types:
+Pre-built templates available in each skill's `templates/` directory:
 
 - `skills/building-agents/templates/agent-template.md`
 - `skills/building-skills/templates/skill-template.md`
 - `skills/building-commands/templates/command-template.md`
 - `skills/building-hooks/templates/hooks-template.json`
-- `skills/building-hooks/templates/validation-hook.sh`
-
-Use these as starting points for your own components.
 
 ## Best Practices
 
 ### Naming Conventions
 
-- **Always use lowercase-hyphens**: `my-agent`, not `my_agent` or `MyAgent`
-- **Max 64 characters** for names
-- **Agents**: Action-oriented names (`code-reviewer`, `test-runner`)
-- **Skills**: Gerund form preferred (`analyzing-data`, `generating-reports`)
-- **Commands**: Start with verbs (`run-tests`, `create-component`)
+| Type | Pattern | Example |
+|------|---------|---------|
+| Agents | Action-oriented | `code-reviewer`, `test-runner` |
+| Skills | Gerund (verb+ing) | `analyzing-data`, `generating-reports` |
+| Commands | Verb-first | `run-tests`, `create-component` |
+| Hooks | Event-based | `validate-write`, `log-bash` |
+| Plugins | Domain-based | `code-review-suite`, `git-automation` |
 
 ### Tool Permissions
 
 - **Start minimal**: Begin with `Read, Grep, Glob`
-- **Add as needed**: Only include Write, Edit, Bash if necessary
-- **Security first**: Always validate inputs when using Bash
-
-### Descriptions
-
-- **Agents**: Focus on WHEN to invoke the agent
-- **Skills**: Critical for auto-invocation - be very specific about triggers
-- **Commands**: Clear one-liner explaining what the command does
+- **Add as needed**: Only include `Write, Edit, Bash` if necessary
+- **Security first**: Always validate inputs when using `Bash`
 
 ### Component Selection
 
-- **Use Agents**: For specialized delegated tasks with independent context
-- **Use Skills**: For always-on expertise with automatic invocation
-- **Use Commands**: For user-triggered workflows with parameters
-- **Use Hooks**: For event-driven automation and validation
+| Use Case | Component |
+|----------|-----------|
+| Specialized delegated task with independent context | Agent |
+| Always-on expertise with automatic invocation | Skill |
+| User-triggered workflow with parameters | Command |
+| Event-driven automation and validation | Hook |
+| Bundled related components | Plugin |
 
-## Examples
+### Critical Rules
 
-### Example: Creating a Code Review Agent
+1. **Skills don't support model field** - skill-builder enforces this
+2. **Commands need version aliases for model** (not short aliases like `haiku`)
+3. **Hooks require security review** - hook-builder is security-focused
+4. **All names: lowercase-hyphens, max 64 chars**
 
-```bash
-/agent-builder:agents:new security-reviewer
-```
+## Migration from v1.x
 
-Claude will create:
-```yaml
----
-name: security-reviewer
-description: Security expert for identifying vulnerabilities, insecure patterns, and compliance issues. Use when reviewing code for security concerns.
-tools: Read, Grep, Glob
-model: sonnet
----
+The old 28 commands have been replaced with 8 unified commands:
 
-# Security Reviewer Agent
-
-You are a security expert specializing in code security analysis...
-```
-
-### Example: Creating a Data Analysis Skill
-
-```bash
-/agent-builder:skills:new analyzing-csv-data
-```
-
-Claude will create:
-```
-.claude/skills/analyzing-csv-data/
-├── SKILL.md
-├── scripts/
-│   └── csv_analyzer.py
-├── references/
-│   └── pandas-guide.md
-└── assets/
-    └── report-template.json
-```
-
-### Example: Creating a Git Workflow Command
-
-```bash
-/agent-builder:commands:new git:commit-push
-```
-
-Claude will create:
-```markdown
----
-description: Commit changes and push to remote repository
-allowed-tools: Read, Grep, Bash
-argument-hint: [commit-message]
----
-
-# Git Commit and Push
-
-Commit with message: $ARGUMENTS
-Then push to remote.
-```
-
-Usage: `/git:commit-push Add authentication feature`
-
-## Architecture
-
-This plugin demonstrates advanced Claude Code patterns:
-
-1. **Meta-Programming**: A Claude agent that builds other Claude agents
-2. **Skill Composition**: Multiple specialized skills working together
-3. **Progressive Disclosure**: Skills reveal resources as needed via `{baseDir}`
-4. **Auto-Invocation**: Skills automatically activate when relevant
-5. **Validation Pipeline**: Scripts ensure schema compliance
-6. **Template Library**: Reusable patterns for common components
+| Old Command | New Command |
+|-------------|-------------|
+| `/agent-builder:agents:new [name]` | `/agent-builder:new agent [name]` |
+| `/agent-builder:skills:new [name]` | `/agent-builder:new skill [name]` |
+| `/agent-builder:commands:new [name]` | `/agent-builder:new command [name]` |
+| `/agent-builder:hooks:new [name]` | `/agent-builder:new hook [name]` |
+| `/agent-builder:agents:audit` | `/agent-builder:audit agent` |
+| `/agent-builder:agents:enhance [name]` | `/agent-builder:enhance agent [name]` |
+| ... | ... |
 
 ## Contributing
 
@@ -357,7 +315,7 @@ To extend this plugin:
 1. Add new templates to the `templates/` directories
 2. Create new validation rules in the validation scripts
 3. Add reference documentation to `references/` directories
-4. Extend the skills with additional patterns and examples
+4. Extend skills with additional patterns and examples
 
 ## License
 
@@ -365,9 +323,9 @@ MIT License
 
 ## Support
 
-For issues, questions, or contributions, please visit:
+For issues, questions, or contributions:
 https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations
 
 ---
 
-**Built with Claude Code** - A meta-agent building meta-agents! 🤖🔨
+**Built with Claude Code** - An orchestrator coordinating specialized builders!

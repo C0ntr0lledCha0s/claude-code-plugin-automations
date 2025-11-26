@@ -1,7 +1,7 @@
 ---
 name: building-plugins
 description: Expert at creating and managing Claude Code plugins that bundle agents, skills, commands, and hooks into cohesive packages. Auto-invokes when the user wants to create, structure, validate, or publish a complete plugin, or needs help with plugin architecture and best practices. Also auto-invokes proactively when Claude is about to create plugin directory structures, write plugin.json manifests, or implement tasks that involve bundling components into a plugin package.
-version: 1.1.0
+version: 2.0.0
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
@@ -34,59 +34,17 @@ Plugins enable users to install complete functionality with a single command.
 - You're customizing for a specific project
 - You don't plan to distribute or share
 
-## Automated Plugin Creation (Orchestration)
+## Plugin Creation Process
 
-The agent-builder provides **automated orchestration** for plugin creation:
+Creating a plugin involves:
+1. Gathering requirements (name, components, metadata)
+2. Creating the directory structure
+3. Writing the plugin.json manifest
+4. Creating each component (agents, skills, commands, hooks)
+5. Writing comprehensive README.md
+6. Validating the complete plugin
 
-### Quick Start: Automated Creation
-
-```bash
-# Command invokes automated workflow
-/agent-builder:plugins:new my-plugin-name
-```
-
-This **orchestrated command** automatically:
-1. ✅ Gathers requirements interactively (using AskUserQuestion)
-2. ✅ Creates plugin structure and manifest
-3. ✅ **Automatically invokes component builders**:
-   - `/agent-builder:agents:new` for each agent
-   - `/agent-builder:skills:new` for each skill
-   - `/agent-builder:commands:new` for each command
-   - `/agent-builder:hooks:new` for hooks
-4. ✅ Generates comprehensive README.md
-5. ✅ Validates the complete plugin
-6. ✅ Provides next steps and usage instructions
-
-### Interactive Script
-
-For manual/standalone use:
-
-```bash
-python3 {baseDir}/scripts/create-plugin-interactive.py
-```
-
-This interactive script guides you through:
-- Plugin naming and validation
-- Metadata collection (author, keywords, category)
-- Component selection
-- Directory structure creation
-- manifest generation
-- Documentation scaffolding
-
-### How Orchestration Works
-
-When you use the `/agent-builder:plugins:new` command, it:
-
-1. **Invokes this skill** for plugin expertise
-2. **Delegates component creation** to specialized builders:
-   - `building-agents` skill for agents
-   - `building-skills` skill for skills
-   - `building-commands` skill for commands
-   - `building-hooks` skill for hooks
-3. **Coordinates** the entire workflow seamlessly
-4. **Validates** the final result
-
-**Key Benefit**: You get a complete, production-ready plugin without manually creating each component.
+**Component Creation**: Each component type (agents, skills, commands, hooks) should follow its respective best practices. Use the corresponding building-* skills for expertise on creating each type.
 
 ## Plugin Structure & Schema
 
@@ -224,19 +182,7 @@ Examples:
 
 ## Creating a Plugin
 
-### Recommended: Use Automated Orchestration
-
-The **fastest and recommended way** to create a plugin is using the orchestrated command:
-
-```bash
-/agent-builder:plugins:new my-plugin-name
-```
-
-This automatically handles all steps below. See the "Automated Plugin Creation (Orchestration)" section above for details.
-
-### Manual Creation (Alternative)
-
-If you prefer manual control or need to understand the detailed steps:
+Follow these steps to create a well-structured plugin:
 
 #### Step 1: Gather Requirements
 
@@ -325,31 +271,27 @@ Use the plugin.json schema template and populate all fields:
 
 #### Step 5: Create Components
 
-Use the specialized builder skills (or let the orchestrated command handle this automatically):
+Create each component using the appropriate expertise:
 
 **For Agents:**
-```bash
-/agent-builder:agents:new agent-name
-```
-Or invoke the `building-agents` skill expertise.
+- Follow the building-agents skill guidance
+- Use the agent-template.md as a starting point
+- Place in `plugin-name/agents/`
 
 **For Skills:**
-```bash
-/agent-builder:skills:new skill-name
-```
-Or invoke the `building-skills` skill expertise.
+- Follow the building-skills skill guidance
+- Create a directory with SKILL.md
+- Place in `plugin-name/skills/skill-name/`
 
 **For Commands:**
-```bash
-/agent-builder:commands:new command-name
-```
-Or invoke the `building-commands` skill expertise.
+- Follow the building-commands skill guidance
+- Use command-template.md as a starting point
+- Place in `plugin-name/commands/`
 
 **For Hooks:**
-```bash
-/agent-builder:hooks:new hook-name
-```
-Or invoke the `building-hooks` skill expertise.
+- Follow the building-hooks skill guidance
+- Create hooks.json configuration
+- Place in `plugin-name/hooks/`
 
 #### Step 6: Write Comprehensive README.md
 

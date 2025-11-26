@@ -1,7 +1,7 @@
 ---
 name: building-agents
 description: Expert at creating and modifying Claude Code agents (subagents). Auto-invokes when the user wants to create, update, modify, enhance, validate, or standardize agents, or when modifying agent YAML frontmatter fields (especially 'model', 'tools', 'description'), needs help designing agent architecture, or wants to understand agent capabilities. Also auto-invokes proactively when Claude is about to write agent files (*/agents/*.md), create modular agent architectures, or implement tasks that involve creating agent components.
-version: 1.3.0
+version: 2.0.0
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
@@ -48,11 +48,14 @@ description: Brief description of what the agent does and when to use it (max 10
 ### Optional Fields
 ```yaml
 ---
+color: "#3498DB"                            # Hex color for terminal display (6-digit with #)
 capabilities: ["task1", "task2", "task3"]  # Array of specialized tasks the agent can perform (helps Claude decide when to invoke)
 tools: Read, Grep, Glob, Bash              # Comma-separated list (omit to inherit all tools)
 model: sonnet                               # sonnet, opus, haiku, or inherit
 ---
 ```
+
+**Note on `color` field**: The color is displayed in the terminal when the agent is invoked, helping users visually identify which agent is running. Use a 6-digit hex color with `#` prefix (e.g., `"#9B59B6"`). Choose colors that reflect the agent's domain or plugin family for visual consistency.
 
 **Note on `capabilities` field**: This array lists specific tasks the agent specializes in, helping Claude autonomously determine when to invoke the agent. Use kebab-case strings (e.g., `"analyze-security"`, `"generate-tests"`, `"review-architecture"`). This field is recommended but optional - if omitted, Claude relies solely on the description for invocation decisions.
 
@@ -78,6 +81,7 @@ The Markdown body should include:
 ```markdown
 ---
 name: agent-name
+color: "#3498DB"
 description: One-line description of agent purpose and when to invoke it
 capabilities: ["task1", "task2", "task3"]
 tools: Read, Grep, Glob, Bash
@@ -162,6 +166,54 @@ Use with caution: Agent inherits all available tools
 - **opus**: Complex reasoning, critical decisions, heavy analysis
 - **inherit**: Use the model from the parent context (default if omitted)
 
+## Color Selection
+
+Colors provide visual identification when agents run in the terminal.
+
+### Format
+- 6-digit hex color with `#` prefix: `"#RRGGBB"`
+- Must be quoted in YAML: `color: "#3498DB"`
+
+### Recommended Color Palettes by Domain
+
+| Domain | Primary | Accent | Description |
+|--------|---------|--------|-------------|
+| **Meta/Building** | `#9B59B6` | `#8E44AD` | Purple shades for meta-programming agents |
+| **GitHub/Git** | `#3498DB` | `#2980B9` | Blue shades for version control |
+| **Testing/QA** | `#E74C3C` | `#C0392B` | Red shades for testing agents |
+| **Documentation** | `#27AE60` | `#229954` | Green shades for docs |
+| **Security** | `#F39C12` | `#D68910` | Orange/gold for security analysis |
+| **Performance** | `#1ABC9C` | `#16A085` | Teal for optimization agents |
+| **Research** | `#9B59B6` | `#8E44AD` | Purple for research/exploration |
+
+### Plugin Color Families
+
+When creating agents for a plugin, use related shades to create visual cohesion:
+
+**Example: agent-builder plugin**
+```yaml
+meta-architect:   "#9B59B6"  # Primary purple
+agent-builder:    "#8E44AD"  # Darker purple
+skill-builder:    "#7D3C98"  # Even darker
+command-builder:  "#5B2C6F"  # Darkest
+hook-builder:     "#6C3483"  # Mid-dark
+```
+
+**Example: github-workflows plugin**
+```yaml
+workflow-orchestrator: "#3498DB"  # Primary blue
+issue-manager:         "#2980B9"  # Darker blue
+pr-reviewer:           "#1F618D"  # Even darker
+release-manager:       "#1A5276"  # Darkest
+```
+
+### Best Practices
+
+1. **Consistency**: Use related colors for agents in the same plugin
+2. **Contrast**: Ensure colors are visible on both light and dark terminals
+3. **Meaning**: Choose colors that intuitively match the agent's purpose
+4. **Avoid**: Very dark colors (`#000000`) or very light colors (`#FFFFFF`)
+
 ## Creating an Agent
 
 ### Step 1: Gather Requirements
@@ -173,6 +225,7 @@ Ask the user:
 
 ### Step 2: Design the Agent
 - Choose a clear, descriptive name (lowercase-hyphens)
+- Select a color that matches the agent's domain (see Color Selection)
 - Write a concise description (focus on WHEN to use)
 - Select minimal necessary tools
 - Choose appropriate model
@@ -198,107 +251,25 @@ Ask the user:
 - Verify behavior matches expectations
 - Iterate based on results
 
-## Generator Scripts
+## Validation Script
 
-This skill includes helper scripts to streamline agent creation:
-
-### create-agent.py - Interactive Agent Generator
-
-Full-featured interactive script that guides you through creating a complete agent with prompts for all fields.
-
-**Usage:**
-```bash
-python3 {baseDir}/scripts/create-agent.py
-```
-
-**Features:**
-- Interactive prompts for name, description, tools, model
-- Validates naming conventions in real-time
-- Tool selection menu with common presets
-- Generates complete agent with proper structure
-- Preview before saving
-- Automatic validation
-
-**Example Session:**
-```
-⚡ CLAUDE CODE AGENT GENERATOR
-========================================
-
-Agent name: code-reviewer
-Description: Reviews code for quality and security issues
-Tools: [Select from menu] → Read, Grep, Glob
-Model: [1] haiku / [2] sonnet / [3] opus → 2
-Purpose: Review code quality and identify security issues
-
-✅ Agent created: .claude/agents/code-reviewer.md
-```
-
-### scaffold-agent.sh - Quick CLI Scaffolder
-
-Fast command-line tool for creating minimal agents with sensible defaults.
-
-**Usage:**
-```bash
-bash {baseDir}/scripts/scaffold-agent.sh <agent-name> <description> [tools] [model]
-```
-
-**Arguments:**
-- `agent-name`: Required - Agent identifier (lowercase-hyphens)
-- `description`: Required - Brief description
-- `tools`: Optional - Comma-separated tools (default: "Read, Grep, Glob")
-- `model`: Optional - haiku/sonnet/opus (default: "sonnet")
-
-**Examples:**
-```bash
-# Minimal agent with defaults
-bash scaffold-agent.sh code-reviewer "Reviews code for quality"
-
-# With custom tools and model
-bash scaffold-agent.sh test-runner "Runs test suites" "Read, Grep, Bash" "haiku"
-```
-
-**When to Use:**
-- Quick prototyping
-- Creating multiple agents rapidly
-- Scripting agent generation
-- When you know exactly what you need
-
-### test-agent.sh - Agent Testing Script
-
-Validates and tests agent files for correctness.
-
-**Usage:**
-```bash
-bash {baseDir}/scripts/test-agent.sh <agent-file>
-```
-
-**What It Checks:**
-- Schema validation (YAML frontmatter)
-- Naming convention compliance
-- Required fields present
-- Placeholder detection (warns about `[...]` text)
-- Common content issues
-- File structure
-
-**Example:**
-```bash
-bash test-agent.sh .claude/agents/code-reviewer.md
-
-✅ Schema validation passed
-✅ Naming conventions followed
-⚠️  Warning: Found placeholder text in brackets [...]
-   → Line 15: [Describe main function]
-   → Line 20: [Step 1 description]
-```
+This skill includes a validation script:
 
 ### validate-agent.py - Schema Validator
 
-Python script for programmatic validation (used by test-agent.sh).
+Python script for validating agent files.
 
 **Usage:**
 ```bash
 python3 {baseDir}/scripts/validate-agent.py <agent-file>
 ```
+
+**What It Checks:**
+- YAML frontmatter syntax
+- Required fields present (name, description)
+- Naming convention compliance (lowercase-hyphens, max 64 chars)
+- Tool permissions validation
+- Model selection validation
 
 **Returns:**
 - Exit code 0 if valid
@@ -310,15 +281,14 @@ python3 {baseDir}/scripts/validate-agent.py <agent-file>
 - Automated testing
 - Integration with other tools
 
-## Validation Scripts Location
+**Example:**
+```bash
+python3 validate-agent.py .claude/agents/code-reviewer.md
 
-All validation and generator scripts are in:
-```
-{baseDir}/scripts/
-├── create-agent.py       # Interactive generator
-├── scaffold-agent.sh     # Quick CLI scaffolder
-├── test-agent.sh         # Complete testing
-└── validate-agent.py     # Schema validation
+✅ Agent validation passed
+   Name: code-reviewer
+   Tools: Read, Grep, Glob
+   Model: sonnet
 ```
 
 ## Security Considerations
@@ -337,6 +307,7 @@ When creating agents, always:
 ```yaml
 ---
 name: security-auditor
+color: "#F39C12"
 description: Specialized security auditor for identifying vulnerabilities, insecure patterns, and compliance issues. Use when reviewing code for security concerns.
 tools: Read, Grep, Glob
 model: sonnet
@@ -347,6 +318,7 @@ model: sonnet
 ```yaml
 ---
 name: test-runner
+color: "#E74C3C"
 description: Automated test execution and reporting agent. Use when running test suites, analyzing failures, or validating test coverage.
 tools: Read, Grep, Glob, Bash
 model: haiku
@@ -357,6 +329,7 @@ model: haiku
 ```yaml
 ---
 name: doc-generator
+color: "#27AE60"
 description: Technical documentation writer specializing in API docs, README files, and inline code documentation. Use when creating or updating documentation.
 tools: Read, Write, Grep, Glob
 model: sonnet
@@ -367,6 +340,7 @@ model: sonnet
 ```yaml
 ---
 name: code-refactor
+color: "#1ABC9C"
 description: Expert code refactoring specialist for improving code quality, removing duplication, and applying design patterns. Use for large-scale refactoring tasks.
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
@@ -375,7 +349,7 @@ model: sonnet
 
 ## Maintaining and Updating Agents
 
-Agents aren't "set and forget" - they need regular maintenance and updates to stay effective.
+Agents need regular maintenance to stay effective.
 
 ### When to Update an Agent
 
@@ -387,275 +361,54 @@ Update agents when:
 - **User feedback**: Agent doesn't meet expectations
 - **Validation fails**: Schema or content issues detected
 
-### Available Maintenance Commands
+### Maintenance Checklist
 
-#### `/agent-builder:agents:update [agent-name]`
-Interactive workflow for updating existing agents:
-- Update description, tools, or model
-- Apply changes with diff preview
-- Validate before and after changes
-- Backup original automatically
+When reviewing agents for updates:
 
-**Use when**: You know what needs to change
-
-#### `/agent-builder:agents:enhance [agent-name]`
-AI-powered analysis and improvement suggestions:
-- Comprehensive scoring (schema, security, quality, maintainability)
-- Prioritized recommendations
-- Identifies gaps and anti-patterns
-- Suggests specific improvements
-
-**Use when**: You want expert analysis of what could be better
-
-#### `/agent-builder:agents:audit`
-Project-wide agent quality audit:
-- Scans all agents in project
-- Security and compliance scoring
-- Identifies critical issues
-- Generates comprehensive report
-
-**Use when**: You want to assess all agents at once
-
-#### `/agent-builder:agents:compare [agent1] [agent2]`
-Side-by-side comparison:
-- Highlights differences
-- Trade-off analysis
-- Helps choose right agent
-- Identifies overlap
-
-**Use when**: Deciding between similar agents or looking for redundancy
-
-#### `/agent-builder:agents:migrate [agent-name]`
-Automated schema and best practice migration:
-- Detects current schema version
-- Applies automated migrations
-- Updates to current standards
-- Creates backups automatically
-
-**Use when**: Upgrading old agents or applying new best practices
-
-### Maintenance Workflow
-
-**Recommended maintenance cycle:**
-
-```
-1. Regular Audits (monthly)
-   └─> /agent-builder:agents:audit
-       └─> Identifies agents needing attention
-
-2. Deep Analysis (as needed)
-   └─> /agent-builder:agents:enhance <agent-name>
-       └─> Get specific recommendations
-
-3. Apply Updates (interactive)
-   └─> /agent-builder:agents:update <agent-name>
-       └─> Make changes with confidence
-
-4. Validate Results
-   └─> Test agent behavior
-   └─> Re-run enhance to verify improvements
-```
-
-### Maintenance Scripts
-
-#### update-agent.py - Interactive Updater
-Full-featured script for updating agents with diff preview.
-
-**Usage:**
-```bash
-python3 {baseDir}/scripts/update-agent.py <agent-name>
-```
-
-**Features:**
-- Finds agent automatically
-- Interactive menu for changes
-- Shows diff before applying
-- Validates after update
-- Creates automatic backup
-
-**Example:**
-```bash
-python3 update-agent.py code-reviewer
-# Interactive prompts for updates
-# Shows diff
-# Applies with confirmation
-```
-
-#### enhance-agent.py - Quality Analyzer
-Deep analysis script that scores agents across multiple dimensions.
-
-**Usage:**
-```bash
-python3 {baseDir}/scripts/enhance-agent.py <agent-name>
-```
-
-**What it analyzes:**
-- Schema compliance (10 points)
-- Security (10 points)
-- Content quality (10 points)
-- Maintainability (10 points)
-- Overall score (average)
-
-**Output:**
-- Detailed findings by category
-- Prioritized recommendations
-- Actionable next steps
-- Pass/warning/fail status
-
-**Example:**
-```bash
-python3 enhance-agent.py code-reviewer
-
-Enhancement Analysis: code-reviewer
-Overall Score: 8.5/10
-
-Detailed Scores:
-  Schema Compliance:  10/10
-  Security:           9/10
-  Content Quality:    8/10
-  Maintainability:    7/10
-
-Recommendations:
-1. 🟢 MEDIUM: Add more examples (currently 1, recommend 3+)
-2. 🟢 LOW: Improve section headings for better navigation
-```
-
-#### migrate-agent.py - Automated Migrator
-Automated schema and best practice migration script.
-
-**Usage:**
-```bash
-python3 {baseDir}/scripts/migrate-agent.py <agent-name>
-```
-
-**What it does:**
-- Detects current schema version (pre-1.0, 0.x, 1.0)
-- Applies version-specific migrations automatically
-- Optimizes tool permissions
-- Updates model to version aliases
-- Adds missing content sections
-- Creates timestamped backups
-
-**Migration paths:**
-- **pre-1.0 → 1.0**: Adds YAML frontmatter, extracts name/description
-- **0.x → current**: Fixes schema, optimizes permissions, adds sections
-- **1.0 → current**: Applies best practice updates
-
-**Output:**
-- Shows detected version
-- Lists changes to apply
-- Displays diff preview
-- Runs validation after migration
-- Runs enhancement scoring
-- Provides rollback instructions
-
-**Example:**
-```bash
-python3 migrate-agent.py old-agent
-
-# Output:
-Detected schema version: pre-1.0
-
-Migration path: pre-1.0 → 1.0
-  1. Add YAML frontmatter
-  2. Extract name and description
-  3. Add default tools and model
-
-Apply migration? (y/n): y
-
-✅ Migration complete!
-   Backup: old-agent.md.pre-migration-20250113_143022
-   Enhanced score: 3.5/10 → 7.5/10 (+114%)
-```
+- [ ] **Schema compliance**: Valid YAML, required fields present
+- [ ] **Security**: Minimal tool permissions, no hardcoded secrets
+- [ ] **Content quality**: Clear role, documented workflow, examples
+- [ ] **Maintainability**: Good structure, consistent formatting
 
 ### Common Update Scenarios
 
 #### Scenario 1: Reduce Tool Permissions
 **Problem**: Agent has Bash but doesn't need it
-**Solution**:
-```bash
-/agent-builder:agents:update my-agent
-> What to update? 2 (tools)
-> Select preset: 1 (Read, Grep, Glob)
-✅ Tools updated, security improved
-```
+**Solution**: Edit the tools field to remove Bash, use minimal set like `Read, Grep, Glob`
 
 #### Scenario 2: Improve Performance/Cost
 **Problem**: Agent uses opus but could use sonnet
-**Solution**:
-```bash
-/agent-builder:agents:update my-agent
-> What to update? 3 (model)
-> Select model: 2 (sonnet)
-✅ 3x faster, 5x cheaper, still capable
-```
+**Solution**: Change model field from `opus` to `sonnet` (3x faster, 5x cheaper)
 
 #### Scenario 3: Add Missing Documentation
 **Problem**: Agent lacks examples and error handling
-**Solution**:
-```bash
-/agent-builder:agents:enhance my-agent
-# Reviews findings
-/agent-builder:agents:update my-agent
-# Manually add examples section
-# Manually add error handling section
-```
+**Solution**: Add Examples section with 2-3 concrete scenarios, add Error Handling section
 
 #### Scenario 4: Fix Security Issues
-**Problem**: Agent has Bash without input validation
-**Solution**:
-```bash
-/agent-builder:agents:enhance my-agent
-# Identifies security issue
-/agent-builder:agents:update my-agent
-# Either: remove Bash, or add validation docs
-```
+**Problem**: Agent has Bash without input validation guidance
+**Solution**: Either remove Bash from tools, or add Input Validation section to agent body
 
-### Migration and Modernization
+### Modernization Checklist
 
-As best practices evolve, older agents may need modernization:
-
-**Signs an agent needs modernization:**
+Signs an agent needs modernization:
 - Created before current guidelines
 - Uses outdated patterns
-- Lower enhancement score (<7/10)
 - Missing key sections (examples, error handling)
 - Over-permissioned tools
 
-**Modernization checklist:**
-- [ ] Update to current schema (check required fields)
-- [ ] Apply security best practices
-- [ ] Add missing sections (workflow, examples, error handling)
-- [ ] Optimize tool permissions (minimal necessary)
-- [ ] Optimize model selection (cost/performance)
-- [ ] Improve description clarity (when to invoke)
-- [ ] Add concrete examples (2-3 scenarios)
-- [ ] Document edge cases
-
-**Automated modernization:**
-```bash
-# Option 1: Full automated migration
-/agent-builder:agents:migrate my-agent
-# Detects version and applies all migrations
-
-# Option 2: Analyze then update
-/agent-builder:agents:enhance my-agent
-# Review suggestions
-/agent-builder:agents:update my-agent
-# Apply recommended changes interactively
-```
-
-**Using migration script directly:**
-```bash
-python3 agent-builder/skills/building-agents/scripts/migrate-agent.py my-agent
-# Automated migration with diff preview
-# Creates backup automatically
-# Validates and scores after migration
-```
+**Modernization steps:**
+1. Update to current schema (check required fields)
+2. Apply security best practices
+3. Add missing sections (workflow, examples, error handling)
+4. Optimize tool permissions (minimal necessary)
+5. Optimize model selection (cost/performance)
+6. Improve description clarity (when to invoke)
+7. Add concrete examples (2-3 scenarios)
+8. Document edge cases
 
 ### Version Control Best Practices
 
-When updating agents in version control:
+When updating agents:
 
 **Before making changes:**
 ```bash
@@ -665,59 +418,10 @@ git commit -m "backup: agent before major update"
 
 **After changes:**
 ```bash
-python3 enhance-agent.py my-agent  # Verify improvement
+python3 {baseDir}/scripts/validate-agent.py my-agent.md  # Verify validity
 git add .claude/agents/my-agent.md
-git commit -m "refactor(agent): improve my-agent security and docs
-
-- Reduced tool permissions (removed Bash)
-- Added input validation documentation
-- Added 3 concrete examples
-- Improved error handling section
-
-Enhanced score: 6.5/10 → 8.5/10"
+git commit -m "refactor(agent): improve my-agent security and docs"
 ```
-
-**Track improvements over time:**
-```bash
-# Before
-python3 enhance-agent.py my-agent > before.txt
-
-# Make changes
-/agent-builder:agents:update my-agent
-
-# After
-python3 enhance-agent.py my-agent > after.txt
-
-# Compare
-diff before.txt after.txt
-```
-
-### Integration with Other Tools
-
-The maintenance commands and scripts integrate with:
-- **validation scripts**: Ensure schema compliance
-- **building-agents skill**: Provides best practices knowledge
-- **git hooks**: Can run validations automatically
-- **CI/CD**: Can enforce quality gates
-
-### Maintenance Resources
-
-For detailed guidance on agent maintenance:
-
-- **Update Patterns**: See `{baseDir}/references/agent-update-patterns.md`
-  - 15+ common scenarios with solutions
-  - Performance, security, and quality patterns
-  - Before/after examples
-
-- **Migration Guide**: See `{baseDir}/references/migration-guide.md`
-  - Schema version migrations
-  - Breaking changes documentation
-  - Step-by-step migration workflows
-
-- **Quality Checklist**: See `{baseDir}/templates/agent-checklist.md`
-  - Comprehensive review checklist
-  - Scoring guidelines
-  - Action item tracking
 
 ## Validation Checklist
 
@@ -725,6 +429,7 @@ Before finalizing an agent, verify:
 
 - [ ] Name is lowercase-hyphens, max 64 characters
 - [ ] Description is clear and actionable (max 1024 characters)
+- [ ] Color is 6-digit hex with # prefix (e.g., `"#3498DB"`)
 - [ ] YAML frontmatter is valid syntax
 - [ ] Tools are minimal and necessary
 - [ ] Model choice is appropriate for task complexity
@@ -737,30 +442,27 @@ Before finalizing an agent, verify:
 ## Reference Documentation
 
 ### Templates
-- `{baseDir}/templates/agent-template.md` - Basic agent template
-- `{baseDir}/templates/agent-checklist.md` - Quality review checklist
+- `{baseDir}/templates/agent-template.md` - Comprehensive agent template with all sections
 
 ### References
-- `{baseDir}/references/agent-examples.md` - Real-world examples
-- `{baseDir}/references/agent-update-patterns.md` - Common update scenarios and solutions
-- `{baseDir}/references/migration-guide.md` - Schema version migration guide
+- `{baseDir}/references/agent-examples.md` - Real-world examples and patterns
 
 ### Quick Reference
 
 **For creating new agents:**
-- Start with `agent-template.md`
+- Start with `agent-template.md` as a foundation
 - Follow patterns from `agent-examples.md`
-- Use checklist from `agent-checklist.md` to validate
+- Run validation: `python3 {baseDir}/scripts/validate-agent.py <agent-file>`
 
 **For updating existing agents:**
-- Check `agent-update-patterns.md` for your scenario
-- Follow `migration-guide.md` for schema updates
-- Use `/agent-builder:agents:update` command for interactive workflow
+- Review the Maintenance Checklist above
+- Apply Modernization steps as needed
+- Re-validate after changes
 
 **For quality assurance:**
-- Run `/agent-builder:agents:enhance` for analysis
-- Review with `agent-checklist.md`
-- Compare against `agent-examples.md` for best practices
+- Check against Validation Checklist
+- Compare against patterns in `agent-examples.md`
+- Ensure minimal tool permissions
 
 ## Your Role
 

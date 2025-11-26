@@ -1,5 +1,6 @@
 ---
 name: example-agent
+color: "#95A5A6"
 description: Use this agent when you need to perform specialized task X with deep analysis
 tools: Read, Grep, Glob, Bash
 ---

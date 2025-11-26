@@ -129,6 +129,17 @@ def validate_agent(file_path: str) -> tuple[bool, list[str]]:
         if model not in valid_models:
             errors.append(f"Invalid model '{model}'. Valid models: {', '.join(valid_models)}")
 
+    # Validate color field (optional but recommended)
+    if 'color' in frontmatter:
+        color = frontmatter['color']
+        # Validate hex color format: #RRGGBB
+        if not isinstance(color, str):
+            errors.append(f"Invalid color type: must be a string (e.g., \"#3498DB\")")
+        elif not re.match(r'^#[0-9A-Fa-f]{6}$', color):
+            errors.append(f"Invalid color format '{color}': must be 6-digit hex with # prefix (e.g., \"#3498DB\")")
+    else:
+        errors.append("Recommendation: Add 'color' field for visual identification in terminal (e.g., color: \"#3498DB\")")
+
     # Check for body content
     body = content[match.end():]
     if len(body.strip()) < 100:

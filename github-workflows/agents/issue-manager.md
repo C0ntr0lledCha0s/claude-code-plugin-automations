@@ -1,5 +1,6 @@
 ---
 name: issue-manager
+color: "#5DADE2"
 description: Issue lifecycle expert for creating, triaging, and organizing GitHub issues. Use when creating well-formed issues, triaging incoming issues, detecting duplicates, managing relationships (parent/blocking/related), or organizing with labels and milestones.
 capabilities: ["create-well-formed-issues", "triage-incoming-issues", "detect-duplicates", "manage-issue-relationships", "organize-with-labels", "assign-milestones"]
 tools: Bash, Read, Write, Edit, Grep, Glob

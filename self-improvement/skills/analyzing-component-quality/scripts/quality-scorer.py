@@ -12,6 +12,10 @@ import yaml
 from pathlib import Path
 from typing import Dict, List, Tuple
 
+# Orchestrator agents are permitted to have the Task tool for delegation
+# These agents coordinate work across other specialized agents
+ORCHESTRATOR_AGENTS = ['project-coordinator', 'investigator', 'workflow-orchestrator', 'meta-architect']
+
 def extract_frontmatter(file_path: Path) -> Dict:
     """Extract YAML frontmatter from markdown file."""
     with open(file_path, 'r', encoding='utf-8') as f:
@@ -91,9 +95,14 @@ def score_tool_permissions(frontmatter: Dict, component_type: str) -> Tuple[int,
         issues.append(f"Many tools specified ({len(allowed_tools)}), ensure all are necessary")
 
     # Check for Task tool in agents (circular delegation risk)
+    # Orchestrator agents are exempt - they need Task tool for delegation
     if component_type == 'agent' and 'Task' in allowed_tools:
-        score -= 1
-        issues.append("Agent has Task tool (potential circular delegation)")
+        agent_name = frontmatter.get('name', '')
+        if agent_name not in ORCHESTRATOR_AGENTS:
+            score -= 1
+            issues.append("Agent has Task tool (potential circular delegation)")
+        else:
+            issues.append("✓ Orchestrator agent: Task tool permitted for delegation")
 
     # Check for unnecessary Write with no Edit
     if 'Write' in allowed_tools and 'Edit' not in allowed_tools:

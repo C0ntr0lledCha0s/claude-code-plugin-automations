@@ -12,9 +12,9 @@ echo "🔍 Validating staged files..."
 
 ERRORS=0
 
-# Validate changed agents
+# Validate changed agents (exclude reference files and templates)
 for file in $STAGED_FILES; do
-    if echo "$file" | grep -q "agents/.*\.md$"; then
+    if echo "$file" | grep -q "agents/.*\.md$" && ! echo "$file" | grep -qE "(references/|templates/|assets/)"; then
         echo "  Validating agent: $file"
         if ! python3 agent-builder/skills/building-agents/scripts/validate-agent.py "$file" 2>&1; then
             ERRORS=$((ERRORS + 1))
@@ -22,9 +22,9 @@ for file in $STAGED_FILES; do
     fi
 done
 
-# Validate changed commands
+# Validate changed commands (exclude SKILL.md, templates, and references)
 for file in $STAGED_FILES; do
-    if echo "$file" | grep -q "commands/.*\.md$"; then
+    if echo "$file" | grep -q "commands/.*\.md$" && ! echo "$file" | grep -qE "(SKILL\.md$|templates/|references/|assets/)"; then
         echo "  Validating command: $file"
         if ! python3 agent-builder/skills/building-commands/scripts/validate-command.py "$file" 2>&1; then
             ERRORS=$((ERRORS + 1))

@@ -1,7 +1,7 @@
 ---
 name: building-skills
-description: Expert at creating and modifying Claude Code skills. Auto-invokes when the user wants to create, update, modify, enhance, validate, or standardize skills, or when modifying skill YAML frontmatter fields (especially 'model', 'allowed-tools', 'description'), needs help designing skill architecture, or wants to understand when to use skills vs agents. Also auto-invokes proactively when Claude is about to write skill files (*/skills/*/SKILL.md), create skill directory structures, or implement tasks that involve creating skill components.
-version: 1.3.0
+description: Expert at creating and modifying Claude Code skills. Auto-invokes when the user wants to create, update, modify, enhance, validate, or standardize skills, or when modifying skill YAML frontmatter fields (especially 'allowed-tools', 'description'), needs help designing skill architecture, or wants to understand when to use skills vs agents. Also auto-invokes proactively when Claude is about to write skill files (*/skills/*/SKILL.md), create skill directory structures, or implement tasks that involve creating skill components.
+version: 2.0.0
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 
@@ -272,90 +272,44 @@ mkdir -p .claude/skills/skill-name/{scripts,references,assets}
 - Check resource access with `{baseDir}`
 - Iterate based on results
 
-## Generator Scripts
+## Validation Script
 
-This skill includes a helper script to streamline skill creation:
+This skill includes a validation script:
 
-### create-skill.py - Interactive Skill Generator
+### validate-skill.py - Schema Validator
 
-Full-featured interactive script that creates a complete skill directory structure with all necessary files.
+Python script for validating skill directories.
 
 **Usage:**
 ```bash
-python3 {baseDir}/scripts/create-skill.py
+python3 {baseDir}/scripts/validate-skill.py <skill-directory/>
 ```
 
-**Features:**
-- Interactive prompts for name, description, tools, model
-- Validates naming conventions (gerund form preferred)
-- Optionally creates subdirectories: `scripts/`, `references/`, `assets/`
-- Generates complete SKILL.md with proper structure
-- Creates example helper scripts in `scripts/` if requested
-- Creates README files in subdirectories
-- Preview before saving
-- Automatic validation
+**What It Checks:**
+- Directory structure
+- SKILL.md format and YAML syntax
+- Required fields (name, description)
+- **Model field prohibition** (CRITICAL error if present)
+- Gerund form naming (recommendation)
+- Auto-invocation triggers in description
+- `{baseDir}` usage in references
+- Script executability
 
-**Example Session:**
+**Returns:**
+- Exit code 0 if valid
+- Exit code 1 with error messages if invalid
+
+**Example:**
+```bash
+python3 validate-skill.py .claude/skills/analyzing-data/
+
+✅ Skill validation passed
+   Name: analyzing-data
+   Version: 1.0.0
+   Allowed tools: Read, Grep, Glob, Bash
+   Has scripts: yes (2 files)
+   Has references: yes (1 file)
 ```
-📦 CLAUDE CODE SKILL GENERATOR
-========================================
-
-Skill name: analyzing-csv-data
-Description: Analyzes CSV files and provides insights
-Version [1.0.0]: 1.0.0
-Allowed tools [Read, Grep, Glob, Bash]: Read, Grep, Glob, Bash
-Model [1] haiku / [2] sonnet / [3] opus → 2
-
-📂 Directory Structure
-Create scripts/ directory? (y/n) [y]: y
-Create references/ directory? (y/n) [y]: y
-Create assets/ directory? (y/n) [n]: n
-
-✅ Skill created: .claude/skills/analyzing-csv-data/
-   📄 SKILL.md
-   📂 scripts/
-      📜 example-helper.py (executable)
-   📂 references/
-      📄 README.md
-```
-
-**What It Creates:**
-
-1. **SKILL.md** - Main skill definition with frontmatter and body
-2. **scripts/** directory (optional) - For executable helper scripts
-   - Creates example Python script as template
-   - Makes scripts executable automatically
-3. **references/** directory (optional) - For documentation
-   - Creates README.md with guidelines
-4. **assets/** directory (optional) - For templates and resources
-   - Creates README.md with usage examples
-
-**Directory Structure Created:**
-```
-skill-name/
-├── SKILL.md              # Generated with complete structure
-├── scripts/              # If requested
-│   ├── README.md
-│   └── example-helper.py  # Executable template
-├── references/           # If requested
-│   └── README.md
-└── assets/              # If requested
-    └── README.md
-```
-
-**When to Use:**
-- Creating new skills with complete structure
-- Need scripts, references, or assets directories
-- Want guided workflow with validation
-- Building complex skills with multiple resources
-
-**After Creation:**
-1. Edit `SKILL.md` and customize the content
-2. Add your actual helper scripts to `scripts/`
-3. Add documentation to `references/`
-4. Add templates/resources to `assets/`
-5. Test the skill by triggering auto-invocation
-6. Validate with standard validation tools
 
 ## Security Considerations
 
@@ -483,177 +437,84 @@ Full templates and examples are available at:
 
 ## Maintaining and Updating Skills
 
-### Maintenance Workflows
+Skills need ongoing maintenance to stay effective.
 
-Once skills are created, they need ongoing maintenance. This skill includes comprehensive tools for skill lifecycle management.
+### Critical Rule: No Model Field
 
-### Update Skill Interactive Tool
+**Skills cannot have a `model:` field.** This is the most common error.
 
-```bash
-/agent-builder:skills:update <skill-name>
-```
+- Skills are "always-on" and use conversation context
+- Only agents support model specification
+- If you find a `model:` field in SKILL.md, remove it
 
-Interactive updater for modifying existing skills:
-- Update description (with auto-invocation triggers)
-- Change allowed-tools
-- Update version (semantic versioning)
-- Run validation
-- **CRITICAL**: Blocks if model field present (skills don't support it)
+### When to Update a Skill
 
-**Script**: `{baseDir}/scripts/update-skill.py`
+Update skills when:
+- **Requirements change**: New capabilities or different scope
+- **Auto-invocation fails**: Claude doesn't recognize when to use it
+- **Security concerns**: Need to adjust allowed-tools
+- **Best practices evolve**: New patterns become standard
 
-### Enhance Skill Quality Analyzer
+### Maintenance Checklist
 
-```bash
-/agent-builder:skills:enhance <skill-name>
-```
+When reviewing skills for updates:
 
-AI-powered quality analysis with 7-category scoring:
-- Schema compliance (naming, gerund form, required fields)
-- **Model field check** (CRITICAL - must not be present)
-- Auto-invocation clarity (WHEN to invoke, triggers)
-- Directory structure ({baseDir} usage, script permissions)
-- Security analysis (Bash validation, permissions)
-- Content quality (sections, examples, documentation)
-- Maintainability (structure, formatting, references)
-
-Returns overall score (0-10) and prioritized recommendations.
-
-**Script**: `{baseDir}/scripts/enhance-skill.py`
-
-### Migrate Skill Schema Tool
-
-```bash
-/agent-builder:skills:migrate <skill-name> --apply
-/agent-builder:skills:migrate --dry-run  # Preview all
-/agent-builder:skills:migrate --apply     # Apply to all
-```
-
-Automated schema migration:
-- ⚠️ **CRITICAL**: Removes model field (skills don't support it)
-- Checks gerund form naming
-- Validates auto-invocation triggers
-- Shows diff, creates backup, validates after
-
-**Script**: `{baseDir}/scripts/migrate-skill.py`
-
-### Validation Script
-
-```bash
-python3 {baseDir}/scripts/validate-skill.py <skill-directory/>
-```
-
-Schema and convention validation:
-- Directory structure
-- SKILL.md format
-- Required fields (name, description)
-- **Model field prohibition** (CRITICAL error if present)
-- Gerund form naming (recommendation)
-- Auto-invocation triggers
-- {baseDir} usage
-- Script executability
+- [ ] **No model field**: Skills cannot have `model:` (CRITICAL)
+- [ ] **Gerund naming**: Prefer `building-*`, `analyzing-*` format
+- [ ] **Clear auto-invocation**: Description states WHEN to invoke
+- [ ] **Minimal allowed-tools**: Only pre-approve necessary tools
+- [ ] **Valid {baseDir} references**: Paths to resources work correctly
+- [ ] **Executable scripts**: Scripts have `chmod +x` permissions
 
 ### Common Maintenance Scenarios
 
 #### Scenario 1: Skill Has Model Field (CRITICAL)
 
-**Problem**: Skill has `model:` field in SKILL.md (invalid for skills)
-
-```bash
-# Quick fix: Migrate to remove model field
-/agent-builder:skills:migrate my-skill --apply
-```
-
-**Why**: Skills are "always-on" and use conversation context. Only agents support model specification.
+**Problem**: Skill has `model:` field in SKILL.md (invalid)
+**Solution**: Remove the `model:` line from YAML frontmatter entirely
 
 #### Scenario 2: Unclear Auto-Invocation
 
 **Problem**: Claude doesn't invoke skill when expected
+**Solution**: Update description to be more specific about triggers:
+```yaml
+# Before
+description: Data analysis expert
 
-```bash
-# Analyze auto-invocation clarity
-/agent-builder:skills:enhance my-skill
-
-# Update description with triggers
-/agent-builder:skills:update my-skill
-> Update description
-> Add: "Auto-invokes when user wants to..."
+# After
+description: Expert at analyzing CSV files. Auto-invokes when the user wants to load, analyze, or transform CSV data.
 ```
 
-#### Scenario 3: Improve Skill Quality
+#### Scenario 3: Scripts Not Working
 
+**Problem**: Helper scripts fail to execute
+**Solution**: Ensure scripts are executable and use correct paths:
 ```bash
-# Get quality score and recommendations
-/agent-builder:skills:enhance my-skill
-
-# Apply improvements interactively
-/agent-builder:skills:update my-skill
+chmod +x .claude/skills/my-skill/scripts/*.sh
+chmod +x .claude/skills/my-skill/scripts/*.py
 ```
 
-#### Scenario 4: Standardize Skills Across Repository
+### Best Practices
 
-```bash
-# Preview all needed migrations
-/agent-builder:skills:migrate --dry-run
-
-# Apply all migrations
-/agent-builder:skills:migrate --apply
-```
-
-### Reference Documentation
-
-Comprehensive maintenance guide available:
-
-- **[Skill Maintenance Guide]({baseDir}/references/skill-maintenance-guide.md)**: Complete reference
-  - Critical differences: skills vs commands
-  - Model field prohibition (why and how)
-  - Common issues and solutions
-  - Quick checklist
-  - Workflow guidance
-
-### Best Practices for Maintenance
-
-1. **Critical Rule: No Model Field**
-   - Skills cannot have `model:` field
-   - Only agents support model specification
-   - Run migration immediately if found
-
-2. **Clear Auto-Invocation**
+1. **Clear Auto-Invocation**
    - Description must state WHEN to invoke
-   - Use trigger words: "Auto-invokes when", "Use when"
+   - Use trigger phrases: "Auto-invokes when", "Use when"
    - Be specific about scenarios
 
-3. **Gerund Form Naming**
+2. **Gerund Form Naming**
    - Recommended: `building-*`, `analyzing-*`, `creating-*`
    - Action-oriented: verb + -ing
-   - Distinguishes skills from commands
+   - Distinguishes skills from agents/commands
 
-4. **Resource Management**
-   - Use {baseDir} for all resource paths
-   - Keep scripts executable (chmod +x)
-   - Organize with scripts/, references/, assets/
+3. **Resource Management**
+   - Use `{baseDir}` for all resource paths
+   - Keep scripts executable
+   - Organize with `scripts/`, `references/`, `assets/`
 
-5. **Regular Quality Checks**
-   - Run `/agent-builder:skills:enhance` periodically
-   - Address critical issues immediately
-   - Plan improvements for recommendations
-
-### Your Role When Maintaining Skills
-
-When the user asks to update, enhance, or fix skills:
-
-1. **Assess the situation**: Understand what needs to change
-2. **Check for model field**: This is the most critical issue
-3. **Recommend appropriate tool**: Point to the right maintenance tool
-4. **Guide the process**: Help interpret analysis results
-5. **Apply fixes**: Use update/migrate tools to make changes
-6. **Validate**: Ensure changes resolved issues
-
-When users mention:
-- "skill doesn't activate" → Check auto-invocation clarity
-- "skill fails to load" → Check for model field (migrate)
-- "improve my skill" → Run enhance, apply recommendations
-- "check all skills" → Run migrate --dry-run for critical issues
+4. **Security**
+   - Be conservative with `allowed-tools`
+   - Validate inputs in helper scripts
+   - Avoid Bash unless necessary
 
 ## Your Role
 
