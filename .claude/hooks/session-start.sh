@@ -50,9 +50,27 @@ fi
 # Only run full setup in Claude Code web environment
 debug_log "=== Checking Remote Environment ==="
 if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
-  debug_log "Not in Claude Code remote environment, skipping full setup"
+  debug_log "Not in Claude Code remote environment, running lightweight checks"
+
+  # Lightweight dependency checks for local environments
+  debug_log "=== Local Environment Dependency Checks ==="
+
+  # Check jq (required for github-workflows plugin)
+  if command -v jq &> /dev/null; then
+    debug_log "jq available: $(jq --version 2>&1 || echo 'unknown')"
+  else
+    debug_log "WARNING: jq not found - install with: bash github-workflows/scripts/ensure-dependencies.sh"
+  fi
+
+  # Check python3 (required for validation scripts)
+  if command -v python3 &> /dev/null; then
+    debug_log "python3 available: $(python3 --version 2>&1 || echo 'unknown')"
+  else
+    debug_log "WARNING: python3 not found"
+  fi
+
   debug_log "Outputting approval JSON and exiting"
-  output_json_and_exit "approve" "Local environment - skipping setup"
+  output_json_and_exit "approve" "Local environment - checks complete"
 fi
 
 debug_log "=== Running Full Setup (Remote Environment) ==="
@@ -94,6 +112,16 @@ if command -v python3 &> /dev/null; then
   debug_log "Python 3 available: $py_version"
 else
   debug_log "WARNING: Python 3 not found"
+fi
+
+# Check jq availability (needed for github-workflows plugin shell scripts)
+debug_log "=== Checking jq ==="
+if command -v jq &> /dev/null; then
+  jq_version=$(jq --version 2>&1 || echo "unknown")
+  debug_log "jq available: $jq_version"
+else
+  debug_log "WARNING: jq not found - some github-workflows features may not work"
+  debug_log "To install jq, run: bash github-workflows/scripts/ensure-dependencies.sh"
 fi
 
 # Verify marketplace plugins are configured
