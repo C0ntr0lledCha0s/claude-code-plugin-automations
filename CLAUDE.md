@@ -73,6 +73,22 @@ plugin-name/
 - All plugins must have valid `plugin.json` manifests
 - Follow strict naming: lowercase-hyphens, max 64 chars, no underscores
 
+## Remote/Web Environment Usage
+
+In remote environments (Claude Code on the web), custom agents may not be available via `@mention`. Use these alternatives:
+
+| Agent | Use Instead | Auto-Triggers When |
+|-------|-------------|-------------------|
+| `@investigator` | `/investigate <target>` | Asking "how does X work?" |
+| `@workflow-orchestrator` | `/commit-smart`, `/workflow-status` | Working with commits/workflows |
+| `@pr-reviewer` | `/pr-review-request` | Reviewing PRs |
+| `@self-critic` | `/quality-check` | Requesting feedback |
+| `@meta-architect` | Building skills auto-invoke | Creating agents/skills/commands |
+
+**Skills auto-invoke based on context** - just describe what you need and the appropriate skill activates.
+
+**GitHub CLI in remote**: Set `GH_TOKEN` environment variable for `gh` commands to work.
+
 ## Component Types
 
 ### Agents (.md files)
