@@ -145,6 +145,18 @@ Configured per branch type:
 - **Squash merge**: Condenses commits into one
 - **Rebase merge**: Linear history
 
+## Version Tagging (Hotfix/Release)
+
+For hotfix and release branches, version is determined by:
+
+1. **Branch name**: If includes version (e.g., `release/2.0.0` or `hotfix/1.0.1`)
+2. **Latest tag**: Increment appropriately (PATCH for hotfix, based on changes for release)
+3. **User prompt**: Ask for version number if not determinable
+
+Follows semantic versioning: `MAJOR.MINOR.PATCH`
+- Hotfixes typically increment PATCH
+- Releases use the version in the branch name
+
 ## Prerequisites
 
 Before finishing a branch:

@@ -122,6 +122,53 @@ When this command is invoked:
 - Short-lived branches from `main`
 - Warning if branch open > 2 days
 
+## Type-Specific Guidance
+
+### Hotfix Branches
+
+**When to use hotfix type:**
+- Security vulnerabilities
+- Critical production bugs
+- Data corruption issues
+- Service outages
+
+**Do NOT use hotfix for:**
+- Normal bug fixes (use `bugfix` type instead)
+- New features
+- Non-urgent improvements
+
+**Best practices:**
+1. Keep it minimal - fix only the critical issue
+2. Test thoroughly even in emergencies
+3. Document the fix with clear commit messages
+4. Notify team about the emergency
+
+**Workflow notes:**
+- Hotfixes branch from `main`, not `develop`
+- May create worktree automatically for isolation
+- Merges to both `main` AND `develop` when finished
+- Creates a version tag automatically
+
+### Release Branches
+
+**When to use release type:**
+- Feature freeze for new version
+- Preparing for production deployment
+- Version bump and changelog updates
+
+**Release preparation checklist:**
+- [ ] Bump version in package files
+- [ ] Update CHANGELOG.md
+- [ ] Update documentation
+- [ ] Final testing
+- [ ] Fix any last-minute bugs (no new features!)
+
+**Workflow notes:**
+- Release branches from `develop`
+- Only bug fixes allowed after branch creation
+- Merges to both `main` AND `develop` when finished
+- Creates tag matching the version number
+
 ## Output Example
 
 ```
