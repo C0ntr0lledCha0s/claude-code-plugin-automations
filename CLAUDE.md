@@ -37,20 +37,56 @@ This is a **meta-repository** containing Claude Code plugins. It's essentially C
 
 ### Available Plugins
 
+**Total: 7 plugins** | 16 agents | 32 skills | 59 commands
+
+#### Development Tools
+
 1. **agent-builder**: Meta-agent plugin for building Claude Code extensions
    - Location: `./agent-builder/`
    - Purpose: Scaffolds and validates agents, skills, commands, hooks, and plugins
-   - Contains: 1 agent, 4 skills, 5 commands, validation scripts
+   - Contains: 6 agents, 6 skills, 8 commands, 1 hook, validation scripts
+   - Key agents: `meta-architect`, `agent-builder`, `skill-builder`, `command-builder`, `hook-builder`, `plugin-builder`
 
-2. **self-improvement**: Self-critique and quality analysis plugin
+2. **testing-expert**: Test quality and coverage analysis plugin
+   - Location: `./testing-expert/`
+   - Purpose: Jest/Playwright expertise, test review, coverage analysis
+   - Contains: 1 agent, 3 skills, 3 commands, 1 hook
+   - Key skills: `jest-testing`, `playwright-testing`, `analyzing-test-quality`
+
+3. **research-agent**: Deep investigation and analysis plugin
+   - Location: `./research-agent/`
+   - Purpose: Codebase investigation, pattern analysis, best practices research
+   - Contains: 1 agent, 3 skills, 4 commands, 1 hook
+   - Key skills: `investigating-codebases`, `analyzing-patterns`, `researching-best-practices`
+
+#### Productivity & Automation
+
+4. **self-improvement**: Self-critique and quality analysis plugin
    - Location: `./self-improvement/`
    - Purpose: Enables Claude to critique its own work and create feedback loops
-   - Contains: 1 agent, 3 skills, 5 commands, 1 hook
+   - Contains: 1 agent, 5 skills, 9 commands, 1 hook
+   - Key skills: `analyzing-response-quality`, `suggesting-improvements`, `improving-components`, `analyzing-component-quality`
 
-3. **github-workflows**: GitHub workflow automation plugin
+5. **github-workflows**: GitHub workflow automation plugin
    - Location: `./github-workflows/`
-   - Purpose: Comprehensive GitHub automation for projects, issues, PRs, and commits
-   - Contains: 1 agent, 3 skills, 9 commands, 1 hook
+   - Purpose: Comprehensive GitHub automation for projects, issues, PRs, commits, releases, and branching
+   - Contains: 4 agents, 8 skills, 30 commands, 1 hook
+   - Key agents: `workflow-orchestrator`, `pr-reviewer`, `issue-manager`, `release-manager`
+   - Key skills: `managing-branches`, `managing-commits`, `managing-projects`, `organizing-with-labels`
+
+6. **project-manager**: Project orchestration and planning plugin
+   - Location: `./project-manager/`
+   - Purpose: Sprint planning, roadmap creation, task delegation, backlog prioritization
+   - Contains: 1 agent, 2 skills, 5 commands, 1 hook
+   - Key skills: `planning-sprints`, `coordinating-projects`
+
+#### Domain-Specific
+
+7. **logseq-expert**: Logseq database expertise plugin (in development)
+   - Location: `./logseq-expert/`
+   - Purpose: Datascript schema expertise, Datalog query building, MD-to-DB migration
+   - Contains: 1 agent, 4 skills, 5 commands
+   - Key skills: `understanding-db-schema`, `querying-logseq-data`, `building-logseq-plugins`, `migrating-to-db`
 
 ### Plugin Structure Standard
 
@@ -161,21 +197,30 @@ python3 agent-builder/skills/building-commands/scripts/validate-command.py plugi
 # Validate hooks
 python3 agent-builder/skills/building-hooks/scripts/validate-hooks.py plugin-name/hooks/hooks.json
 
-# Validate plugin.json
-python3 -m json.tool plugin-name/.claude-plugin/plugin.json
+# Validate plugin.json (full validation)
+python3 agent-builder/skills/building-plugins/scripts/validate-plugin.py plugin-name/.claude-plugin/plugin.json
 
-# Validate marketplace.json
+# Validate JSON syntax only
+python3 -m json.tool plugin-name/.claude-plugin/plugin.json
 python3 -m json.tool .claude-plugin/marketplace.json
 ```
 
 ### Creating Components
-Use the agent-builder slash commands (namespace structure):
+Use the agent-builder slash commands:
 ```bash
-/agent-builder:agents:new agent-name       # Create a new agent
-/agent-builder:skills:new skill-name       # Create a new skill
-/agent-builder:commands:new command-name   # Create a new command
-/agent-builder:hooks:new hook-name         # Create a new hook
-/agent-builder:plugins:new plugin-name     # Create a complete plugin
+/agent-builder:new agent my-agent          # Create a new agent
+/agent-builder:new skill my-skill          # Create a new skill
+/agent-builder:new command my-command      # Create a new command
+/agent-builder:new hook my-hook            # Create a new hook
+/agent-builder:new plugin my-plugin        # Create a complete plugin
+
+# Other agent-builder commands:
+/agent-builder:update agent my-agent       # Update existing component
+/agent-builder:validate path/to/component  # Validate component schema
+/agent-builder:audit agent                 # Audit components for quality
+/agent-builder:enhance agent my-agent      # Get improvement suggestions
+/agent-builder:migrate agent my-agent      # Migrate to current schema
+/agent-builder:compare agent a b           # Compare two components
 ```
 
 ### Testing Components
@@ -191,13 +236,24 @@ After creating components:
 - `.claude-plugin/marketplace.json`: Marketplace manifest listing all plugins (CRITICAL: must be updated when adding/modifying plugins)
 - `README.md`: Main documentation with installation instructions
 - `MARKETPLACE_CONTRIBUTION_WORKFLOW.md`: Guide for contributing improvements
+- `CI_CD_GUIDE.md`: CI/CD pipeline documentation
+- `CONTRIBUTING.md`: Contribution guidelines
+- `validate-all.sh`: Quick validation script for all plugins
+- `validate-plugins.sh`: Comprehensive validation with detailed output
 
 ### Agent Builder Plugin
-- `agent-builder/agents/meta-architect.md`: Expert architect agent
+- `agent-builder/agents/meta-architect.md`: Architecture planning advisor
+- `agent-builder/agents/agent-builder.md`: Specialized agent builder
+- `agent-builder/agents/skill-builder.md`: Specialized skill builder
+- `agent-builder/agents/command-builder.md`: Specialized command builder
+- `agent-builder/agents/hook-builder.md`: Specialized hook builder
+- `agent-builder/agents/plugin-builder.md`: Specialized plugin builder
 - `agent-builder/skills/building-agents/`: Agent creation expertise
 - `agent-builder/skills/building-skills/`: Skill creation expertise
 - `agent-builder/skills/building-commands/`: Command creation expertise
 - `agent-builder/skills/building-hooks/`: Hook creation expertise
+- `agent-builder/skills/building-plugins/`: Plugin creation expertise
+- `agent-builder/skills/coordinating-builders/`: Builder orchestration skill
 - `agent-builder/skills/*/scripts/validate-*.py`: Validation scripts
 - `agent-builder/skills/*/templates/`: Component templates
 
@@ -206,9 +262,67 @@ After creating components:
 - `self-improvement/skills/analyzing-response-quality/`: Quality analysis
 - `self-improvement/skills/suggesting-improvements/`: Improvement suggestions
 - `self-improvement/skills/creating-feedback-loops/`: Feedback loop creation
+- `self-improvement/skills/improving-components/`: Auto-improvement of components
+- `self-improvement/skills/analyzing-component-quality/`: Component quality analysis
 - `self-improvement/commands/review-my-work.md`: Comprehensive work review
 - `self-improvement/commands/quality-check.md`: Quick quality assessment
+- `self-improvement/commands/analyze-component.md`: Component analysis
+- `self-improvement/commands/improve-component.md`: Auto-improvement
 - `self-improvement/AUTOMATED_ANALYSIS.md`: Analysis results and patterns
+
+### GitHub Workflows Plugin
+- `github-workflows/agents/workflow-orchestrator.md`: Cross-domain workflow coordinator
+- `github-workflows/agents/pr-reviewer.md`: PR review expert
+- `github-workflows/agents/issue-manager.md`: Issue lifecycle expert
+- `github-workflows/agents/release-manager.md`: Release workflow expert
+- `github-workflows/skills/managing-branches/`: Branching strategy expertise
+- `github-workflows/skills/managing-commits/`: Commit quality and conventional commits
+- `github-workflows/skills/managing-projects/`: GitHub Projects v2 expertise
+- `github-workflows/skills/organizing-with-labels/`: Label and milestone management
+- `github-workflows/skills/reviewing-pull-requests/`: PR review workflows
+- `github-workflows/skills/triaging-issues/`: Issue triage and management
+- `github-workflows/skills/creating-issues/`: Issue creation and validation
+- `github-workflows/skills/managing-relationships/`: Issue relationships (parent/blocking)
+- `github-workflows/commands/`: 30 commands for branches, worktrees, releases, PRs, issues, milestones
+
+### Research Agent Plugin
+- `research-agent/agents/investigator.md`: Deep investigation agent
+- `research-agent/skills/investigating-codebases/`: Codebase exploration
+- `research-agent/skills/analyzing-patterns/`: Pattern analysis
+- `research-agent/skills/researching-best-practices/`: Best practices lookup
+- `research-agent/commands/investigate.md`: Feature/component investigation
+- `research-agent/commands/research.md`: Comprehensive research
+- `research-agent/commands/best-practice.md`: Best practices lookup
+- `research-agent/commands/compare.md`: Comparative analysis
+
+### Project Manager Plugin
+- `project-manager/agents/project-coordinator.md`: Strategic planning advisor
+- `project-manager/skills/planning-sprints/`: Sprint planning expertise
+- `project-manager/skills/coordinating-projects/`: Project coordination
+- `project-manager/commands/plan-sprint.md`: Interactive sprint planning
+- `project-manager/commands/roadmap-create.md`: Roadmap creation
+- `project-manager/commands/project-status.md`: Project health check
+- `project-manager/commands/delegate-task.md`: Task routing
+- `project-manager/commands/prioritize-backlog.md`: Backlog prioritization
+
+### Testing Expert Plugin
+- `testing-expert/agents/test-reviewer.md`: Test quality reviewer
+- `testing-expert/skills/jest-testing/`: Jest framework expertise
+- `testing-expert/skills/playwright-testing/`: Playwright E2E testing
+- `testing-expert/skills/analyzing-test-quality/`: Test quality analysis
+- `testing-expert/commands/review-tests.md`: Test review
+- `testing-expert/commands/suggest-tests.md`: Test suggestions
+- `testing-expert/commands/analyze-coverage.md`: Coverage analysis
+
+### Logseq Expert Plugin (In Development)
+- `logseq-expert/agents/logseq-db-expert.md`: Logseq database expert
+- `logseq-expert/skills/understanding-db-schema/`: Datascript schema expertise
+- `logseq-expert/skills/querying-logseq-data/`: Datalog query building
+- `logseq-expert/skills/building-logseq-plugins/`: Plugin development
+- `logseq-expert/skills/migrating-to-db/`: MD-to-DB migration
+- `logseq-expert/commands/query.md`: Query assistance
+- `logseq-expert/commands/explain.md`: Schema explanation
+- `logseq-expert/commands/check-migration.md`: Migration validation
 
 ## Important Conventions
 
@@ -276,6 +390,22 @@ Skills use `{baseDir}` to reference resources that are only loaded when needed, 
 ### Feedback Loop System
 The self-improvement plugin creates a meta-feedback loop where Claude can identify its own limitations and contribute improvements back to the plugins.
 
+### Builder Coordination Pattern
+The `coordinating-builders` skill demonstrates how to orchestrate multiple specialized agents from the main thread. It:
+- Analyzes tasks to determine which builders to invoke
+- Decides on parallel vs sequential execution
+- Delegates to specialized builder agents (agent-builder, skill-builder, etc.)
+- Reports back execution plans for the main thread to follow
+
+### Advisory Agent Pattern
+Agents that need to coordinate multiple operations use the **advisory pattern**:
+- Agent analyzes the situation and provides recommendations
+- Agent returns structured advice to the main thread
+- Main thread (or user) executes the recommended actions
+- Examples: `meta-architect`, `project-coordinator`, `workflow-orchestrator`
+
+This pattern works around the subagent limitation while still providing intelligent orchestration.
+
 ### Subagent Architecture Constraints
 
 **IMPORTANT**: Subagents (agents invoked via the Task tool) **cannot spawn other subagents**. This is a hard architectural restriction in Claude Code to prevent infinite loops.
@@ -302,9 +432,9 @@ Subagent Architecture:
 - **Skills auto-invoke in both contexts** (main thread and subagents)
 
 **For orchestration patterns**, use:
-1. **Skills** - Run in main thread, can coordinate agents
+1. **Skills** - Run in main thread, can coordinate agents (e.g., `coordinating-builders`)
 2. **Commands** - Run in main thread, can delegate to agents
-3. **Advisory agents** - Recommend actions, user/main thread executes
+3. **Advisory agents** - Recommend actions, user/main thread executes (e.g., `meta-architect`)
 
 **DO NOT** add `Task` to agent tools - it creates false orchestration expectations.
 
