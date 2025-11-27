@@ -276,6 +276,38 @@ Skills use `{baseDir}` to reference resources that are only loaded when needed, 
 ### Feedback Loop System
 The self-improvement plugin creates a meta-feedback loop where Claude can identify its own limitations and contribute improvements back to the plugins.
 
+### Subagent Architecture Constraints
+
+**IMPORTANT**: Subagents (agents invoked via the Task tool) **cannot spawn other subagents**. This is a hard architectural restriction in Claude Code to prevent infinite loops.
+
+```
+Subagent Architecture:
+┌─────────────────────────────────────────┐
+│ Main Thread (Claude Code CLI)           │
+│ - Can use Task tool ✓                   │
+│ - Skills auto-invoke here ✓             │
+│                                         │
+│   ┌─────────────────────────────────┐   │
+│   │ Subagent (invoked via Task)     │   │
+│   │ - CANNOT use Task tool ✗        │   │
+│   │ - Skills still auto-invoke ✓    │   │
+│   │ - Cannot spawn nested agents    │   │
+│   └─────────────────────────────────┘   │
+└─────────────────────────────────────────┘
+```
+
+**Key implications:**
+- **Skills and commands CAN use Task** (they run in the main thread)
+- **Agents CANNOT effectively use Task** (they run as subagents)
+- **Skills auto-invoke in both contexts** (main thread and subagents)
+
+**For orchestration patterns**, use:
+1. **Skills** - Run in main thread, can coordinate agents
+2. **Commands** - Run in main thread, can delegate to agents
+3. **Advisory agents** - Recommend actions, user/main thread executes
+
+**DO NOT** add `Task` to agent tools - it creates false orchestration expectations.
+
 ## Security Considerations
 
 - **Validate all inputs**: Especially in hooks and bash commands
