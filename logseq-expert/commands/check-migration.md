@@ -1,10 +1,6 @@
 ---
 description: Analyze a Logseq MD graph for DB migration compatibility and potential issues
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
-  - Bash
+allowed-tools: Read, Grep, Glob, Bash
 argument-hint: "[graph-path]"
 ---
 

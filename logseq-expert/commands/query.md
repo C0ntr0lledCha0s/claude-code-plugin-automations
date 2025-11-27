@@ -1,9 +1,6 @@
 ---
 description: Build a Datalog query for Logseq DB graphs based on natural language description
-allowed-tools:
-  - Read
-  - WebFetch
-  - WebSearch
+allowed-tools: Read, WebFetch, WebSearch
 argument-hint: "<query-description>"
 ---
 

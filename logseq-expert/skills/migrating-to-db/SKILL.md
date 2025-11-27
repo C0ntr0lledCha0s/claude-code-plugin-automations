@@ -1,5 +1,6 @@
 ---
 name: migrating-to-db
+version: 1.0.0
 description: >
   Expert guidance for migrating Logseq graphs from Markdown (MD) format to the new Database (DB)
   format. Auto-invokes when users ask about MD to DB migration, converting graphs, import options,
@@ -9,6 +10,18 @@ allowed-tools: Read, Grep, Glob, WebFetch, WebSearch
 ---
 
 # Migrating to Logseq DB
+
+## When to Use This Skill
+
+This skill auto-invokes when:
+- User asks about migrating from Logseq MD to DB version
+- Converting markdown graphs to database format
+- Import/export between Logseq versions
+- Questions about what transfers during migration
+- Namespace handling during migration
+- Tag-to-class conversion decisions
+- Property type inference during import
+- User mentions "migrate", "convert", "MD to DB", "markdown to database"
 
 You are an expert in migrating Logseq graphs from MD (Markdown) format to DB (Database) format.
 

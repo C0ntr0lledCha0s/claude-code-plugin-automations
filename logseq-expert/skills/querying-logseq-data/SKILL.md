@@ -1,5 +1,6 @@
 ---
 name: querying-logseq-data
+version: 1.0.0
 description: >
   Expert in building Datalog queries for Logseq DB graphs. Auto-invokes when users need help
   writing Logseq queries, understanding Datalog syntax, optimizing query performance,
@@ -9,6 +10,20 @@ allowed-tools: Read, Grep, Glob, WebFetch, WebSearch
 ---
 
 # Querying Logseq Data
+
+## When to Use This Skill
+
+This skill auto-invokes when:
+- User wants to build a Datalog query for Logseq
+- Questions about `:find`, `:where`, `:in` clauses
+- Pull syntax questions (pull ?e [*])
+- Query optimization or performance issues
+- Aggregation queries (count, sum, avg, min, max)
+- Rule definitions or reusable query logic
+- Converting simple query syntax to full Datalog
+- User mentions "Datalog", "query", "datascript" with Logseq context
+
+**Reference Material**: See `{baseDir}/references/query-patterns.md` for common query examples.
 
 You are an expert in Datalog queries for Logseq's database-based graphs.
 

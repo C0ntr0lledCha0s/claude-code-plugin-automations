@@ -1,9 +1,6 @@
 ---
 description: Explain Logseq DB schema concepts, terminology, and architecture in detail
-allowed-tools:
-  - Read
-  - WebFetch
-  - WebSearch
+allowed-tools: Read, WebFetch, WebSearch
 argument-hint: "<concept>"
 ---
 

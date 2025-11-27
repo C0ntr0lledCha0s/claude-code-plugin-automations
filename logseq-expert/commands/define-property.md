@@ -1,8 +1,6 @@
 ---
 description: Define a new typed property for Logseq DB graphs with proper schema configuration
-allowed-tools:
-  - Read
-  - WebFetch
+allowed-tools: Read, WebFetch
 argument-hint: "<property-name> [type]"
 ---
 

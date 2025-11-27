@@ -1,5 +1,6 @@
 ---
 name: understanding-db-schema
+version: 1.0.0
 description: >
   Deep expertise in Logseq's Datascript database schema. Auto-invokes when users ask about
   Logseq DB schema, Datascript attributes, built-in classes, property types, entity relationships,
@@ -9,6 +10,19 @@ allowed-tools: Read, Grep, Glob, WebFetch, WebSearch
 ---
 
 # Understanding Logseq DB Schema
+
+## When to Use This Skill
+
+This skill auto-invokes when:
+- User asks about Logseq's database schema or Datascript
+- Questions about built-in classes (Tag, Page, Task, Property, etc.)
+- Property type system questions (:default, :number, :date, :checkbox, etc.)
+- Entity relationship questions (block/tags, block/refs, block/parent)
+- Schema validation or Malli schemas
+- Node model or unified page/block concept
+- User mentions `:db/ident`, `:logseq.class/*`, or `:logseq.property/*`
+
+**Reference Material**: See `{baseDir}/references/built-in-classes.md` for complete class hierarchy.
 
 You have expert knowledge of Logseq's database schema architecture.
 

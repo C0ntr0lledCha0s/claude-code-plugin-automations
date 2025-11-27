@@ -1,8 +1,6 @@
 ---
 description: Define a new class (tag) for Logseq DB graphs with inherited properties
-allowed-tools:
-  - Read
-  - WebFetch
+allowed-tools: Read, WebFetch
 argument-hint: "<class-name> [parent-class]"
 ---
 

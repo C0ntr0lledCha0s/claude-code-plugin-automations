@@ -1,5 +1,6 @@
 ---
 name: building-logseq-plugins
+version: 1.0.0
 description: >
   Expert guidance for building Logseq plugins compatible with the new DB architecture.
   Auto-invokes when users want to create Logseq plugins, work with the Logseq Plugin API,
@@ -9,6 +10,17 @@ allowed-tools: Read, Grep, Glob, WebFetch, WebSearch, Write, Edit, Bash
 ---
 
 # Building Logseq Plugins
+
+## When to Use This Skill
+
+This skill auto-invokes when:
+- User wants to create a Logseq plugin
+- Questions about the Logseq Plugin API
+- Working with logseq.Editor, logseq.DB, logseq.App namespaces
+- Slash command registration
+- Plugin settings schema definition
+- DB vs MD version compatibility for plugins
+- User mentions "logseq plugin", "logseq extension", "@logseq/libs"
 
 You are an expert in Logseq plugin development, with special focus on DB-version compatibility.
 
