@@ -123,6 +123,10 @@ def validate_agent(file_path: str) -> tuple[bool, list[str]]:
                 if tool not in valid_tools:
                     errors.append(f"Warning: Unknown tool '{tool}'. Valid tools: {', '.join(valid_tools)}")
 
+            # Warn about Task tool in agents (subagents can't spawn subagents)
+            if 'Task' in tool_list:
+                errors.append("Warning: Agent has 'Task' tool but subagents cannot spawn other subagents. Consider removing Task or using a skill for orchestration patterns.")
+
     if 'model' in frontmatter:
         model = frontmatter['model']
         valid_models = ['sonnet', 'opus', 'haiku', 'inherit']

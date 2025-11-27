@@ -88,6 +88,14 @@ Claude should automatically invoke this skill when:
      (Research only needs to read and search)
 ```
 
+**Special Case - Task Tool in Agents**:
+```
+❌ Critical: Agent with Task tool
+     (Subagents cannot spawn other subagents - Task won't work)
+
+   Fix: Remove Task from agents, or convert to skill if orchestration needed
+```
+
 ### 3. **Auto-Invoke Triggers** (1-5)
 
 **What it measures**: How effectively the component will activate when needed
@@ -241,8 +249,10 @@ description: Expert at analyzing code quality using ESLint, Prettier, and static
 Focus on:
 - When should this agent be invoked vs. doing inline?
 - Are tools appropriate for the agent's mission?
+- **Does agent have Task tool?** (Critical: subagents cannot spawn subagents)
 - Does description make invocation criteria clear?
 - Is the agent focused enough (single responsibility)?
+- If orchestration is needed, should this be a skill instead?
 
 ### For Skills
 

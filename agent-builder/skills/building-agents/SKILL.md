@@ -59,6 +59,33 @@ model: sonnet                               # sonnet, opus, haiku, or inherit
 
 **Note on `capabilities` field**: This array lists specific tasks the agent specializes in, helping Claude autonomously determine when to invoke the agent. Use kebab-case strings (e.g., `"analyze-security"`, `"generate-tests"`, `"review-architecture"`). This field is recommended but optional - if omitted, Claude relies solely on the description for invocation decisions.
 
+## Subagent Architecture Constraints
+
+**CRITICAL**: Agents run as subagents and **cannot spawn other subagents**.
+
+```
+Subagent Limitation:
+┌─────────────────────────────────────────┐
+│ Main Thread                             │
+│ - Can use Task tool ✓                   │
+│                                         │
+│   ┌─────────────────────────────────┐   │
+│   │ Subagent (your agent)           │   │
+│   │ - CANNOT use Task tool ✗        │   │
+│   │ - Skills still auto-invoke ✓    │   │
+│   └─────────────────────────────────┘   │
+└─────────────────────────────────────────┘
+```
+
+**Implications:**
+- **DO NOT** include `Task` in agent tools - it creates false expectations
+- **For orchestration patterns**, create a skill instead (skills run in main thread)
+- **Skills auto-invoke** within agent context, so agents get skill expertise without Task
+
+**When to Use Skill vs Agent for Orchestration:**
+- Need to coordinate multiple agents? → Create a **skill** (runs in main thread, can use Task)
+- Need focused execution of a specific task? → Create an **agent** (specialized executor)
+
 ### Naming Conventions
 - **Lowercase letters, numbers, and hyphens only**
 - **No underscores or special characters**

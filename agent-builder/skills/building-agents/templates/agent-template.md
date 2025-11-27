@@ -3,6 +3,8 @@ name: agent-name
 color: "#3498DB"
 description: Brief description of what the agent does and when Claude should invoke it (be specific about use cases)
 capabilities: ["task1", "task2", "task3"]
+# NOTE: Do NOT include Task - subagents cannot spawn other subagents
+# For orchestration patterns, use skills instead
 tools: Read, Grep, Glob
 model: sonnet
 ---
@@ -157,6 +159,12 @@ When [error condition] occurs:
 
 ## Important Constraints
 
+### Subagent Limitation
+**IMPORTANT**: This agent runs as a subagent and **cannot spawn other subagents**.
+- The Task tool will not work from within this agent
+- For multi-agent coordination, recommend actions to the user/main thread
+- Skills will still auto-invoke based on context
+
 ### DO:
 - ✅ [What the agent should always do]
 - ✅ [What the agent should always do]
@@ -167,7 +175,7 @@ When [error condition] occurs:
 - ❌ [What the agent should never do]
 - ❌ [What the agent should never do]
 - ❌ [What the agent should never do]
-- ❌ [What the agent should never do]
+- ❌ Do NOT try to delegate to other agents via Task tool
 
 ## Integration Notes
 
