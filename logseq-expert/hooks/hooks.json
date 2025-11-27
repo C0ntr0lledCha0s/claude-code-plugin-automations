@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Check if the user's message is about Logseq, specifically the database version. Look for keywords like: logseq, datascript, datalog, logseq db, logseq query, logseq class, logseq property, logseq tag, logseq migration, logseq plugin, block/tags, block/refs, logseq.property, logseq.class. If detected, remind yourself to use the logseq-expert skills for authoritative guidance."
+          }
+        ]
+      }
+    ]
+  }
+}

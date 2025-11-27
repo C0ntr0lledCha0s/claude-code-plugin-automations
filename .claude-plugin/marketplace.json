@@ -10,8 +10,8 @@
     "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
     "pluginRoot": "./",
     "stats": {
-      "totalPlugins": 6,
-      "lastUpdated": "2025-11-21"
+      "totalPlugins": 7,
+      "lastUpdated": "2025-11-26"
     }
   },
   "plugins": [
@@ -175,6 +175,32 @@
       "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
       "license": "MIT",
       "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/testing-expert"
+    },
+    {
+      "name": "logseq-expert",
+      "source": "./logseq-expert",
+      "description": "Expert plugin for Logseq's new database-based architecture. Provides deep knowledge of Datascript schema, built-in classes/properties, Datalog query building, plugin development, and MD-to-DB migration assistance.",
+      "version": "1.0.0",
+      "category": "development-tools",
+      "keywords": [
+        "logseq",
+        "database",
+        "datascript",
+        "datalog",
+        "knowledge-management",
+        "queries",
+        "schema",
+        "migration",
+        "plugin-development",
+        "clojure"
+      ],
+      "author": {
+        "name": "C0ntr0lledCha0s",
+        "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
+      },
+      "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
+      "license": "MIT",
+      "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/logseq-expert"
     }
   ]
 }

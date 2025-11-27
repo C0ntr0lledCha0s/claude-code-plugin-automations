@@ -1,0 +1,27 @@
+{
+  "name": "logseq-expert",
+  "version": "1.0.0",
+  "description": "Expert plugin for Logseq's new database-based architecture. Provides deep knowledge of Datascript schema, built-in classes/properties, Datalog query building, plugin development, and MD-to-DB migration assistance.",
+  "author": {
+    "name": "Claude Code Plugins",
+    "email": "plugins@example.com",
+    "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugins"
+  },
+  "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugins",
+  "license": "MIT",
+  "keywords": [
+    "logseq",
+    "database",
+    "datascript",
+    "datalog",
+    "knowledge-management",
+    "queries",
+    "schema",
+    "migration",
+    "plugin-development"
+  ],
+  "agents": "./agents/",
+  "skills": "./skills/",
+  "commands": "./commands/",
+  "hooks": ["./hooks/hooks.json"]
+}
