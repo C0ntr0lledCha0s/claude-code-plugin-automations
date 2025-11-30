@@ -5,9 +5,16 @@
  * Model Context Protocol server for Logseq integration.
  * Provides tools and resources for interacting with Logseq graphs.
  *
+ * Environment variables:
+ *   LOGSEQ_API_TOKEN (required): Authorization token from Logseq
+ *   LOGSEQ_API_URL: Full URL (e.g., "http://192.168.1.100:45454")
+ *   LOGSEQ_API_HOST: Host address (default: "127.0.0.1")
+ *   LOGSEQ_API_PORT: Port number (default: "12315")
+ *
  * Usage:
  *   LOGSEQ_API_TOKEN=xxx npx logseq-mcp
- *   LOGSEQ_API_TOKEN=xxx LOGSEQ_API_URL=http://localhost:12315 npx logseq-mcp
+ *   LOGSEQ_API_TOKEN=xxx LOGSEQ_API_URL=http://192.168.1.100:45454 npx logseq-mcp
+ *   LOGSEQ_API_TOKEN=xxx LOGSEQ_API_HOST=192.168.1.100 LOGSEQ_API_PORT=45454 npx logseq-mcp
  */
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
@@ -20,7 +27,7 @@ import {
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
-import { LogseqHttpClient, createClientFromEnv } from "./client/logseq-http.js";
+import { LogseqHttpClient, createClientFromEnv, getConfiguredUrl } from "./client/logseq-http.js";
 import { readTools, handleReadTool } from "./tools/read-tools.js";
 import { writeTools, handleWriteTool } from "./tools/write-tools.js";
 import { queryTools, handleQueryTool } from "./tools/query-tools.js";
@@ -80,9 +87,7 @@ async function main(): Promise<void> {
     console.error(
       "Cannot connect to Logseq. Make sure Logseq is running with HTTP API enabled."
     );
-    console.error(
-      `Trying to connect to: ${process.env.LOGSEQ_API_URL ?? "http://127.0.0.1:12315"}`
-    );
+    console.error(`Trying to connect to: ${getConfiguredUrl()}`);
     process.exit(1);
   }
 
@@ -185,7 +190,7 @@ async function main(): Promise<void> {
 
   // Log startup (to stderr so it doesn't interfere with MCP protocol)
   console.error(`${SERVER_NAME} v${SERVER_VERSION} started`);
-  console.error(`Connected to Logseq at ${process.env.LOGSEQ_API_URL ?? "http://127.0.0.1:12315"}`);
+  console.error(`Connected to Logseq at ${getConfiguredUrl()}`);
 }
 
 // Run the server

@@ -68,19 +68,28 @@ export class LogseqHttpClient {
     });
 
     if (!response.ok) {
-      throw new LogseqHttpError(
-        `HTTP ${response.status}: ${response.statusText}`,
-        response.status
-      );
+      // Try to get error details from response body
+      let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+      try {
+        const errorData = await response.json() as Record<string, unknown>;
+        if (errorData.error || errorData.message) {
+          errorMessage = String(errorData.error || errorData.message);
+        }
+      } catch {
+        // Ignore JSON parsing errors for error responses
+      }
+      throw new LogseqHttpError(errorMessage, response.status);
     }
 
+    // Logseq API returns data directly, not wrapped in {result: ...}
     const data = await response.json();
 
-    if (data.error) {
-      throw new LogseqHttpError(data.error, undefined, data);
+    // Handle error responses that come with 200 status
+    if (data && typeof data === 'object' && 'error' in data && !('uuid' in data)) {
+      throw new LogseqHttpError(String(data.error), undefined, data);
     }
 
-    return data.result as T;
+    return data as T;
   }
 
   // ============== Page Operations ==============
@@ -285,14 +294,36 @@ export class LogseqHttpClient {
 
 /**
  * Create a client from environment variables
+ *
+ * Supported environment variables:
+ * - LOGSEQ_API_TOKEN (required): Authorization token from Logseq
+ * - LOGSEQ_API_URL: Full URL (e.g., "http://192.168.1.100:45454")
+ * - LOGSEQ_API_HOST: Host address (default: "127.0.0.1")
+ * - LOGSEQ_API_PORT: Port number (default: "12315")
+ *
+ * Priority: LOGSEQ_API_URL takes precedence over HOST/PORT combination
  */
 export function createClientFromEnv(): LogseqHttpClient {
-  const url = process.env.LOGSEQ_API_URL ?? "http://127.0.0.1:12315";
   const token = process.env.LOGSEQ_API_TOKEN;
 
   if (!token) {
     throw new Error("LOGSEQ_API_TOKEN environment variable is required");
   }
 
+  // Build URL from either full URL or host/port combination
+  const url = getConfiguredUrl();
+
   return new LogseqHttpClient({ url, token });
+}
+
+/**
+ * Get the configured API URL for display/debugging
+ */
+export function getConfiguredUrl(): string {
+  if (process.env.LOGSEQ_API_URL) {
+    return process.env.LOGSEQ_API_URL;
+  }
+  const host = process.env.LOGSEQ_API_HOST ?? "127.0.0.1";
+  const port = process.env.LOGSEQ_API_PORT ?? "12315";
+  return `http://${host}:${port}`;
 }

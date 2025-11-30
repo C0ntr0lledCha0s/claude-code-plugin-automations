@@ -22,10 +22,32 @@
     "mcp",
     "crud"
   ],
-  "agents": "./agents/",
-  "skills": "./skills/",
-  "commands": "./commands/",
-  "servers": "./servers/",
-  "scripts": "./scripts/",
-  "config": "./config/"
+  "agents": [
+    "./agents/logseq-db-expert.md"
+  ],
+  "skills": [
+    "./skills/understanding-db-schema",
+    "./skills/querying-logseq-data",
+    "./skills/building-logseq-plugins",
+    "./skills/migrating-to-db",
+    "./skills/connecting-to-logseq",
+    "./skills/reading-logseq-data",
+    "./skills/writing-to-logseq"
+  ],
+  "commands": [
+    "./commands/init.md",
+    "./commands/status.md",
+    "./commands/query.md",
+    "./commands/explain.md",
+    "./commands/check-migration.md",
+    "./commands/define-class.md",
+    "./commands/define-property.md",
+    "./commands/get-page.md",
+    "./commands/search.md",
+    "./commands/create-page.md",
+    "./commands/add-block.md",
+    "./commands/sync-notes.md",
+    "./commands/get-tasks.md",
+    "./commands/today.md"
+  ]
 }
