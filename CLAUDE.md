@@ -37,15 +37,16 @@ This is a **meta-repository** containing Claude Code plugins. It's essentially C
 
 ### Available Plugins
 
-**Total: 7 plugins** | 15 agents | 31 skills | 59 commands
+**Total: 7 plugins** | 16 agents | 32 skills | 59 commands
 
 #### Development Tools
 
 1. **agent-builder**: Plugin for building Claude Code extensions
    - Location: `./agent-builder/`
-   - Purpose: Scaffolds and validates agents, skills, commands, hooks, and plugins
-   - Contains: 5 agents, 5 skills, 8 commands, 1 hook, validation scripts
-   - Key agents: `agent-builder`, `skill-builder`, `command-builder`, `hook-builder`, `plugin-builder`
+   - Purpose: Scaffolds and validates agents, skills, commands, hooks, MCP servers, and plugins
+   - Contains: 6 agents, 6 skills, 8 commands, 1 hook, validation scripts
+   - Key agents: `agent-builder`, `skill-builder`, `command-builder`, `hook-builder`, `plugin-builder`, `skill-reviewer`
+   - Key skills: `building-agents`, `building-skills`, `building-commands`, `building-hooks`, `building-plugins`, `building-mcp-servers`
    - Orchestration: The `plugin` command provides full orchestration for multi-component creation
 
 2. **testing-expert**: Test quality and coverage analysis plugin
@@ -252,11 +253,13 @@ After creating components:
 - `agent-builder/agents/command-builder.md`: Specialized command builder
 - `agent-builder/agents/hook-builder.md`: Specialized hook builder
 - `agent-builder/agents/plugin-builder.md`: Specialized plugin builder
+- `agent-builder/agents/skill-reviewer.md`: Skill quality reviewer
 - `agent-builder/skills/building-agents/`: Agent creation expertise
 - `agent-builder/skills/building-skills/`: Skill creation expertise
 - `agent-builder/skills/building-commands/`: Command creation expertise
 - `agent-builder/skills/building-hooks/`: Hook creation expertise
-- `agent-builder/skills/building-plugins/`: Plugin creation expertise
+- `agent-builder/skills/building-plugins/`: Plugin creation expertise (includes settings pattern)
+- `agent-builder/skills/building-mcp-servers/`: MCP server integration expertise
 - `agent-builder/commands/plugin.md`: Plugin orchestration command (handles multi-component creation)
 - `agent-builder/skills/*/scripts/validate-*.py`: Validation scripts
 - `agent-builder/skills/*/templates/`: Component templates
