@@ -1,7 +1,7 @@
 {
   "name": "agent-builder",
-  "version": "2.0.0",
-  "description": "Meta-agent plugin for building Claude Code components. Features a meta-architect planning advisor with specialized builders (agent-builder, skill-builder, command-builder, hook-builder, plugin-builder) for creating, updating, auditing, and maintaining agents, skills, commands, hooks, and complete plugins.",
+  "version": "2.1.0",
+  "description": "Plugin for building Claude Code components. Features specialized builders (agent-builder, skill-builder, command-builder, hook-builder, plugin-builder) for creating, updating, auditing, and maintaining agents, skills, commands, hooks, and complete plugins. The plugin command provides full orchestration for multi-component creation.",
   "author": {
     "name": "C0ntr0lledCha0s",
     "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
@@ -10,8 +10,6 @@
   "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/agent-builder",
   "license": "MIT",
   "keywords": [
-    "meta-agent",
-    "orchestrator",
     "agent-builder",
     "skill-builder",
     "command-builder",
@@ -20,11 +18,10 @@
     "scaffolding",
     "automation",
     "development-tools",
-    "parallel-execution",
-    "delegation-pattern"
+    "plugin-orchestration",
+    "component-creation"
   ],
   "agents": [
-    "./agents/meta-architect.md",
     "./agents/agent-builder.md",
     "./agents/skill-builder.md",
     "./agents/command-builder.md",
@@ -36,8 +33,7 @@
     "./skills/building-skills",
     "./skills/building-commands",
     "./skills/building-hooks",
-    "./skills/building-plugins",
-    "./skills/coordinating-builders"
+    "./skills/building-plugins"
   ],
   "commands": [
     "./commands/new.md",

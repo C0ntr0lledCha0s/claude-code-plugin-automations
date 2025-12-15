@@ -37,15 +37,16 @@ This is a **meta-repository** containing Claude Code plugins. It's essentially C
 
 ### Available Plugins
 
-**Total: 7 plugins** | 16 agents | 32 skills | 59 commands
+**Total: 7 plugins** | 15 agents | 31 skills | 59 commands
 
 #### Development Tools
 
-1. **agent-builder**: Meta-agent plugin for building Claude Code extensions
+1. **agent-builder**: Plugin for building Claude Code extensions
    - Location: `./agent-builder/`
    - Purpose: Scaffolds and validates agents, skills, commands, hooks, and plugins
-   - Contains: 6 agents, 6 skills, 8 commands, 1 hook, validation scripts
-   - Key agents: `meta-architect`, `agent-builder`, `skill-builder`, `command-builder`, `hook-builder`, `plugin-builder`
+   - Contains: 5 agents, 5 skills, 8 commands, 1 hook, validation scripts
+   - Key agents: `agent-builder`, `skill-builder`, `command-builder`, `hook-builder`, `plugin-builder`
+   - Orchestration: The `plugin` command provides full orchestration for multi-component creation
 
 2. **testing-expert**: Test quality and coverage analysis plugin
    - Location: `./testing-expert/`
@@ -212,7 +213,11 @@ Use the agent-builder slash commands:
 /agent-builder:new skill my-skill          # Create a new skill
 /agent-builder:new command my-command      # Create a new command
 /agent-builder:new hook my-hook            # Create a new hook
-/agent-builder:new plugin my-plugin        # Create a complete plugin
+
+# For plugins (multi-component), use the dedicated plugin command:
+/agent-builder:plugin create my-plugin     # Create a complete plugin with orchestration
+/agent-builder:plugin validate my-plugin   # Validate an existing plugin
+/agent-builder:plugin update my-plugin     # Update plugin metadata or components
 
 # Other agent-builder commands:
 /agent-builder:update agent my-agent       # Update existing component
@@ -242,7 +247,6 @@ After creating components:
 - `validate-plugins.sh`: Comprehensive validation with detailed output
 
 ### Agent Builder Plugin
-- `agent-builder/agents/meta-architect.md`: Architecture planning advisor
 - `agent-builder/agents/agent-builder.md`: Specialized agent builder
 - `agent-builder/agents/skill-builder.md`: Specialized skill builder
 - `agent-builder/agents/command-builder.md`: Specialized command builder
@@ -253,7 +257,7 @@ After creating components:
 - `agent-builder/skills/building-commands/`: Command creation expertise
 - `agent-builder/skills/building-hooks/`: Hook creation expertise
 - `agent-builder/skills/building-plugins/`: Plugin creation expertise
-- `agent-builder/skills/coordinating-builders/`: Builder orchestration skill
+- `agent-builder/commands/plugin.md`: Plugin orchestration command (handles multi-component creation)
 - `agent-builder/skills/*/scripts/validate-*.py`: Validation scripts
 - `agent-builder/skills/*/templates/`: Component templates
 
@@ -390,21 +394,25 @@ Skills use `{baseDir}` to reference resources that are only loaded when needed, 
 ### Feedback Loop System
 The self-improvement plugin creates a meta-feedback loop where Claude can identify its own limitations and contribute improvements back to the plugins.
 
-### Builder Coordination Pattern
-The `coordinating-builders` skill demonstrates how to orchestrate multiple specialized agents from the main thread. It:
-- Analyzes tasks to determine which builders to invoke
-- Decides on parallel vs sequential execution
-- Delegates to specialized builder agents (agent-builder, skill-builder, etc.)
-- Reports back execution plans for the main thread to follow
+### Command-Based Orchestration Pattern
+The `plugin` command demonstrates how to orchestrate multiple specialized agents from the main thread. It:
+- Runs in the main thread (can use Task tool)
+- Researches existing patterns before creating
+- Presents options and gets user confirmation
+- Creates components in parallel when independent
+- Sequences operations when dependencies exist (structure before components)
+- Validates all components after creation
+
+This is the preferred pattern for multi-component operations because commands run in the main thread and can directly invoke agents via Task.
 
 ### Advisory Agent Pattern
-Agents that need to coordinate multiple operations use the **advisory pattern**:
+Some agents that cannot directly execute use the **advisory pattern**:
 - Agent analyzes the situation and provides recommendations
 - Agent returns structured advice to the main thread
 - Main thread (or user) executes the recommended actions
-- Examples: `meta-architect`, `project-coordinator`, `workflow-orchestrator`
+- Examples: `project-coordinator`, `workflow-orchestrator`
 
-This pattern works around the subagent limitation while still providing intelligent orchestration.
+**Note**: For the agent-builder plugin, this pattern was replaced with command-based orchestration (the `plugin` command) which is more effective because commands can directly execute via Task.
 
 ### Subagent Architecture Constraints
 
@@ -432,9 +440,9 @@ Subagent Architecture:
 - **Skills auto-invoke in both contexts** (main thread and subagents)
 
 **For orchestration patterns**, use:
-1. **Skills** - Run in main thread, can coordinate agents (e.g., `coordinating-builders`)
-2. **Commands** - Run in main thread, can delegate to agents
-3. **Advisory agents** - Recommend actions, user/main thread executes (e.g., `meta-architect`)
+1. **Commands** - Run in main thread, can delegate to agents (e.g., `plugin` command)
+2. **Skills** - Run in main thread, can coordinate agents if needed
+3. **Advisory agents** - Only when direct execution isn't needed (return recommendations)
 
 **DO NOT** add `Task` to agent tools - it creates false orchestration expectations.
 
