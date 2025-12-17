@@ -21,8 +21,8 @@ Update an existing Claude Code component using the orchestrator pattern.
    - Ensure type is valid
    - Verify component exists
 
-2. **Delegate to Orchestrator**
-   - meta-architect determines appropriate builder
+2. **Delegate to Builder**
+   - Route via Task to appropriate builder
    - Builder provides interactive update workflow
 
 3. **Report Results**
@@ -89,5 +89,5 @@ Use /agent-builder:new to create it.
 When invoked:
 1. Parse type and name from arguments
 2. Locate existing component
-3. Delegate to meta-architect
+3. Delegate via Task to appropriate builder
 4. Return update results with diff

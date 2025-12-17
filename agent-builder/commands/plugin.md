@@ -1,13 +1,13 @@
 ---
-description: Plugin operations - create, validate, or update Claude Code plugins
+description: Create, validate, or update Claude Code plugins with full orchestration. Handles research, planning, user confirmation, and parallel component creation.
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash, Task, AskUserQuestion
 argument-hint: "[action] [name]"
 model: claude-sonnet-4-5
 ---
 
-# Plugin Operations
+# Plugin Orchestrator
 
-Perform operations on Claude Code plugins using the orchestrator pattern.
+Create, validate, or update Claude Code plugins. This command handles the complete workflow including research, planning, user confirmation, and parallel component creation.
 
 **Arguments:**
 - `$1` (required): Action - `create`, `validate`, `update`
@@ -15,105 +15,220 @@ Perform operations on Claude Code plugins using the orchestrator pattern.
 
 **Full arguments:** $ARGUMENTS
 
-## Actions
+## Why This Command Exists
 
-### create
-Create a new plugin with components.
-
-### validate
-Validate an existing plugin.
-
-### update
-Update plugin metadata or add components.
+Creating plugins involves multiple components (agents, skills, commands, hooks) that must be coordinated. This command:
+- Runs in the **main thread** (can use Task tool)
+- Orchestrates **parallel creation** of components
+- Ensures proper **sequencing** (structure before components)
+- Provides **validation** at each step
 
 ## Workflow: Create
 
+### Phase 1: Research Existing Patterns
+
+Before creating, explore the codebase:
 ```
-/agent-builder:plugin create code-review-suite
-    ↓
-meta-architect (orchestrator)
-    ↓
-1. Gather requirements (AskUserQuestion)
-2. Create plugin structure
-3. Delegate component creation (PARALLEL)
-   ├─ agent-builder (for agents)
-   ├─ skill-builder (for skills)
-   ├─ command-builder (for commands)
-   └─ hook-builder (for hooks)
-4. Generate README.md
-5. Validate complete plugin
-    ↓
-Report comprehensive results
+Use Explore agent to find:
+- Existing similar plugins
+- Naming conventions in use
+- Related components that might overlap
+```
+
+### Phase 2: Present Options to User
+
+Present 2-3 template options:
+
+```markdown
+## 📋 Plugin Options
+
+### Option A: Minimal Plugin
+- 1-2 commands only
+- Basic structure
+- Best for: Simple utilities
+
+### Option B: Standard Plugin (Recommended)
+- 1-2 agents + 2-3 commands
+- README with examples
+- Best for: Most use cases
+
+### Option C: Comprehensive Plugin
+- Multiple agents + skills + commands + hooks
+- Full documentation
+- Best for: Major features
+
+**Questions:**
+1. Which template? (A/B/C)
+2. What components do you need?
+3. Any specific requirements?
+```
+
+### Phase 3: Confirm Before Creating
+
+Use AskUserQuestion to get explicit confirmation:
+```
+Before I create the plugin, please confirm:
+- Plugin name: [name]
+- Template: [selected]
+- Components: [list]
+
+Proceed? (yes/no)
+```
+
+### Phase 4: Create Structure (Sequential)
+
+First, create the plugin directory structure:
+```
+Task → plugin-builder
+Prompt: "Create plugin structure '[name]' with directories for [components]"
+```
+
+This MUST complete before creating components.
+
+### Phase 5: Create Components (Parallel)
+
+After structure exists, create components in parallel:
+```
+Task → agent-builder: "Create [agent-name] agent in [plugin]/agents/"
+Task → agent-builder: "Create [agent-name] agent in [plugin]/agents/"
+Task → skill-builder: "Create [skill-name] skill in [plugin]/skills/"
+Task → command-builder: "Create [command-name] command in [plugin]/commands/"
+Task → hook-builder: "Create hooks in [plugin]/hooks/"
+```
+
+**Parallel execution**: These can run simultaneously since they're independent.
+
+### Phase 6: Finalize (Sequential)
+
+After components exist:
+```
+Task → plugin-builder: "Finalize plugin - generate README, update marketplace.json"
+```
+
+### Phase 7: Validate
+
+Run full validation:
+```bash
+python3 agent-builder/skills/building-plugins/scripts/validate-plugin.py [plugin]/.claude-plugin/plugin.json
+```
+
+### Phase 8: Report Results
+
+```markdown
+## ✅ Plugin Created: [name]
+
+### Structure
+```
+[name]/
+├── .claude-plugin/plugin.json ✅
+├── agents/ (2 agents)
+├── commands/ (3 commands)
+└── README.md ✅
+```
+
+### Components Created
+| Type | Name | Status |
+|------|------|--------|
+| Agent | [name] | ✅ |
+| Command | [name] | ✅ |
+
+### Validation
+- Plugin structure: ✅ Valid
+- All components: ✅ Passed
+
+### Installation
+```bash
+ln -s $(pwd)/[name] ~/.claude/plugins/[name]
+```
+
+### Next Steps
+1. Test individual components
+2. Customize prompts as needed
+3. Update README with examples
 ```
 
 ## Workflow: Validate
 
 ```
 /agent-builder:plugin validate my-plugin
-    ↓
-1. Check plugin.json
-2. Validate all referenced components
-3. Check README.md
-4. Security assessment
-    ↓
-Report validation results
 ```
+
+1. Locate plugin directory
+2. Validate plugin.json structure and required fields
+3. Check all referenced component paths exist
+4. Validate each component:
+   - Task → agent-builder: "Validate agents in [plugin]"
+   - Task → skill-builder: "Validate skills in [plugin]"
+   - Task → command-builder: "Validate commands in [plugin]"
+   - Task → hook-builder: "Validate hooks in [plugin]"
+5. Check README.md exists and has content
+6. Report consolidated results
 
 ## Workflow: Update
 
 ```
 /agent-builder:plugin update my-plugin
-    ↓
-meta-architect
-    ↓
+```
+
 1. Read current plugin.json
-2. Gather update requirements
-3. Apply changes
-4. Re-validate
-    ↓
-Report update results
-```
+2. AskUserQuestion: What would you like to update?
+   - Add new components
+   - Update metadata (version, description, keywords)
+   - Add/modify hooks
+   - Update README
+3. Execute requested changes
+4. Re-validate plugin
+5. Report what changed
 
-## Examples
+## Template Structures
 
-### Create a Plugin
-```
-/agent-builder:plugin create code-review-suite
-```
-
-Interactive prompts will ask:
-- Template type (minimal, standard, full)
-- Components to include
-- Plugin metadata (author, keywords, etc.)
-
-### Validate a Plugin
-```
-/agent-builder:plugin validate my-plugin
-```
-
-### Update a Plugin
-```
-/agent-builder:plugin update my-plugin
-```
-
-## Plugin Structure Created
-
+### Minimal Plugin
 ```
 plugin-name/
 ├── .claude-plugin/
-│   └── plugin.json          # Plugin manifest
-├── agents/                  # Agent definitions
-│   └── *.md
-├── skills/                  # Skill directories
-│   └── skill-name/
-│       └── SKILL.md
-├── commands/                # Slash commands
-│   └── *.md
-├── hooks/                   # Event hooks
+│   └── plugin.json
+├── commands/
+│   └── main.md
+└── README.md
+```
+
+### Standard Plugin
+```
+plugin-name/
+├── .claude-plugin/
+│   └── plugin.json
+├── agents/
+│   └── main-agent.md
+├── commands/
+│   ├── analyze.md
+│   └── fix.md
+├── scripts/
+│   └── helper.sh
+└── README.md
+```
+
+### Comprehensive Plugin
+```
+plugin-name/
+├── .claude-plugin/
+│   └── plugin.json
+├── agents/
+│   ├── orchestrator.md
+│   └── specialist.md
+├── skills/
+│   └── domain-expertise/
+│       ├── SKILL.md
+│       └── references/
+├── commands/
+│   ├── analyze.md
+│   ├── fix.md
+│   └── report.md
+├── hooks/
 │   ├── hooks.json
 │   └── scripts/
-├── scripts/                 # Helper scripts
-└── README.md               # Documentation
+│       └── validate.sh
+├── scripts/
+└── README.md
 ```
 
 ## Plugin.json Schema
@@ -125,88 +240,39 @@ plugin-name/
   "description": "Plugin description",
   "author": {
     "name": "Author Name",
-    "email": "email@example.com",
     "url": "https://github.com/username"
   },
   "repository": "https://github.com/...",
+  "homepage": "https://github.com/.../tree/main/plugin-name",
   "license": "MIT",
   "keywords": ["keyword1", "keyword2"],
-  "commands": "./commands/",
-  "agents": "./agents/",
-  "skills": "./skills/",
-  "hooks": ["./hooks/hooks.json"]
+  "agents": ["./agents/main-agent.md"],
+  "skills": ["./skills/domain-expertise"],
+  "commands": ["./commands/analyze.md", "./commands/fix.md"],
+  "hooks": "./hooks/hooks.json"
 }
 ```
 
-## Template Types
+## Examples
 
-### Minimal
-- 1 command
-- Basic structure
-- For simple plugins
-
-### Standard
-- 1-2 agents
-- 2-3 commands
-- Optional skills
-- Most common
-
-### Full
-- Multiple agents
-- Multiple skills
-- Multiple commands
-- Hooks
-- MCP servers
-- For comprehensive plugins
-
-## Validation Checks
-
-| Check | Description |
-|-------|-------------|
-| plugin.json | Valid JSON, required fields |
-| Paths | All referenced paths exist |
-| Components | Each component passes validation |
-| README | Exists and has content |
-| Structure | Follows conventions |
-
-## Output: Create
-
-```markdown
-## Plugin Created: [name]
-
-### Structure
+### Create a Code Review Plugin
 ```
-plugin-name/
-├── .claude-plugin/plugin.json ✅
-├── agents/ (2 agents)
-├── commands/ (3 commands)
-└── README.md ✅
+/agent-builder:plugin create code-review
 ```
 
-### Components Created
-| Type | Name | Status |
-|------|------|--------|
-| Agent | code-reviewer | ✅ |
-| Agent | security-auditor | ✅ |
-| Command | review | ✅ |
-| Command | scan | ✅ |
-| Command | report | ✅ |
+Interactive prompts will guide you through:
+- Selecting template type
+- Defining components
+- Setting metadata
 
-### Validation
-- Plugin structure: ✅ Valid
-- All components: ✅ Passed
-- README: ✅ Generated
-
-### Installation
-```bash
-ln -s $(pwd)/plugin-name ~/.claude/plugins/plugin-name
+### Validate an Existing Plugin
+```
+/agent-builder:plugin validate my-plugin
 ```
 
-### Next Steps
-1. Customize component prompts
-2. Add reference documentation
-3. Test all components
-4. Update README with examples
+### Update Plugin Metadata
+```
+/agent-builder:plugin update my-plugin
 ```
 
 ## Error Handling
@@ -218,20 +284,53 @@ ln -s $(pwd)/plugin-name ~/.claude/plugins/plugin-name
 Valid actions: create, validate, update
 ```
 
-### Plugin Exists
+### Plugin Already Exists (for create)
 ```
 ⚠️ Plugin directory already exists: "$2"
 
 Options:
 1. Choose a different name
-2. Use /agent-builder:plugin update to modify
+2. Use `/agent-builder:plugin update $2` to modify
 3. Delete existing and recreate
+```
+
+### Plugin Not Found (for validate/update)
+```
+❌ Plugin not found: "$2"
+
+Searched locations:
+- ./$2/
+- ./plugins/$2/
+- ~/.claude/plugins/$2/
+
+Use `/agent-builder:plugin create $2` to create it.
+```
+
+### Component Creation Failed
+```
+⚠️ Failed to create component: [name]
+
+Error: [details]
+
+Options:
+1. Retry this component
+2. Skip and continue
+3. Rollback (delete created components)
 ```
 
 ## Execution
 
 When invoked:
-1. Parse action and name from arguments
-2. Route to appropriate workflow
-3. For create: orchestrate multi-component creation
-4. Return comprehensive results
+1. Parse `$1` as action, `$2` as name
+2. Validate arguments
+3. Route to appropriate workflow (create/validate/update)
+4. For create: orchestrate full multi-component creation
+5. Return comprehensive results
+
+## Key Principles
+
+1. **Research First**: Understand existing patterns before creating
+2. **Confirm Before Acting**: Never create without user approval
+3. **Parallel When Possible**: Independent components created simultaneously
+4. **Sequential When Required**: Structure before components, components before finalization
+5. **Validate Always**: Every component validated after creation

@@ -819,7 +819,158 @@ Be proactive in:
 
 Your goal is to help users create high-quality, well-structured plugins that provide real value and follow best practices.
 
+## Plugin Settings Pattern
+
+Plugins can implement user-configurable settings using the `.claude/plugin-name.local.md` pattern. This allows users to customize plugin behavior on a per-project basis.
+
+### File Location and Format
+
+**Location**: `.claude/<plugin-name>.local.md` in the project root
+
+**Format**: YAML frontmatter + markdown body
+
+```markdown
+---
+# Plugin configuration (YAML frontmatter)
+enabled: true
+mode: strict
+custom_option: value
+---
+
+# Plugin Context (markdown body)
+
+Additional context or instructions that the plugin should consider.
+This content can be loaded by hooks or skills.
+```
+
+### Use Cases
+
+**1. Hook Activation Control**
+```markdown
+---
+validation_enabled: true
+auto_format: false
+---
+```
+
+The hook script checks this setting:
+```bash
+#!/bin/bash
+CONFIG_FILE=".claude/${PLUGIN_NAME}.local.md"
+
+# Quick exit if config doesn't exist
+[ ! -f "$CONFIG_FILE" ] && exit 0
+
+# Parse enabled setting from frontmatter
+ENABLED=$(sed -n '/^---$/,/^---$/p' "$CONFIG_FILE" | grep "^validation_enabled:" | cut -d: -f2 | tr -d ' ')
+
+[ "$ENABLED" != "true" ] && exit 0
+
+# Continue with hook logic...
+```
+
+**2. Agent State Management**
+```markdown
+---
+assigned_tasks:
+  - review-api-endpoints
+  - update-documentation
+completed_reviews: 5
+last_run: "2025-01-15"
+---
+```
+
+**3. Project-Specific Context**
+```markdown
+---
+enabled: true
+---
+
+## Project Conventions
+
+- Use TypeScript for all new code
+- Follow the Airbnb style guide
+- All API endpoints must have tests
+
+## Domain Knowledge
+
+This project manages customer billing. Key concepts:
+- Subscriptions have monthly/annual cycles
+- Invoices generate on billing dates
+```
+
+### Parsing Settings in Hooks
+
+**Extract string/boolean fields:**
+```bash
+get_setting() {
+  local file="$1"
+  local key="$2"
+  sed -n '/^---$/,/^---$/p' "$file" | grep "^${key}:" | cut -d: -f2 | tr -d ' '
+}
+
+ENABLED=$(get_setting ".claude/my-plugin.local.md" "enabled")
+MODE=$(get_setting ".claude/my-plugin.local.md" "mode")
+```
+
+**Extract markdown body:**
+```bash
+get_body() {
+  local file="$1"
+  sed '1,/^---$/d' "$file" | sed '1,/^---$/d'
+}
+
+CONTEXT=$(get_body ".claude/my-plugin.local.md")
+```
+
+### Best Practices
+
+1. **Use `.local.md` suffix**: Indicates user-local settings, should be in `.gitignore`
+2. **Provide sensible defaults**: Plugin should work without settings file
+3. **Document all settings**: List options in plugin README
+4. **Validate settings**: Check for required values in hooks
+5. **Handle missing file**: Always check if settings file exists first
+6. **Restart required**: Settings only load at session start
+
+### Template: Plugin Settings File
+
+```markdown
+---
+# my-plugin settings
+# Copy to .claude/my-plugin.local.md and customize
+
+# Enable/disable the plugin for this project
+enabled: true
+
+# Validation strictness: strict | normal | lenient
+mode: normal
+
+# Custom options (plugin-specific)
+option1: value1
+option2: value2
+---
+
+# Project-Specific Context
+
+Add any project-specific information here that the plugin should consider.
+```
+
+### Integration with Components
+
+**In hooks** (most common):
+```bash
+CONFIG=".claude/my-plugin.local.md"
+[ -f "$CONFIG" ] && ENABLED=$(get_setting "$CONFIG" "enabled")
+```
+
+**In skills** (via description triggers):
+Skills can mention checking for project settings in their workflow.
+
+**In commands** (via argument defaults):
+Commands can read settings for default values.
+
 ## Common Questions
+
 
 **Q: When should I create a plugin vs individual components?**
 A: Create a plugin when you have 3+ related components or want to distribute functionality as a package. Individual components are fine for one-off customizations.

@@ -14,7 +14,7 @@ bash validate-all.sh
 
 **Agents:**
 ```bash
-python3 agent-builder/skills/building-agents/scripts/validate-agent.py agent-builder/agents/meta-architect.md
+python3 agent-builder/skills/building-agents/scripts/validate-agent.py agent-builder/agents/agent-builder.md
 ```
 
 **Skills:**

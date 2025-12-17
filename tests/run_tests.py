@@ -15,7 +15,7 @@ REPO_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(REPO_ROOT / 'self-improvement' / 'skills' / 'analyzing-component-quality' / 'scripts'))
 
 # Orchestrator agents that are permitted to have Task tool
-ORCHESTRATOR_AGENTS = ['project-coordinator', 'investigator', 'workflow-orchestrator', 'meta-architect']
+ORCHESTRATOR_AGENTS = ['project-coordinator', 'investigator', 'workflow-orchestrator']
 
 
 def extract_frontmatter(file_path: Path) -> Dict:

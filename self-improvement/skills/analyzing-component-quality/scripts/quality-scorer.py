@@ -14,7 +14,7 @@ from typing import Dict, List, Tuple
 
 # Orchestrator agents are permitted to have the Task tool for delegation
 # These agents coordinate work across other specialized agents
-ORCHESTRATOR_AGENTS = ['project-coordinator', 'investigator', 'workflow-orchestrator', 'meta-architect']
+ORCHESTRATOR_AGENTS = ['project-coordinator', 'investigator', 'workflow-orchestrator']
 
 def extract_frontmatter(file_path: Path) -> Dict:
     """Extract YAML frontmatter from markdown file."""

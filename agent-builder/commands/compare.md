@@ -23,7 +23,7 @@ Compare two Claude Code components side-by-side to understand differences and tr
    - Read configurations
 
 2. **Delegate Comparison**
-   - meta-architect routes to appropriate builder
+   - Route via Task to appropriate builder
    - Builder performs detailed comparison
 
 3. **Return Analysis**
@@ -146,6 +146,6 @@ Understand current state before making changes.
 
 When invoked:
 1. Parse type and both names from arguments
-2. Delegate to meta-architect
+2. Delegate via Task to appropriate builder
 3. Builder performs comprehensive comparison
 4. Return detailed analysis with recommendations

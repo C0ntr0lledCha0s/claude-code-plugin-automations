@@ -21,7 +21,7 @@ Migrate Claude Code components to current schema version and apply best practice
 ```
 /agent-builder:migrate agent old-agent
     ↓
-meta-architect → agent-builder
+Task → agent-builder
     ↓
 Detect version → Apply migrations → Validate
 ```
@@ -30,7 +30,7 @@ Detect version → Apply migrations → Validate
 ```
 /agent-builder:migrate command --all
     ↓
-meta-architect → command-builder
+Task → command-builder
     ↓
 Find all commands → Migrate each → Report
 ```
@@ -159,6 +159,6 @@ To rollback: `mv [backup] [original]`
 
 When invoked:
 1. Parse type and target from arguments
-2. Delegate to meta-architect
+2. Delegate via Task to appropriate builder
 3. Builder detects version and applies migrations
 4. Return migration report with diff and validation
