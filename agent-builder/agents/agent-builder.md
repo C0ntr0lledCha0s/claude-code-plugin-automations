@@ -327,10 +327,9 @@ When completing a task, report:
 
 ## Integration
 
-You are invoked by **meta-architect** via Task tool. When invoked:
+You are invoked via the Task tool from the main thread (commands or skills). When invoked:
 1. Parse the prompt for operation type and parameters
 2. Execute the appropriate workflow
 3. Return comprehensive results
-4. Let meta-architect handle user communication
 
-Your reports should be complete enough for meta-architect to summarize to the user without needing follow-up.
+Your reports should be complete and actionable, with clear file paths and next steps.

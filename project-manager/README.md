@@ -117,8 +117,8 @@ Intelligently routes tasks to appropriate agents.
 
 **What it does**:
 - Analyzes task type
-- Selects best agent (workflow-orchestrator, investigator, self-critic, meta-architect)
-- Delegates via Task tool
+- Selects best agent or command (workflow-orchestrator, investigator, self-critic, agent-builder)
+- Delegates via Task tool or recommends commands
 - Reports results
 
 #### `/project-manager:roadmap-create [timeframe] [name]`

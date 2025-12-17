@@ -1,21 +1,21 @@
 # Agent Builder Plugin
 
-**A comprehensive meta-agent plugin for building Claude Code agents, skills, slash commands, hooks, and plugins.**
+**A comprehensive plugin for building Claude Code agents, skills, slash commands, hooks, and plugins.**
 
-This plugin provides an orchestrator-based architecture for creating Claude Code extensions. The meta-architect coordinates specialized builder agents that handle component creation, validation, and maintenance.
+This plugin provides specialized builder agents and command-based orchestration for creating Claude Code extensions. Commands run in the main thread and delegate to builder agents via Task for parallel execution.
 
-## Version 2.0.0 - Orchestrator Architecture
+## Version 2.2.0 - Command-Based Orchestration
 
-This major release introduces an orchestrator pattern with parallel execution:
+This release uses command-based orchestration with parallel execution:
 
-- **Meta-Architect Orchestrator**: Plans operations and delegates to specialized builders
-- **4 Specialized Builders**: Dedicated agents for agents, skills, commands, and hooks
-- **8 Unified Commands**: Simplified interface replacing the previous 28 type-specific commands
+- **Plugin Command Orchestrator**: The `/agent-builder:plugin` command plans and delegates to specialized builders
+- **6 Specialized Builders**: Dedicated agents for agents, skills, commands, hooks, plugins, and skill review
+- **8 Unified Commands**: Simplified interface for all component operations
 - **Parallel Execution**: Independent operations execute simultaneously for better performance
 
 ## Features
 
-- **Orchestrator Pattern**: Meta-architect plans and delegates to specialized builders
+- **Command-Based Orchestration**: Plugin command plans and delegates to specialized builders
 - **Parallel Execution**: Independent component operations run simultaneously
 - **Automated Scaffolding**: Quickly create agents, skills, commands, hooks, and plugins
 - **Best Practices Guidance**: Built-in expertise on Claude Code architecture and conventions
@@ -30,33 +30,35 @@ This major release introduces an orchestrator pattern with parallel execution:
 User Request
     |
     v
-/agent-builder:new agent code-reviewer
+/agent-builder:plugin create my-plugin
     |
     v
-meta-architect (Orchestrator)
+Plugin Command (Main Thread Orchestrator)
     |
-    +---> agent-builder agent (for agents)
-    +---> skill-builder agent (for skills)
-    +---> command-builder agent (for commands)
-    +---> hook-builder agent (for hooks)
+    +---> Task: plugin-builder (structure)
+    +---> Task: agent-builder (for agents)
+    +---> Task: skill-builder (for skills)
+    +---> Task: command-builder (for commands)
+    +---> Task: hook-builder (for hooks)
     |
     v
-Component Created & Validated
+Components Created & Validated
 ```
 
 ## Components
 
-### Agents (5)
+### Agents (6)
 
 | Agent | Purpose |
 |-------|---------|
-| **meta-architect** | Orchestrator that plans operations and delegates to specialized builders |
 | **agent-builder** | Specialized builder for creating/maintaining Claude Code agents |
 | **skill-builder** | Specialized builder for creating/maintaining skills (directories + SKILL.md) |
 | **command-builder** | Specialized builder for creating/maintaining slash commands |
 | **hook-builder** | Specialized builder for creating/maintaining event hooks (security-focused) |
+| **plugin-builder** | Specialized builder for plugin structure, manifests, and marketplace registration |
+| **skill-reviewer** | Quality reviewer for skills - analyzes triggers, content, progressive disclosure |
 
-### Skills (5)
+### Skills (6)
 
 | Skill | Auto-Invokes When |
 |-------|-------------------|
@@ -65,6 +67,7 @@ Component Created & Validated
 | **building-commands** | User mentions creating/building commands |
 | **building-hooks** | User mentions creating/building hooks |
 | **building-plugins** | User mentions creating/building plugins |
+| **building-mcp-servers** | User mentions MCP integration, external APIs, tool servers |
 
 ### Unified Commands (8)
 
@@ -172,7 +175,7 @@ ln -s $(pwd)/agent-builder/commands ~/.claude/commands
 /agent-builder:plugin validate my-plugin/
 ```
 
-## How the Orchestrator Works
+## How Orchestration Works
 
 ### Single Component Creation
 
@@ -180,10 +183,10 @@ ln -s $(pwd)/agent-builder/commands ~/.claude/commands
 /agent-builder:new agent code-reviewer
     |
     v
-meta-architect
+new.md command
     |-- Validates name: "code-reviewer" (lowercase-hyphens)
     |-- Determines type: agent
-    |-- Delegates to: agent-builder agent
+    |-- Delegates via Task to: agent-builder agent
     |
     v
 agent-builder agent
@@ -198,12 +201,12 @@ Success: Agent created and validated
 ### Multi-Component Plugin Creation
 
 ```
-/agent-builder:new plugin code-review-suite
+/agent-builder:plugin create code-review-suite
     |
     v
-meta-architect
-    |-- Creates plugin structure (sequential)
-    |-- Delegates components (PARALLEL):
+plugin.md command (Main Thread)
+    |-- Creates plugin structure via Task → plugin-builder (sequential)
+    |-- Delegates components (PARALLEL Task calls):
     |   +---> agent-builder: Create reviewer agent
     |   +---> agent-builder: Create security-auditor agent
     |   +---> command-builder: Create review command
@@ -221,8 +224,8 @@ Success: Plugin with 2 agents, 2 commands created
 /agent-builder:audit --all
     |
     v
-meta-architect
-    |-- Delegates to all builders (PARALLEL):
+audit.md command
+    |-- Delegates to all builders (PARALLEL Task calls):
     |   +---> agent-builder: Audit all agents
     |   +---> skill-builder: Audit all skills
     |   +---> command-builder: Audit all commands

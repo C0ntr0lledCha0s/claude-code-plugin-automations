@@ -91,9 +91,9 @@ When this command is invoked with `/project-manager:delegate-task [task-descript
    - "Validate this plan" → self-critic
 
    Automation Tasks:
-   - "Create agent/skill/command/hook" → meta-architect
-   - "Build automation for X" → meta-architect
-   - "Need custom workflow" → meta-architect
+   - "Create agent/skill/command/hook" → agent-builder commands
+   - "Build automation for X" → agent-builder commands
+   - "Need custom workflow" → agent-builder commands
 
    Planning Tasks:
    - "Plan sprint" → project-coordinator (self)
@@ -403,7 +403,7 @@ Next Steps:
   - github-workflows (for workflow-orchestrator, pr-reviewer)
   - research-agent (for investigator)
   - self-improvement (for self-critic)
-  - agent-builder (for meta-architect)
+  - agent-builder (for component creation commands)
 
 ### Task Tool Usage
 - This command is essentially a router/orchestrator
@@ -447,8 +447,8 @@ Decision Tree:
    Keywords: "review my work", "quality check", "critique" → self-critic
    Keywords: "validate", "assess quality" → self-critic
 
-   Keywords: "create agent", "create skill", "create command" → meta-architect
-   Keywords: "build automation", "create hook" → meta-architect
+   Keywords: "create agent", "create skill", "create command" → agent-builder commands
+   Keywords: "build automation", "create hook" → agent-builder commands
 
    Keywords: "plan sprint", "roadmap", "multi-project" → project-coordinator (self)
 

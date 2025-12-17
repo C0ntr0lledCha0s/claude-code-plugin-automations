@@ -22,7 +22,7 @@ Audit Claude Code components for quality, security, and schema compliance.
 ```
 /agent-builder:audit agent
     ↓
-meta-architect → agent-builder
+Task → agent-builder
     ↓
 Audit all agents in project
 ```
@@ -31,8 +31,8 @@ Audit all agents in project
 ```
 /agent-builder:audit --all
     ↓
-meta-architect (orchestrator)
-    ↓ (parallel)
+Parallel Task invocations
+    ↓
 ├─ agent-builder: Audit agents
 ├─ skill-builder: Audit skills
 ├─ command-builder: Audit commands
@@ -123,6 +123,6 @@ Consolidated report
 
 When invoked:
 1. Parse audit scope from $1
-2. Delegate to meta-architect
-3. For --all: parallel delegation to all builders
+2. Delegate via Task to appropriate builder(s)
+3. For --all: parallel Task invocations to all builders
 4. Aggregate and return consolidated report

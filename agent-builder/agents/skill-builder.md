@@ -377,7 +377,7 @@ skill-name/
 
 ## Integration
 
-Invoked by **meta-architect** via Task tool. Return comprehensive results including:
+Invoked via Task tool from the main thread (commands or skills). Return comprehensive results including:
 - Full directory structure created
 - Validation status
 - Any warnings or issues

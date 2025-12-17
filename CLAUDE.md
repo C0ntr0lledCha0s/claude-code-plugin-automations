@@ -37,7 +37,7 @@ This is a **meta-repository** containing Claude Code plugins. It's essentially C
 
 ### Available Plugins
 
-**Total: 7 plugins** | 16 agents | 32 skills | 59 commands
+**Total: 7 plugins** | 16 agents | 35 skills | 59 commands
 
 #### Development Tools
 
@@ -72,9 +72,9 @@ This is a **meta-repository** containing Claude Code plugins. It's essentially C
 5. **github-workflows**: GitHub workflow automation plugin
    - Location: `./github-workflows/`
    - Purpose: Comprehensive GitHub automation for projects, issues, PRs, commits, releases, and branching
-   - Contains: 4 agents, 8 skills, 30 commands, 1 hook
+   - Contains: 4 agents, 9 skills, 30 commands, 1 hook
    - Key agents: `workflow-orchestrator`, `pr-reviewer`, `issue-manager`, `release-manager`
-   - Key skills: `managing-branches`, `managing-commits`, `managing-projects`, `organizing-with-labels`
+   - Key skills: `managing-branches`, `managing-commits`, `managing-projects`, `organizing-with-labels`, `reviewing-pull-requests`, `triaging-issues`, `creating-issues`, `managing-relationships`, `managing-worktrees`
 
 6. **project-manager**: Project orchestration and planning plugin
    - Location: `./project-manager/`
@@ -87,8 +87,8 @@ This is a **meta-repository** containing Claude Code plugins. It's essentially C
 7. **logseq-expert**: Logseq database expertise plugin (in development)
    - Location: `./logseq-expert/`
    - Purpose: Datascript schema expertise, Datalog query building, MD-to-DB migration
-   - Contains: 1 agent, 4 skills, 5 commands
-   - Key skills: `understanding-db-schema`, `querying-logseq-data`, `building-logseq-plugins`, `migrating-to-db`
+   - Contains: 1 agent, 7 skills, 14 commands
+   - Key skills: `understanding-db-schema`, `querying-logseq-data`, `building-logseq-plugins`, `migrating-to-db`, `connecting-to-logseq`, `reading-logseq-data`, `writing-to-logseq`
 
 ### Plugin Structure Standard
 
@@ -118,7 +118,7 @@ plugin-name/
 - **Structure**: Single markdown file with YAML frontmatter
 - **Required fields**: `name`, `description`
 - **Optional fields**: `tools`, `model`
-- **Naming**: Action-oriented (e.g., `code-reviewer`, `meta-architect`)
+- **Naming**: Action-oriented (e.g., `code-reviewer`, `security-auditor`)
 
 ### Skills (directories)
 - **Purpose**: Auto-invoked expertise that activates based on context

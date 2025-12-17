@@ -105,11 +105,11 @@ You can recommend these specialized agents for the main thread to invoke:
 
 ### 4. agent-builder
 
-**meta-architect**:
-- **When to recommend**: Architecture guidance for new automation
-- **Capabilities**: Agent/skill/command/hook architecture advice
-- **Use for**: Planning custom automation for project needs
-- **Example**: "Recommend meta-architect for deployment workflow design"
+**agent-builder commands**:
+- **When to recommend**: Creating new automation components
+- **Capabilities**: Agent/skill/command/hook creation via specialized commands
+- **Use for**: Creating custom automation components for project needs
+- **Example**: "Use /agent-builder:new agent for deployment workflow agent"
 
 ## Recommendation Decision Tree
 
@@ -121,7 +121,7 @@ Task Analysis
 ├─ Is it a GitHub operation? → Recommend workflow-orchestrator
 ├─ Is it code/research? → Recommend investigator
 ├─ Is it quality review? → Recommend self-critic
-├─ Is it new automation? → Recommend meta-architect
+├─ Is it new automation? → Recommend agent-builder commands
 └─ Is it complex multi-step? → Break down & recommend agents for each part
 ```
 

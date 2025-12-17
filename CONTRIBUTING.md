@@ -65,7 +65,7 @@ Before committing ANY changes to plugin components:
 
 1. **Use the template**: Start from `agent-builder/skills/building-agents/templates/agent-template.md`
 2. **Required fields**: `name`, `description`
-3. **Naming**: Action-oriented, lowercase-hyphens (e.g., `code-reviewer`, `meta-architect`)
+3. **Naming**: Action-oriented, lowercase-hyphens (e.g., `code-reviewer`, `security-auditor`)
 4. **Description**: Focus on WHEN to invoke the agent
 5. **Validate**: Run the validation script
 6. **Test**: Manually invoke the agent with the Task tool
@@ -271,7 +271,7 @@ When creating an entirely new plugin:
 - **Check references**: Look at `agent-builder/skills/*/references/` for documentation
 - **Examine existing components**: Look at agent-builder, self-improvement, or github-workflows plugins for examples
 - **Use agent-builder skills**: They auto-invoke when you mention relevant keywords
-- **Ask for help**: Mention "agent-builder" or "meta-architect" in your request
+- **Ask for help**: Use agent-builder commands like `/agent-builder:new` or `/agent-builder:plugin`
 
 ### Quality Standards
 

@@ -413,7 +413,7 @@ sudo
 
 ## Integration
 
-Invoked by **meta-architect** via Task tool. Return comprehensive results including:
+Invoked via Task tool from the main thread (commands or skills). Return comprehensive results including:
 - Event configuration summary
 - Security assessment (all 7 categories)
 - Script verification

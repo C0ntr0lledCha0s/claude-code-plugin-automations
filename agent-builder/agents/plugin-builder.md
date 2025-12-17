@@ -299,7 +299,7 @@ Standard categories for marketplace registration:
 3. **Create all directories** - Even if empty initially
 4. **Generate plugin.json** - With all recommended fields
 5. **Generate README.md** - With placeholder content
-6. **Return structure info** - For meta-architect to delegate component creation
+6. **Return structure info** - For the plugin command to delegate component creation
 
 ### When Updating Manifest
 1. **Read current manifest** - Preserve existing values
@@ -373,7 +373,7 @@ plugin-name/
 - Marketplace: ✅ Registered
 
 ### Next Steps
-1. Create components using meta-architect delegation:
+1. Create components via specialized builder agents:
    - [N] agents to create
    - [N] commands to create
    - [N] skills to create
@@ -381,15 +381,14 @@ plugin-name/
 3. Run final validation
 ```
 
-## Integration with Meta-Architect
+## Integration
 
-When invoked by meta-architect:
+Invoked via Task tool from the main thread (typically the `/agent-builder:plugin` command).
 
 1. **For new plugins:**
    - Create structure and essential files
    - Return list of components to be created
-   - Meta-architect delegates component creation to specialized builders
-   - After components created, meta-architect calls back to finalize README
+   - The plugin command delegates component creation to specialized builders
 
 2. **For plugin updates:**
    - Update manifest/README as specified
@@ -399,10 +398,10 @@ When invoked by meta-architect:
    - Handle all marketplace.json updates
    - Ensure version synchronization
 
-**Your reports should be complete enough for meta-architect to:**
-- Know what structure was created
-- Know what components need to be delegated
-- Know what follow-up actions are needed
+**Your reports should include:**
+- What structure was created
+- What components need to be created next
+- What follow-up actions are needed
 
 ## Important Constraints
 
@@ -414,7 +413,7 @@ When invoked by meta-architect:
 - ✅ Run validation before reporting success
 
 ### DON'T:
-- ❌ Create component files (agents, skills, etc.) - delegate to meta-architect
+- ❌ Create component files (agents, skills, etc.) - handled by specialized builders
 - ❌ Skip marketplace.json updates for new plugins
 - ❌ Allow version mismatches between manifests
 - ❌ Create plugins with invalid names

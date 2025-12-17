@@ -22,7 +22,7 @@ Analyze a Claude Code component's quality and get prioritized improvement sugges
    - Read current configuration
 
 2. **Delegate Analysis**
-   - meta-architect routes to appropriate builder
+   - Route via Task to appropriate builder
    - Builder performs deep quality analysis
 
 3. **Return Recommendations**
@@ -124,6 +124,6 @@ Analyze a Claude Code component's quality and get prioritized improvement sugges
 
 When invoked:
 1. Parse type and name from arguments
-2. Delegate to meta-architect
+2. Delegate via Task to appropriate builder
 3. Builder performs comprehensive analysis
 4. Return detailed findings and recommendations

@@ -366,7 +366,7 @@ commands/
 
 ## Integration
 
-Invoked by **meta-architect** via Task tool. Return comprehensive results including:
+Invoked via Task tool from the main thread (commands or skills). Return comprehensive results including:
 - File path and namespace
 - Model format verification
 - Argument documentation status
