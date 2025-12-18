@@ -1,0 +1,27 @@
+{
+  "name": "documents-manager",
+  "version": "1.0.0",
+  "description": "Comprehensive documentation management plugin for analyzing, generating, updating, and enforcing documentation standards in codebases",
+  "author": {
+    "name": "Claude Code Plugin Automations",
+    "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
+  },
+  "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/documents-manager",
+  "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
+  "license": "MIT",
+  "keywords": [
+    "documentation",
+    "docs",
+    "readme",
+    "api-docs",
+    "jsdoc",
+    "docstrings",
+    "code-comments",
+    "documentation-coverage",
+    "documentation-generator"
+  ],
+  "commands": "./commands/",
+  "agents": "./agents/",
+  "skills": "./skills/",
+  "hooks": ["./hooks/hooks.json"]
+}

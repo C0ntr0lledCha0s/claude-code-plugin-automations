@@ -6,12 +6,12 @@
   },
   "metadata": {
     "description": "A collection of meta-agents and plugins for Claude Code, including tools for building agents and continuous self-improvement",
-    "version": "2.4.0",
+    "version": "2.5.0",
     "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
     "pluginRoot": "./",
     "stats": {
-      "totalPlugins": 7,
-      "lastUpdated": "2025-11-27"
+      "totalPlugins": 8,
+      "lastUpdated": "2025-12-18"
     }
   },
   "plugins": [
@@ -203,6 +203,33 @@
       "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
       "license": "MIT",
       "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/logseq-expert"
+    },
+    {
+      "name": "documents-manager",
+      "source": "./documents-manager",
+      "description": "Comprehensive documentation management plugin for analyzing, generating, updating, and enforcing documentation standards. Features coverage analysis, automated doc generation (JSDoc, docstrings, README), quality auditing with scoring, and documentation sync. Supports JavaScript, TypeScript, Python, Go, Rust, and more.",
+      "version": "1.0.0",
+      "category": "development-tools",
+      "keywords": [
+        "documentation",
+        "docs",
+        "readme",
+        "api-docs",
+        "jsdoc",
+        "docstrings",
+        "code-comments",
+        "documentation-coverage",
+        "documentation-generator",
+        "documentation-audit",
+        "developer-experience"
+      ],
+      "author": {
+        "name": "C0ntr0lledCha0s",
+        "url": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
+      },
+      "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
+      "license": "MIT",
+      "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/documents-manager"
     }
   ]
 }

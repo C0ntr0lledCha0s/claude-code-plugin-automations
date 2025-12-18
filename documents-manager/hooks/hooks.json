@@ -1,0 +1,24 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "If this Write tool created or modified a source code file (.js, .ts, .jsx, .tsx, .py, .go, .rs, .java), briefly check if any new functions, classes, or exports lack documentation. If significant undocumented code is detected, politely suggest running `/documents-manager:docs-generate` to add documentation. Keep the suggestion brief (1-2 sentences) and non-blocking."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "If this Edit tool modified a source code file and changed a function signature (parameters, return type) or significantly altered behavior, briefly note that documentation may need updating. Only mention this if clearly relevant - don't interrupt for minor edits. If documentation update is needed, suggest `/documents-manager:docs-update`."
+          }
+        ]
+      }
+    ]
+  }
+}
