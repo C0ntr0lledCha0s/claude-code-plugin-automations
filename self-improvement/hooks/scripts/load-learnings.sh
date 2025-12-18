@@ -11,8 +11,10 @@ set -euo pipefail
 cleanup() {
     local exit_code=$?
     if [[ $exit_code -ne 0 ]]; then
-        # Log error but don't fail the session start
+        # Log error to stderr but don't fail the session start
         echo "ERROR: load-learnings.sh failed with exit code $exit_code" >&2
+        # Ensure we always output valid JSON even on error
+        printf '{"decision": "approve", "reason": "Hook error - continuing session"}\n' | tr -d '\r'
     fi
 }
 trap cleanup EXIT
@@ -39,12 +41,21 @@ load_learnings() {
     fi
 
     # Pass variables as arguments to Python script
-    python3 - "$LEARNINGS_DB" "$PATTERNS_DB" "$SESSION_ID" "$SCRIPT_DIR" <<'EOF'
+    # Use a temporary file to capture Python output and extract only JSON
+    local temp_output
+    temp_output=$(mktemp)
+    trap "rm -f '$temp_output'" RETURN
+
+    python3 - "$LEARNINGS_DB" "$PATTERNS_DB" "$SESSION_ID" "$SCRIPT_DIR" > "$temp_output" 2>&1 <<'EOF'
 import json
 import sys
 import subprocess
+import warnings
 from datetime import datetime, timedelta
 from pathlib import Path
+
+# Suppress all warnings to keep output clean
+warnings.filterwarnings('ignore')
 
 # Get file paths from arguments
 learnings_file = sys.argv[1]
@@ -305,6 +316,17 @@ else:
     print('{"decision": "approve", "suppressOutput": true}')
 
 EOF
+
+    # Extract only valid JSON from the output (last line starting with {)
+    local json_output
+    json_output=$(grep -E '^\{' "$temp_output" | tail -1 || echo '')
+
+    if [[ -n "$json_output" ]]; then
+        echo "$json_output"
+    else
+        # If no valid JSON found, output a default approval
+        echo '{"decision": "approve", "reason": "No learnings to load"}'
+    fi
 }
 
 # Main execution
