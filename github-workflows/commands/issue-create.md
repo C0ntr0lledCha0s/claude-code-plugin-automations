@@ -109,7 +109,7 @@ Confirm this scope? [Y/n/other]: _
 
 Select scope (REQUIRED):
 Available scopes (from project analysis):
-1. scope:agent-builder
+1. scope:claude-component-builder
 2. scope:self-improvement
 3. scope:github-workflows
 4. scope:testing-expert
@@ -129,7 +129,7 @@ Your choice: _
 Associate with branch? (or skip):
 Current branches with labels:
 1. branch:plugin/github-workflows
-2. branch:plugin/agent-builder
+2. branch:plugin/claude-component-builder
 3. [Create new branch label]
 4. [Skip]
 
@@ -231,7 +231,7 @@ Missing required labels:
 ❌ Scope: Not set
 
 You MUST specify a scope label. Available scopes:
-1. scope:agent-builder
+1. scope:claude-component-builder
 2. scope:self-improvement
 3. scope:github-workflows
 ...
@@ -265,8 +265,8 @@ gh issue create \
 **Labels**:
 - Type: enhancement
 - Priority: priority:high
-- Scope: plugin:agent-builder
-- Branch: branch:plugin/agent-builder
+- Scope: plugin:claude-component-builder
+- Branch: branch:plugin/claude-component-builder
 
 **Milestone**: Phase: Hooks Validation
 
@@ -292,13 +292,13 @@ For scripting, pass all options:
 /issue-create "Title" \
   --type enhancement \
   --priority high \
-  --scope plugin:agent-builder \
-  --branch plugin/agent-builder \
+  --scope plugin:claude-component-builder \
+  --branch plugin/claude-component-builder \
   --milestone "Phase: Hooks Validation" \
   --parent 55 \
   --blocked-by 58 \
   --related 56,57 \
-  --project "Agent Plugin Development" \
+  --project "Claude Component Plugin Development" \
   --body "Description here"
 ```
 

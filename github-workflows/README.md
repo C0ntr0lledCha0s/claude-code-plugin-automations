@@ -479,15 +479,15 @@ github-workflows/
 Run validation scripts:
 ```bash
 # Validate skills
-python /path/to/agent-builder/skills/building-skills/scripts/validate-skill.py \
+python /path/to/claude-component-builder/skills/building-skills/scripts/validate-skill.py \
   skills/managing-projects/
 
 # Validate agents
-python /path/to/agent-builder/skills/building-agents/scripts/validate-agent.py \
+python /path/to/claude-component-builder/skills/building-agents/scripts/validate-agent.py \
   agents/workflow-orchestrator.md
 
 # Validate commands
-python /path/to/agent-builder/skills/building-commands/scripts/validate-command.py \
+python /path/to/claude-component-builder/skills/building-commands/scripts/validate-command.py \
   commands/project-create.md
 ```
 

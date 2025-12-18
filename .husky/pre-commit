@@ -16,7 +16,7 @@ ERRORS=0
 for file in $STAGED_FILES; do
     if echo "$file" | grep -q "agents/.*\.md$" && ! echo "$file" | grep -qE "(references/|templates/|assets/)"; then
         echo "  Validating agent: $file"
-        if ! python3 agent-builder/skills/building-agents/scripts/validate-agent.py "$file" 2>&1; then
+        if ! python3 claude-component-builder/skills/building-agents/scripts/validate-agent.py "$file" 2>&1; then
             ERRORS=$((ERRORS + 1))
         fi
     fi
@@ -26,7 +26,7 @@ done
 for file in $STAGED_FILES; do
     if echo "$file" | grep -q "commands/.*\.md$" && ! echo "$file" | grep -qE "(SKILL\.md$|templates/|references/|assets/)"; then
         echo "  Validating command: $file"
-        if ! python3 agent-builder/skills/building-commands/scripts/validate-command.py "$file" 2>&1; then
+        if ! python3 claude-component-builder/skills/building-commands/scripts/validate-command.py "$file" 2>&1; then
             ERRORS=$((ERRORS + 1))
         fi
     fi
@@ -36,7 +36,7 @@ done
 for file in $STAGED_FILES; do
     if echo "$file" | grep -q "hooks/hooks\.json$"; then
         echo "  Validating hooks: $file"
-        if ! python3 agent-builder/skills/building-hooks/scripts/validate-hooks.py "$file" 2>&1; then
+        if ! python3 claude-component-builder/skills/building-hooks/scripts/validate-hooks.py "$file" 2>&1; then
             ERRORS=$((ERRORS + 1))
         fi
     fi
@@ -47,7 +47,7 @@ for file in $STAGED_FILES; do
     if echo "$file" | grep -q "skills/.*/SKILL\.md$"; then
         skill_dir=$(dirname "$file")
         echo "  Validating skill: $skill_dir"
-        if ! python3 agent-builder/skills/building-skills/scripts/validate-skill.py "$skill_dir" 2>&1; then
+        if ! python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py "$skill_dir" 2>&1; then
             ERRORS=$((ERRORS + 1))
         fi
     fi
@@ -64,12 +64,35 @@ for file in $STAGED_FILES; do
     fi
 done
 
-# Validate marketplace.json if changed
+# Validate marketplace.json if changed (comprehensive check)
 for file in $STAGED_FILES; do
     if echo "$file" | grep -q "\.claude-plugin/marketplace\.json$"; then
         echo "  Validating marketplace: $file"
+
+        # Check JSON syntax
         if ! python3 -m json.tool "$file" >/dev/null 2>&1; then
             echo "    ❌ Invalid JSON in $file"
+            ERRORS=$((ERRORS + 1))
+            continue
+        fi
+
+        # Check that all plugin directories exist
+        echo "    Checking plugin directories..."
+        plugin_sources=$(python3 -c "import json; data=json.load(open('$file', encoding='utf-8')); print('\n'.join([p['source'] for p in data.get('plugins', [])]))" 2>/dev/null)
+        if [ -n "$plugin_sources" ]; then
+            while IFS= read -r source; do
+                plugin_dir="${source#./}"
+                if [ ! -d "$plugin_dir" ]; then
+                    echo "    ❌ Plugin directory not found: $plugin_dir"
+                    ERRORS=$((ERRORS + 1))
+                fi
+            done <<< "$plugin_sources"
+        fi
+
+        # Check for duplicate plugin names
+        duplicate_names=$(python3 -c "import json; from collections import Counter; data=json.load(open('$file', encoding='utf-8')); names=[p['name'] for p in data.get('plugins', [])]; dups=[n for n,c in Counter(names).items() if c>1]; print('\n'.join(dups))" 2>/dev/null)
+        if [ -n "$duplicate_names" ]; then
+            echo "    ❌ Duplicate plugin names found: $duplicate_names"
             ERRORS=$((ERRORS + 1))
         fi
     fi

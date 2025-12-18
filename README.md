@@ -40,22 +40,22 @@ The Agent Builder plugin provides comprehensive tools for creating Claude Code e
 **Quick Start:**
 ```bash
 # Create a new agent
-/agent-builder:agents:new code-reviewer
+/claude-component-builder:agents:new code-reviewer
 
 # Create a new skill
-/agent-builder:skills:new analyzing-data
+/claude-component-builder:skills:new analyzing-data
 
 # Create a new command
-/agent-builder:commands:new run-tests
+/claude-component-builder:commands:new run-tests
 
 # Create a new hook
-/agent-builder:hooks:new validate-writes
+/claude-component-builder:hooks:new validate-writes
 
 # Create a complete plugin
-/agent-builder:plugins:new my-tools
+/claude-component-builder:plugins:new my-tools
 ```
 
-[See full documentation →](./agent-builder/README.md)
+[See full documentation →](./claude-component-builder/README.md)
 
 ### Self-Improvement Plugin
 
@@ -100,7 +100,7 @@ Install directly from the Claude Code marketplace:
 claude marketplace add https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations
 
 # Install specific plugins
-claude plugin install agent-builder
+claude plugin install claude-component-builder
 claude plugin install self-improvement
 ```
 
@@ -112,7 +112,7 @@ Or add to your `.claude/settings.json`:
     "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations"
   ],
   "plugins": [
-    "agent-builder",
+    "claude-component-builder",
     "self-improvement"
   ]
 }
@@ -129,7 +129,7 @@ cd claude-code-plugin-automations
 
 # Link plugins to Claude user directory
 mkdir -p ~/.claude/plugins
-ln -s $(pwd)/agent-builder ~/.claude/plugins/agent-builder
+ln -s $(pwd)/claude-component-builder ~/.claude/plugins/claude-component-builder
 ln -s $(pwd)/self-improvement-plugin ~/.claude/plugins/self-improvement
 ```
 
@@ -147,9 +147,9 @@ git clone https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations.git
 # Link components to project .claude directory
 mkdir -p .claude/{agents,skills,commands}
 
-ln -s $(pwd)/claude-code-plugin-automations/agent-builder/agents/* .claude/agents/
-ln -s $(pwd)/claude-code-plugin-automations/agent-builder/skills/* .claude/skills/
-ln -s $(pwd)/claude-code-plugin-automations/agent-builder/commands/* .claude/commands/
+ln -s $(pwd)/claude-code-plugin-automations/claude-component-builder/agents/* .claude/agents/
+ln -s $(pwd)/claude-code-plugin-automations/claude-component-builder/skills/* .claude/skills/
+ln -s $(pwd)/claude-code-plugin-automations/claude-component-builder/commands/* .claude/commands/
 
 ln -s $(pwd)/claude-code-plugin-automations/self-improvement-plugin/agents/* .claude/agents/
 ln -s $(pwd)/claude-code-plugin-automations/self-improvement-plugin/skills/* .claude/skills/
@@ -164,7 +164,7 @@ If your Claude Code version supports it, use the plugin manifest:
 # Add to your project's .claude/settings.json
 {
   "plugins": [
-    "/path/to/claude-code-plugin-automations/agent-builder",
+    "/path/to/claude-code-plugin-automations/claude-component-builder",
     "/path/to/claude-code-plugin-automations/self-improvement-plugin"
   ]
 }
@@ -209,11 +209,11 @@ Implement hooks for validation:
 
 ### Quick Links
 
-- [Agent Builder Plugin Documentation](./agent-builder/README.md)
-- [Creating Agents](./agent-builder/skills/building-agents/SKILL.md)
-- [Creating Skills](./agent-builder/skills/building-skills/SKILL.md)
-- [Creating Commands](./agent-builder/skills/building-commands/SKILL.md)
-- [Creating Hooks](./agent-builder/skills/building-hooks/SKILL.md)
+- [Agent Builder Plugin Documentation](./claude-component-builder/README.md)
+- [Creating Agents](./claude-component-builder/skills/building-agents/SKILL.md)
+- [Creating Skills](./claude-component-builder/skills/building-skills/SKILL.md)
+- [Creating Commands](./claude-component-builder/skills/building-commands/SKILL.md)
+- [Creating Hooks](./claude-component-builder/skills/building-hooks/SKILL.md)
 
 ### Claude Code Resources
 
@@ -226,7 +226,7 @@ Implement hooks for validation:
 claude-code-plugin-automations/
 ├── .claude-plugin/
 │   └── marketplace.json       # Marketplace manifest
-├── agent-builder/             # Meta-agent plugin
+├── claude-component-builder/             # Meta-agent plugin
 │   ├── .claude-plugin/
 │   │   └── plugin.json        # Plugin manifest
 │   ├── agents/                # Meta-architect agent
@@ -319,7 +319,7 @@ npm run version:major
 Use the Agent Builder to create new plugins:
 
 ```bash
-/agent-builder:plugins:new my-awesome-plugin
+/claude-component-builder:plugins:new my-awesome-plugin
 ```
 
 Claude will guide you through:
@@ -356,16 +356,16 @@ The Agent Builder includes validation scripts:
 
 ```bash
 # Validate an agent
-python agent-builder/skills/building-agents/scripts/validate-agent.py .claude/agents/my-agent.md
+python claude-component-builder/skills/building-agents/scripts/validate-agent.py .claude/agents/my-agent.md
 
 # Validate a skill
-python agent-builder/skills/building-skills/scripts/validate-skill.py .claude/skills/my-skill/
+python claude-component-builder/skills/building-skills/scripts/validate-skill.py .claude/skills/my-skill/
 
 # Validate a command
-python agent-builder/skills/building-commands/scripts/validate-command.py .claude/commands/my-command.md
+python claude-component-builder/skills/building-commands/scripts/validate-command.py .claude/commands/my-command.md
 
 # Validate hooks
-python agent-builder/skills/building-hooks/scripts/validate-hooks.py .claude/hooks.json
+python claude-component-builder/skills/building-hooks/scripts/validate-hooks.py .claude/hooks.json
 ```
 
 ### Manual Testing

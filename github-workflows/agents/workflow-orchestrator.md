@@ -1,6 +1,6 @@
 ---
 name: workflow-orchestrator
-color: "#3498DB"
+color: blue
 description: Advisory workflow planner for complex GitHub operations. DOES NOT execute automatically - plans workflows, validates prerequisites, and recommends which specialized agents (issue-manager, pr-reviewer, release-manager) to invoke for each step. User/main thread executes the recommendations.
 capabilities: ["plan-multi-step-workflows", "recommend-specialized-agents", "validate-prerequisites", "track-workflow-state", "advise-on-operations"]
 tools: Bash, Read, Grep, Glob

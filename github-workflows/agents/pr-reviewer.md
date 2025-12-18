@@ -1,6 +1,6 @@
 ---
 name: pr-reviewer
-color: "#2980B9"
+color: blue
 description: Expert PR reviewer integrating code quality analysis and self-improvement checks. Use for comprehensive PR reviews with quality gates, automated feedback, and approval decisions. Invokes self-critic for quality validation.
 capabilities: ["analyze-pull-requests", "enforce-quality-gates", "generate-review-feedback", "integrate-quality-checks", "validate-code-security"]
 tools: Bash, Read, Write, Edit, Grep, Glob

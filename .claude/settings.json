@@ -12,7 +12,7 @@
     ]
   },
   "enabledPlugins": {
-    "agent-builder@claude-code-plugin-automations": true,
+    "claude-component-builder@claude-code-plugin-automations": true,
     "self-improvement@claude-code-plugin-automations": true,
     "github-workflows@claude-code-plugin-automations": true,
     "research-agent@claude-code-plugin-automations": true,

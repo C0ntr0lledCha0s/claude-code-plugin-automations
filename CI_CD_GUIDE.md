@@ -60,7 +60,7 @@ Validates commit messages follow conventional commit format:
 - `revert` - Revert a commit
 
 **Valid scopes:**
-- `agent-builder`
+- `claude-component-builder`
 - `self-improvement`
 - `github-workflows`
 - `agents`

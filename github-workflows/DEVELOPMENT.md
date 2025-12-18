@@ -39,29 +39,29 @@ bash validate-all.sh
 
 **Agents:**
 ```bash
-python3 agent-builder/skills/building-agents/scripts/validate-agent.py github-workflows/agents/workflow-orchestrator.md
-python3 agent-builder/skills/building-agents/scripts/validate-agent.py github-workflows/agents/pr-reviewer.md
+python3 claude-component-builder/skills/building-agents/scripts/validate-agent.py github-workflows/agents/workflow-orchestrator.md
+python3 claude-component-builder/skills/building-agents/scripts/validate-agent.py github-workflows/agents/pr-reviewer.md
 ```
 
 **Skills:**
 ```bash
-python3 agent-builder/skills/building-skills/scripts/validate-skill.py github-workflows/skills/managing-commits/
-python3 agent-builder/skills/building-skills/scripts/validate-skill.py github-workflows/skills/managing-projects/
-python3 agent-builder/skills/building-skills/scripts/validate-skill.py github-workflows/skills/organizing-with-labels/
-python3 agent-builder/skills/building-skills/scripts/validate-skill.py github-workflows/skills/triaging-issues/
-python3 agent-builder/skills/building-skills/scripts/validate-skill.py github-workflows/skills/reviewing-pull-requests/
+python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py github-workflows/skills/managing-commits/
+python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py github-workflows/skills/managing-projects/
+python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py github-workflows/skills/organizing-with-labels/
+python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py github-workflows/skills/triaging-issues/
+python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py github-workflows/skills/reviewing-pull-requests/
 ```
 
 **Commands:**
 ```bash
 for cmd in github-workflows/commands/*.md; do
-  python3 agent-builder/skills/building-commands/scripts/validate-command.py "$cmd"
+  python3 claude-component-builder/skills/building-commands/scripts/validate-command.py "$cmd"
 done
 ```
 
 **Hooks:**
 ```bash
-python3 agent-builder/skills/building-hooks/scripts/validate-hooks.py github-workflows/hooks/hooks.json
+python3 claude-component-builder/skills/building-hooks/scripts/validate-hooks.py github-workflows/hooks/hooks.json
 ```
 
 **Plugin Manifest:**
@@ -86,11 +86,11 @@ python3 -m json.tool github-workflows/.claude-plugin/plugin.json
 
 ## Creating New Components
 
-Use the agent-builder tools:
-- `/agent-builder:new-agent <name>` - Create new agent
-- `/agent-builder:new-skill <name>` - Create new skill
-- `/agent-builder:new-command <name>` - Create new command
-- `/agent-builder:new-hook <name>` - Create new hook
+Use the claude-component-builder tools:
+- `/claude-component-builder:new-agent <name>` - Create new agent
+- `/claude-component-builder:new-skill <name>` - Create new skill
+- `/claude-component-builder:new-command <name>` - Create new command
+- `/claude-component-builder:new-hook <name>` - Create new hook
 
 Or invoke the skills by mentioning keywords like "create command", "modify skill", etc.
 
@@ -173,22 +173,22 @@ bash validate-all.sh
 **Modifying Agents:**
 1. Edit `github-workflows/agents/*.md`
 2. Update tools, description, or workflow logic
-3. Validate: `python3 agent-builder/skills/building-agents/scripts/validate-agent.py github-workflows/agents/AGENT_NAME.md`
+3. Validate: `python3 claude-component-builder/skills/building-agents/scripts/validate-agent.py github-workflows/agents/AGENT_NAME.md`
 
 **Modifying Skills:**
 1. Edit `github-workflows/skills/SKILL_NAME/SKILL.md`
 2. Update scripts in `scripts/` directory if needed
-3. Validate: `python3 agent-builder/skills/building-skills/scripts/validate-skill.py github-workflows/skills/SKILL_NAME/`
+3. Validate: `python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py github-workflows/skills/SKILL_NAME/`
 
 **Modifying Commands:**
 1. Edit `github-workflows/commands/*.md`
 2. Update argument validation and workflow
-3. Validate: `python3 agent-builder/skills/building-commands/scripts/validate-command.py github-workflows/commands/COMMAND_NAME.md`
+3. Validate: `python3 claude-component-builder/skills/building-commands/scripts/validate-command.py github-workflows/commands/COMMAND_NAME.md`
 
 **Modifying Hooks:**
 1. Edit `github-workflows/hooks/hooks.json`
 2. Update scripts in `hooks/scripts/` if needed
-3. Validate: `python3 agent-builder/skills/building-hooks/scripts/validate-hooks.py github-workflows/hooks/hooks.json`
+3. Validate: `python3 claude-component-builder/skills/building-hooks/scripts/validate-hooks.py github-workflows/hooks/hooks.json`
 
 ### 3. Testing Changes
 
@@ -250,25 +250,25 @@ bash validate-all.sh github-workflows
 
 **Agents:**
 ```bash
-python3 agent-builder/skills/building-agents/scripts/validate-agent.py \
+python3 claude-component-builder/skills/building-agents/scripts/validate-agent.py \
   github-workflows/agents/workflow-orchestrator.md
 ```
 
 **Skills:**
 ```bash
-python3 agent-builder/skills/building-skills/scripts/validate-skill.py \
+python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py \
   github-workflows/skills/managing-commits/
 ```
 
 **Commands:**
 ```bash
-python3 agent-builder/skills/building-commands/scripts/validate-command.py \
+python3 claude-component-builder/skills/building-commands/scripts/validate-command.py \
   github-workflows/commands/commit-smart.md
 ```
 
 **Hooks:**
 ```bash
-python3 agent-builder/skills/building-hooks/scripts/validate-hooks.py \
+python3 claude-component-builder/skills/building-hooks/scripts/validate-hooks.py \
   github-workflows/hooks/hooks.json
 ```
 
@@ -350,9 +350,9 @@ Current test suites cover:
 
 ### Creating a New Agent
 
-Use agent-builder:
+Use claude-component-builder:
 ```bash
-/agent-builder:agents:new my-agent-name
+/claude-component-builder:agents:new my-agent-name
 ```
 
 Or manually:
@@ -373,9 +373,9 @@ Or manually:
 
 ### Creating a New Skill
 
-Use agent-builder:
+Use claude-component-builder:
 ```bash
-/agent-builder:skills:new my-skill-name
+/claude-component-builder:skills:new my-skill-name
 ```
 
 Or manually:
@@ -387,9 +387,9 @@ Or manually:
 
 ### Creating a New Command
 
-Use agent-builder:
+Use claude-component-builder:
 ```bash
-/agent-builder:commands:new my-command
+/claude-component-builder:commands:new my-command
 ```
 
 Or manually:

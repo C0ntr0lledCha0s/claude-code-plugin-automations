@@ -24,7 +24,7 @@ capabilities:
   - "Read and write data via HTTP API"
   - "Execute Datalog queries programmatically"
   - "Sync conversation notes to Logseq"
-color: "#4A90D9"
+color: cyan
 ---
 
 # Logseq Database Expert Agent

@@ -12,18 +12,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
    bash validate-all.sh
 
    # Or validate individual components:
-   python3 agent-builder/skills/building-agents/scripts/validate-agent.py path/to/agent.md
-   python3 agent-builder/skills/building-skills/scripts/validate-skill.py path/to/skill/
-   python3 agent-builder/skills/building-commands/scripts/validate-command.py path/to/command.md
-   python3 agent-builder/skills/building-hooks/scripts/validate-hooks.py path/to/hooks.json
+   python3 claude-component-builder/skills/building-agents/scripts/validate-agent.py path/to/agent.md
+   python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py path/to/skill/
+   python3 claude-component-builder/skills/building-commands/scripts/validate-command.py path/to/command.md
+   python3 claude-component-builder/skills/building-hooks/scripts/validate-hooks.py path/to/hooks.json
    ```
 
 2. **Fix ALL critical errors** before committing. The pre-commit hook will block commits with validation errors.
 
-3. **Use agent-builder tools** when creating/modifying components:
+3. **Use claude-component-builder tools** when creating/modifying components:
    - Invoke the `building-agents`, `building-skills`, `building-commands`, or `building-hooks` skills
-   - Use templates from `agent-builder/skills/*/templates/`
-   - Reference examples from `agent-builder/skills/*/references/`
+   - Use templates from `claude-component-builder/skills/*/templates/`
+   - Reference examples from `claude-component-builder/skills/*/references/`
 
 **Why this matters**: Validation catches security vulnerabilities, naming issues, and structural problems BEFORE they become part of git history.
 
@@ -31,7 +31,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **meta-repository** containing Claude Code plugins. It's essentially Claude building tools for Claude - a collection of meta-agents, skills, commands, and hooks that extend Claude Code's capabilities.
 
-**Key Concept**: This repository contains plugins that help build other plugins. The Agent Builder plugin is a "meta-agent" - an agent that creates other agents.
+**Key Concept**: This repository contains plugins that help build other plugins. The Claude Component Builder plugin is a "meta-plugin" - a plugin that creates other plugins and their components.
 
 ## Plugin Architecture
 
@@ -41,8 +41,8 @@ This is a **meta-repository** containing Claude Code plugins. It's essentially C
 
 #### Development Tools
 
-1. **agent-builder**: Plugin for building Claude Code extensions
-   - Location: `./agent-builder/`
+1. **claude-component-builder**: Plugin for building Claude Code extensions
+   - Location: `./claude-component-builder/`
    - Purpose: Scaffolds and validates agents, skills, commands, hooks, MCP servers, and plugins
    - Contains: 6 agents, 6 skills, 8 commands, 1 hook, validation scripts
    - Key agents: `agent-builder`, `skill-builder`, `command-builder`, `hook-builder`, `plugin-builder`, `skill-reviewer`
@@ -188,19 +188,19 @@ npm run validate
 **Individual Component Validation**:
 ```bash
 # Validate agent
-python3 agent-builder/skills/building-agents/scripts/validate-agent.py plugin-name/agents/agent-name.md
+python3 claude-component-builder/skills/building-agents/scripts/validate-agent.py plugin-name/agents/agent-name.md
 
 # Validate skill
-python3 agent-builder/skills/building-skills/scripts/validate-skill.py plugin-name/skills/skill-name/
+python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py plugin-name/skills/skill-name/
 
 # Validate command
-python3 agent-builder/skills/building-commands/scripts/validate-command.py plugin-name/commands/command-name.md
+python3 claude-component-builder/skills/building-commands/scripts/validate-command.py plugin-name/commands/command-name.md
 
 # Validate hooks
-python3 agent-builder/skills/building-hooks/scripts/validate-hooks.py plugin-name/hooks/hooks.json
+python3 claude-component-builder/skills/building-hooks/scripts/validate-hooks.py plugin-name/hooks/hooks.json
 
 # Validate plugin.json (full validation)
-python3 agent-builder/skills/building-plugins/scripts/validate-plugin.py plugin-name/.claude-plugin/plugin.json
+python3 claude-component-builder/skills/building-plugins/scripts/validate-plugin.py plugin-name/.claude-plugin/plugin.json
 
 # Validate JSON syntax only
 python3 -m json.tool plugin-name/.claude-plugin/plugin.json
@@ -208,25 +208,25 @@ python3 -m json.tool .claude-plugin/marketplace.json
 ```
 
 ### Creating Components
-Use the agent-builder slash commands:
+Use the claude-component-builder slash commands:
 ```bash
-/agent-builder:new agent my-agent          # Create a new agent
-/agent-builder:new skill my-skill          # Create a new skill
-/agent-builder:new command my-command      # Create a new command
-/agent-builder:new hook my-hook            # Create a new hook
+/claude-component-builder:new agent my-agent          # Create a new agent
+/claude-component-builder:new skill my-skill          # Create a new skill
+/claude-component-builder:new command my-command      # Create a new command
+/claude-component-builder:new hook my-hook            # Create a new hook
 
 # For plugins (multi-component), use the dedicated plugin command:
-/agent-builder:plugin create my-plugin     # Create a complete plugin with orchestration
-/agent-builder:plugin validate my-plugin   # Validate an existing plugin
-/agent-builder:plugin update my-plugin     # Update plugin metadata or components
+/claude-component-builder:plugin create my-plugin     # Create a complete plugin with orchestration
+/claude-component-builder:plugin validate my-plugin   # Validate an existing plugin
+/claude-component-builder:plugin update my-plugin     # Update plugin metadata or components
 
-# Other agent-builder commands:
-/agent-builder:update agent my-agent       # Update existing component
-/agent-builder:validate path/to/component  # Validate component schema
-/agent-builder:audit agent                 # Audit components for quality
-/agent-builder:enhance agent my-agent      # Get improvement suggestions
-/agent-builder:migrate agent my-agent      # Migrate to current schema
-/agent-builder:compare agent a b           # Compare two components
+# Other claude-component-builder commands:
+/claude-component-builder:update agent my-agent       # Update existing component
+/claude-component-builder:validate path/to/component  # Validate component schema
+/claude-component-builder:audit agent                 # Audit components for quality
+/claude-component-builder:enhance agent my-agent      # Get improvement suggestions
+/claude-component-builder:migrate agent my-agent      # Migrate to current schema
+/claude-component-builder:compare agent a b           # Compare two components
 ```
 
 ### Testing Components
@@ -247,22 +247,22 @@ After creating components:
 - `validate-all.sh`: Quick validation script for all plugins
 - `validate-plugins.sh`: Comprehensive validation with detailed output
 
-### Agent Builder Plugin
-- `agent-builder/agents/agent-builder.md`: Specialized agent builder
-- `agent-builder/agents/skill-builder.md`: Specialized skill builder
-- `agent-builder/agents/command-builder.md`: Specialized command builder
-- `agent-builder/agents/hook-builder.md`: Specialized hook builder
-- `agent-builder/agents/plugin-builder.md`: Specialized plugin builder
-- `agent-builder/agents/skill-reviewer.md`: Skill quality reviewer
-- `agent-builder/skills/building-agents/`: Agent creation expertise
-- `agent-builder/skills/building-skills/`: Skill creation expertise
-- `agent-builder/skills/building-commands/`: Command creation expertise
-- `agent-builder/skills/building-hooks/`: Hook creation expertise
-- `agent-builder/skills/building-plugins/`: Plugin creation expertise (includes settings pattern)
-- `agent-builder/skills/building-mcp-servers/`: MCP server integration expertise
-- `agent-builder/commands/plugin.md`: Plugin orchestration command (handles multi-component creation)
-- `agent-builder/skills/*/scripts/validate-*.py`: Validation scripts
-- `agent-builder/skills/*/templates/`: Component templates
+### Claude Component Builder Plugin
+- `claude-component-builder/agents/agent-builder.md`: Specialized agent builder
+- `claude-component-builder/agents/skill-builder.md`: Specialized skill builder
+- `claude-component-builder/agents/command-builder.md`: Specialized command builder
+- `claude-component-builder/agents/hook-builder.md`: Specialized hook builder
+- `claude-component-builder/agents/plugin-builder.md`: Specialized plugin builder
+- `claude-component-builder/agents/skill-reviewer.md`: Skill quality reviewer
+- `claude-component-builder/skills/building-agents/`: Agent creation expertise
+- `claude-component-builder/skills/building-skills/`: Skill creation expertise
+- `claude-component-builder/skills/building-commands/`: Command creation expertise
+- `claude-component-builder/skills/building-hooks/`: Hook creation expertise
+- `claude-component-builder/skills/building-plugins/`: Plugin creation expertise (includes settings pattern)
+- `claude-component-builder/skills/building-mcp-servers/`: MCP server integration expertise
+- `claude-component-builder/commands/plugin.md`: Plugin orchestration command (handles multi-component creation)
+- `claude-component-builder/skills/*/scripts/validate-*.py`: Validation scripts
+- `claude-component-builder/skills/*/templates/`: Component templates
 
 ### Self-Improvement Plugin
 - `self-improvement/agents/self-critic.md`: Self-critique agent
@@ -386,7 +386,7 @@ After creating components:
 ## Architecture Insights
 
 ### Meta-Programming Pattern
-The agent-builder plugin demonstrates meta-programming: it's a Claude agent that builds other Claude agents. This creates a self-referential system where the tools can improve themselves.
+The claude-component-builder plugin demonstrates meta-programming: it's a Claude plugin that builds other Claude plugins and components. This creates a self-referential system where the tools can improve themselves.
 
 ### Skill Composition
 Multiple specialized skills work together. For example, when creating an agent, the `building-agents` skill auto-invokes, providing expertise, templates, and validation.
@@ -415,7 +415,7 @@ Some agents that cannot directly execute use the **advisory pattern**:
 - Main thread (or user) executes the recommended actions
 - Examples: `project-coordinator`, `workflow-orchestrator`
 
-**Note**: For the agent-builder plugin, this pattern was replaced with command-based orchestration (the `plugin` command) which is more effective because commands can directly execute via Task.
+**Note**: For the claude-component-builder plugin, this pattern was replaced with command-based orchestration (the `plugin` command) which is more effective because commands can directly execute via Task.
 
 ### Subagent Architecture Constraints
 

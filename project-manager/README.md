@@ -12,7 +12,7 @@ The project-manager plugin provides a comprehensive project management layer tha
 - **github-workflows**: For GitHub operations (issues, PRs, boards, commits)
 - **research-agent**: For codebase research and best practices
 - **self-improvement**: For quality validation and critique
-- **agent-builder**: For creating custom automation
+- **claude-component-builder**: For creating custom automation
 
 ## Components
 
@@ -117,7 +117,7 @@ Intelligently routes tasks to appropriate agents.
 
 **What it does**:
 - Analyzes task type
-- Selects best agent or command (workflow-orchestrator, investigator, self-critic, agent-builder)
+- Selects best agent or command (workflow-orchestrator, investigator, self-critic, claude-component-builder)
 - Delegates via Task tool or recommends commands
 - Reports results
 
@@ -166,7 +166,7 @@ ln -s $(pwd)/project-manager ~/.claude/plugins/project-manager
 - `github-workflows` - For GitHub operations
 - `research-agent` - For research and investigation
 - `self-improvement` - For quality checks
-- `agent-builder` - For custom automation
+- `claude-component-builder` - For custom automation
 
 ## Quick Start
 
@@ -531,7 +531,7 @@ MIT License - See repository root for details
 - coordinating-projects skill for multi-project coordination
 - 5 commands: plan-sprint, prioritize-backlog, project-status, delegate-task, roadmap-create
 - project-planning-awareness hook
-- Full integration with github-workflows, research-agent, self-improvement, agent-builder
+- Full integration with github-workflows, research-agent, self-improvement, claude-component-builder
 
 ---
 

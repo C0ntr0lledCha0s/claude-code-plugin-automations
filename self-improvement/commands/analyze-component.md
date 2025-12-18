@@ -121,7 +121,7 @@ To apply these improvements:
 
 To compare with similar components:
 ```bash
-/agent-builder:[type]:compare [component1] [component2]
+/claude-component-builder:compare [type] [component1] [component2]
 ```
 ```
 

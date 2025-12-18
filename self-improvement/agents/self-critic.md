@@ -1,6 +1,6 @@
 ---
 name: self-critic
-color: "#27AE60"
+color: pink
 description: Expert critic and quality analyst for Claude's responses. Use after completing complex tasks, before final responses, or when the user requests review. Analyzes reasoning, completeness, accuracy, and communication quality.
 capabilities: ["analyze-response-quality", "evaluate-reasoning", "assess-communication", "review-code-quality", "identify-blind-spots"]
 tools: Read, Grep, Glob, Bash

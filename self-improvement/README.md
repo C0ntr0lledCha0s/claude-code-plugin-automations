@@ -750,13 +750,13 @@ MIT License - See repository LICENSE file
 
 ## 🙏 Acknowledgments
 
-Built using the Agent Builder plugin, demonstrating meta-meta-programming: a meta-agent building a system for self-improvement.
+Built using the Claude Component Builder plugin, demonstrating meta-meta-programming: a meta-agent building a system for self-improvement.
 
 ## 🔗 Links
 
 - [Claude Code Documentation](https://docs.claude.com/claude-code)
 - [Plugin Repository](https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations)
-- [Agent Builder Plugin](../agent-builder/README.md)
+- [Claude Component Builder Plugin](../claude-component-builder/README.md)
 
 ---
 

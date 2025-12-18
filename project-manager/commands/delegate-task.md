@@ -1,5 +1,5 @@
 ---
-description: Intelligently routes tasks to appropriate specialized agents (github-workflows, research-agent, self-improvement, agent-builder) based on task type and requirements
+description: Intelligently routes tasks to appropriate specialized agents (github-workflows, research-agent, self-improvement, claude-component-builder) based on task type and requirements
 allowed-tools: Bash, Read, Grep, Glob, Task
 argument-hint: "[task-description]"
 ---
@@ -91,9 +91,9 @@ When this command is invoked with `/project-manager:delegate-task [task-descript
    - "Validate this plan" → self-critic
 
    Automation Tasks:
-   - "Create agent/skill/command/hook" → agent-builder commands
-   - "Build automation for X" → agent-builder commands
-   - "Need custom workflow" → agent-builder commands
+   - "Create agent/skill/command/hook" → claude-component-builder commands
+   - "Build automation for X" → claude-component-builder commands
+   - "Need custom workflow" → claude-component-builder commands
 
    Planning Tasks:
    - "Plan sprint" → project-coordinator (self)
@@ -403,7 +403,7 @@ Next Steps:
   - github-workflows (for workflow-orchestrator, pr-reviewer)
   - research-agent (for investigator)
   - self-improvement (for self-critic)
-  - agent-builder (for component creation commands)
+  - claude-component-builder (for component creation commands)
 
 ### Task Tool Usage
 - This command is essentially a router/orchestrator
@@ -447,8 +447,8 @@ Decision Tree:
    Keywords: "review my work", "quality check", "critique" → self-critic
    Keywords: "validate", "assess quality" → self-critic
 
-   Keywords: "create agent", "create skill", "create command" → agent-builder commands
-   Keywords: "build automation", "create hook" → agent-builder commands
+   Keywords: "create agent", "create skill", "create command" → claude-component-builder commands
+   Keywords: "build automation", "create hook" → claude-component-builder commands
 
    Keywords: "plan sprint", "roadmap", "multi-project" → project-coordinator (self)
 

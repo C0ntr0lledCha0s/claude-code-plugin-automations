@@ -155,7 +155,7 @@ This document defines conventions for project status management, label usage, is
 | Label | Use When |
 |-------|----------|
 | `plugin` | Plugin-specific functionality |
-| `plugin:agent-builder` | Agent-builder plugin specific |
+| `plugin:claude-component-builder` | Claude-component-builder plugin specific |
 | `plugin:self-improvement` | Self-improvement plugin specific |
 | `plugin:github-workflows` | GitHub-workflows plugin specific |
 | `plugin:testing-expert` | Testing-expert plugin specific |
@@ -327,7 +327,7 @@ gh api repos/:owner/:repo/milestones -f title="Phase: Hooks Validation" \
 gh issue edit 42 --milestone "Phase: Hooks Validation"
 
 # Bulk assign
-gh issue list --label "plugin:agent-builder" --json number -q '.[].number' | \
+gh issue list --label "plugin:claude-component-builder" --json number -q '.[].number' | \
   xargs -I {} gh issue edit {} --milestone "Phase: Hooks Validation"
 ```
 
@@ -437,7 +437,7 @@ When a branch is merged or deleted, consider:
 |-----------|-----------------|---------|
 | Type | Yes | `bug` |
 | Priority | Yes (for open) | `priority:medium` |
-| Scope | If applicable | `plugin:agent-builder` |
+| Scope | If applicable | `plugin:claude-component-builder` |
 | Branch | If feature work | `branch:feature/auth` |
 
 **Notes**:

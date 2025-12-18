@@ -1,6 +1,6 @@
 ---
 name: release-manager
-color: "#1F618D"
+color: blue
 description: Release workflow expert for versioning, changelog generation, and release publishing. Use when preparing releases, bumping versions, generating changelogs from commits, creating release notes, or publishing GitHub releases with tags.
 capabilities: ["manage-semantic-versioning", "generate-changelogs", "create-release-notes", "publish-github-releases", "manage-release-tags", "track-release-milestones"]
 tools: Bash, Read, Write, Edit, Grep, Glob

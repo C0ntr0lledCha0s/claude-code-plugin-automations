@@ -13,7 +13,7 @@ CLAUDE_PLUGINS_DIR="$HOME/.claude/plugins"
 
 # Plugins to symlink
 PLUGINS=(
-    "agent-builder"
+    "claude-component-builder"
     "self-improvement"
     "github-workflows"
     "research-agent"

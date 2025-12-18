@@ -16,19 +16,21 @@
   },
   "plugins": [
     {
-      "name": "agent-builder",
-      "source": "./agent-builder",
-      "description": "Meta-agent plugin for building Claude Code agents, skills, slash commands, hooks, and complete plugins. Provides automated scaffolding, validation, templates, and best practices guidance. Includes comprehensive plugin creator with templates, validation scripts, and architecture guides.",
-      "version": "1.5.0",
+      "name": "claude-component-builder",
+      "source": "./claude-component-builder",
+      "description": "Comprehensive plugin for building Claude Code components: agents, skills, commands, hooks, MCP servers, and complete plugins. Features specialized builders, validation scripts, templates, and best practices guidance following Anthropic's plugin-dev patterns.",
+      "version": "2.4.0",
       "category": "development-tools",
       "keywords": [
-        "meta-agent",
+        "component-builder",
         "agent-builder",
         "skill-builder",
         "command-builder",
         "hook-builder",
         "plugin-builder",
+        "mcp-servers",
         "scaffolding",
+        "validation",
         "automation",
         "development-tools"
       ],
@@ -38,7 +40,7 @@
       },
       "repository": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations",
       "license": "MIT",
-      "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/agent-builder"
+      "homepage": "https://github.com/C0ntr0lledCha0s/claude-code-plugin-automations/tree/main/claude-component-builder"
     },
     {
       "name": "self-improvement",

@@ -58,7 +58,7 @@
       }
     ],
     "commitScopes": [
-      "agent-builder",
+      "claude-component-builder",
       "self-improvement",
       "github-workflows",
       "agents",

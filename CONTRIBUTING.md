@@ -4,49 +4,49 @@ Thank you for your interest in contributing! This guide will help you create hig
 
 ## Before You Start
 
-This repository contains **meta-plugins** - plugins that help build other plugins. The agent-builder plugin provides tools, templates, and validation scripts to ensure quality.
+This repository contains **meta-plugins** - plugins that help build other plugins. The claude-component-builder plugin provides tools, templates, and validation scripts to ensure quality.
 
 ## Development Workflow
 
 ### Creating New Components
 
-**ALWAYS use the agent-builder tools** when creating components:
+**ALWAYS use the claude-component-builder tools** when creating components:
 
 #### 1. Creating an Agent
 ```bash
 # Invoke the building-agents skill by mentioning "create agent" in your request
 # Or use the slash command:
-/agent-builder:new-agent agent-name
+/claude-component-builder:new-agent agent-name
 
 # Then validate:
-python3 agent-builder/skills/building-agents/scripts/validate-agent.py plugin-name/agents/agent-name.md
+python3 claude-component-builder/skills/building-agents/scripts/validate-agent.py plugin-name/agents/agent-name.md
 ```
 
 #### 2. Creating a Skill
 ```bash
 # Invoke the building-skills skill
-/agent-builder:new-skill skill-name
+/claude-component-builder:new-skill skill-name
 
 # Then validate:
-python3 agent-builder/skills/building-skills/scripts/validate-skill.py plugin-name/skills/skill-name/
+python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py plugin-name/skills/skill-name/
 ```
 
 #### 3. Creating a Command
 ```bash
 # Invoke the building-commands skill
-/agent-builder:new-command command-name
+/claude-component-builder:new-command command-name
 
 # Then validate:
-python3 agent-builder/skills/building-commands/scripts/validate-command.py plugin-name/commands/command-name.md
+python3 claude-component-builder/skills/building-commands/scripts/validate-command.py plugin-name/commands/command-name.md
 ```
 
 #### 4. Creating a Hook
 ```bash
 # Invoke the building-hooks skill
-/agent-builder:new-hook hook-name
+/claude-component-builder:new-hook hook-name
 
 # Then validate:
-python3 agent-builder/skills/building-hooks/scripts/validate-hooks.py plugin-name/hooks/hooks.json
+python3 claude-component-builder/skills/building-hooks/scripts/validate-hooks.py plugin-name/hooks/hooks.json
 ```
 
 ### Validation Checklist
@@ -63,7 +63,7 @@ Before committing ANY changes to plugin components:
 
 #### For Agents:
 
-1. **Use the template**: Start from `agent-builder/skills/building-agents/templates/agent-template.md`
+1. **Use the template**: Start from `claude-component-builder/skills/building-agents/templates/agent-template.md`
 2. **Required fields**: `name`, `description`
 3. **Naming**: Action-oriented, lowercase-hyphens (e.g., `code-reviewer`, `security-auditor`)
 4. **Description**: Focus on WHEN to invoke the agent
@@ -72,7 +72,7 @@ Before committing ANY changes to plugin components:
 
 #### For Skills:
 
-1. **Use the template**: Start from `agent-builder/skills/building-skills/templates/skill-template.md`
+1. **Use the template**: Start from `claude-component-builder/skills/building-skills/templates/skill-template.md`
 2. **Required sections**:
    - `## When to Use This Skill` (CRITICAL for auto-invocation)
    - `## Your Capabilities`
@@ -85,7 +85,7 @@ Before committing ANY changes to plugin components:
 
 #### For Commands:
 
-1. **Use the template**: Start from `agent-builder/skills/building-commands/templates/command-template.md`
+1. **Use the template**: Start from `claude-component-builder/skills/building-commands/templates/command-template.md`
 2. **Required sections**:
    - `## Arguments` (if command accepts arguments)
    - `## Workflow` (document execution steps)
@@ -98,7 +98,7 @@ Before committing ANY changes to plugin components:
 
 #### For Hooks:
 
-1. **Use the template**: Start from `agent-builder/skills/building-hooks/templates/hooks-template.json`
+1. **Use the template**: Start from `claude-component-builder/skills/building-hooks/templates/hooks-template.json`
 2. **Event types**: `PreToolUse`, `PostToolUse`, `UserPromptSubmit`
 3. **Hook types**: `command` (bash scripts) or `prompt` (LLM prompts)
 4. **Security**: Validate all inputs, avoid dangerous operations
@@ -176,20 +176,20 @@ git commit -m "feat: add new component"  # ✅ Passes validation
 
 ### Validation Script Reference
 
-All validation scripts are in `agent-builder/skills/*/scripts/`:
+All validation scripts are in `claude-component-builder/skills/*/scripts/`:
 
 ```bash
 # Validate an agent
-python3 agent-builder/skills/building-agents/scripts/validate-agent.py path/to/agent.md
+python3 claude-component-builder/skills/building-agents/scripts/validate-agent.py path/to/agent.md
 
 # Validate a skill
-python3 agent-builder/skills/building-skills/scripts/validate-skill.py path/to/skill-dir/
+python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py path/to/skill-dir/
 
 # Validate a command
-python3 agent-builder/skills/building-commands/scripts/validate-command.py path/to/command.md
+python3 claude-component-builder/skills/building-commands/scripts/validate-command.py path/to/command.md
 
 # Validate hooks
-python3 agent-builder/skills/building-hooks/scripts/validate-hooks.py path/to/hooks.json
+python3 claude-component-builder/skills/building-hooks/scripts/validate-hooks.py path/to/hooks.json
 
 # Validate a plugin manifest
 python3 -m json.tool path/to/plugin.json
@@ -221,7 +221,7 @@ git commit --no-verify
 When modifying existing components:
 
 1. **Read the component first** to understand its structure
-2. **Use agent-builder skills** for guidance (they auto-invoke on keywords like "modify skill")
+2. **Use claude-component-builder skills** for guidance (they auto-invoke on keywords like "modify skill")
 3. **Validate after changes** to ensure you didn't break anything
 4. **Bump version** in `plugin.json` following semantic versioning
 5. **Update plugin documentation** (README.md) with changes
@@ -249,7 +249,7 @@ When creating an entirely new plugin:
    }
    ```
 
-3. **Create components** using agent-builder tools
+3. **Create components** using claude-component-builder tools
 
 4. **Write README.md** documenting the plugin
 
@@ -267,11 +267,11 @@ When creating an entirely new plugin:
 
 ### Getting Help
 
-- **Read templates**: Check `agent-builder/skills/*/templates/` for examples
-- **Check references**: Look at `agent-builder/skills/*/references/` for documentation
-- **Examine existing components**: Look at agent-builder, self-improvement, or github-workflows plugins for examples
-- **Use agent-builder skills**: They auto-invoke when you mention relevant keywords
-- **Ask for help**: Use agent-builder commands like `/agent-builder:new` or `/agent-builder:plugin`
+- **Read templates**: Check `claude-component-builder/skills/*/templates/` for examples
+- **Check references**: Look at `claude-component-builder/skills/*/references/` for documentation
+- **Examine existing components**: Look at claude-component-builder, self-improvement, or github-workflows plugins for examples
+- **Use claude-component-builder skills**: They auto-invoke when you mention relevant keywords
+- **Ask for help**: Use claude-component-builder commands like `/claude-component-builder:new` or `/claude-component-builder:plugin`
 
 ### Quality Standards
 
@@ -303,7 +303,7 @@ Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `ci`
 
 Example:
 ```
-feat(agent-builder): add new validation for command arguments
+feat(claude-component-builder): add new validation for command arguments
 
 Adds comprehensive argument validation to catch command injection
 vulnerabilities before they reach production.
@@ -319,6 +319,6 @@ Closes #123
 - Review `README.md` for installation and usage
 - Examine `MARKETPLACE_CONTRIBUTION_WORKFLOW.md` for marketplace contribution process
 - Look at existing plugins for examples
-- Use agent-builder tools for interactive guidance
+- Use claude-component-builder tools for interactive guidance
 
 Happy contributing! 🎉

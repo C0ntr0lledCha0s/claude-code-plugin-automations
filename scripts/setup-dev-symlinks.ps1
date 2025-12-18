@@ -17,7 +17,7 @@ $ClaudePluginsDir = Join-Path $env:USERPROFILE ".claude\plugins"
 
 # Plugins to symlink
 $Plugins = @(
-    "agent-builder",
+    "claude-component-builder",
     "self-improvement",
     "github-workflows",
     "research-agent",

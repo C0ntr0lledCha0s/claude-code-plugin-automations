@@ -14,26 +14,26 @@ bash validate-all.sh
 
 **Agents:**
 ```bash
-python3 agent-builder/skills/building-agents/scripts/validate-agent.py self-improvement/agents/self-critic.md
+python3 claude-component-builder/skills/building-agents/scripts/validate-agent.py self-improvement/agents/self-critic.md
 ```
 
 **Skills:**
 ```bash
-python3 agent-builder/skills/building-skills/scripts/validate-skill.py self-improvement/skills/analyzing-response-quality/
-python3 agent-builder/skills/building-skills/scripts/validate-skill.py self-improvement/skills/suggesting-improvements/
-python3 agent-builder/skills/building-skills/scripts/validate-skill.py self-improvement/skills/creating-feedback-loops/
+python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py self-improvement/skills/analyzing-response-quality/
+python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py self-improvement/skills/suggesting-improvements/
+python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py self-improvement/skills/creating-feedback-loops/
 ```
 
 **Commands:**
 ```bash
 for cmd in self-improvement/commands/*.md; do
-  python3 agent-builder/skills/building-commands/scripts/validate-command.py "$cmd"
+  python3 claude-component-builder/skills/building-commands/scripts/validate-command.py "$cmd"
 done
 ```
 
 **Hooks:**
 ```bash
-python3 agent-builder/skills/building-hooks/scripts/validate-hooks.py self-improvement/hooks/hooks.json
+python3 claude-component-builder/skills/building-hooks/scripts/validate-hooks.py self-improvement/hooks/hooks.json
 ```
 
 **Plugin Manifest:**
@@ -57,11 +57,11 @@ python3 -m json.tool self-improvement/.claude-plugin/plugin.json
 
 ## Creating New Components
 
-Use the agent-builder tools:
-- `/agent-builder:new-agent <name>` - Create new agent
-- `/agent-builder:new-skill <name>` - Create new skill
-- `/agent-builder:new-command <name>` - Create new command
-- `/agent-builder:new-hook <name>` - Create new hook
+Use the claude-component-builder tools:
+- `/claude-component-builder:new-agent <name>` - Create new agent
+- `/claude-component-builder:new-skill <name>` - Create new skill
+- `/claude-component-builder:new-command <name>` - Create new command
+- `/claude-component-builder:new-hook <name>` - Create new hook
 
 Or invoke the skills by mentioning keywords like "create agent", "modify skill", etc.
 

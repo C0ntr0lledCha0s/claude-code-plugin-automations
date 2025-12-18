@@ -74,7 +74,7 @@ Creates `.claude/github-workflows/env.json`:
     "existing": 15,
     "missing": ["priority:high", "priority:medium"],
     "recommended": ["bug", "feature", "enhancement"],
-    "suggestedScopes": ["agent-builder", "self-improvement", "github-workflows"]
+    "suggestedScopes": ["claude-component-builder", "self-improvement", "github-workflows"]
   },
   "setup": {
     "labelsComplete": false,
@@ -218,7 +218,7 @@ When this command is invoked:
        - scope:frontend
 
    🏷️ Suggested Scope Labels (from project analysis):
-     scope:agent-builder
+     scope:claude-component-builder
      scope:self-improvement
      scope:github-workflows
      Run /label-suggest --create to add these
@@ -312,7 +312,7 @@ After initialization, these are available in `env.json`:
 | `branch.scopeLabel` | Label matching detected scope | `"scope:auth"` |
 | `labels.existing` | Count of existing labels | `15` |
 | `labels.missing` | List of missing standard labels | `["priority:high"]` |
-| `labels.suggestedScopes` | Scope labels suggested from project analysis | `["agent-builder"]` |
+| `labels.suggestedScopes` | Scope labels suggested from project analysis | `["claude-component-builder"]` |
 | `setup.labelsComplete` | Whether all standard labels exist | `false` |
 | `preferences.projectType` | Personal or team project | `"personal"` |
 | `preferences.defaultIssueFilter` | Default filter for issue-track | `"all"` |

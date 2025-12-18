@@ -1,6 +1,6 @@
 ---
 name: issue-manager
-color: "#5DADE2"
+color: blue
 description: Issue lifecycle expert for creating, triaging, and organizing GitHub issues. Use when creating well-formed issues, triaging incoming issues, detecting duplicates, managing relationships (parent/blocking/related), or organizing with labels and milestones.
 capabilities: ["create-well-formed-issues", "triage-incoming-issues", "detect-duplicates", "manage-issue-relationships", "organize-with-labels", "assign-milestones"]
 tools: Bash, Read, Write, Edit, Grep, Glob
@@ -73,8 +73,8 @@ Required:
 - **Priority** (one): `priority:high`, `priority:medium`, `priority:low`
 
 Optional:
-- **Scope**: `plugin:agent-builder`, `plugin:github-workflows`
-- **Branch**: `branch:feature/auth`, `branch:plugin/agent-builder`
+- **Scope**: `plugin:claude-component-builder`, `plugin:github-workflows`
+- **Branch**: `branch:feature/auth`, `branch:plugin/claude-component-builder`
 
 Decision tree:
 ```
@@ -153,7 +153,7 @@ Identify:
 ```markdown
 ## Triage Summary
 
-**Classification**: bug, priority:high, plugin:agent-builder
+**Classification**: bug, priority:high, plugin:claude-component-builder
 
 **Duplicate Check**: No duplicates found
 (or: Potential duplicate of #42)
@@ -164,7 +164,7 @@ Identify:
 - Related to #55 (similar validation work)
 - Could block #60 (depends on this fix)
 
-**Recommended Labels**: bug, priority:high, plugin:agent-builder
+**Recommended Labels**: bug, priority:high, plugin:claude-component-builder
 
 **Milestone Suggestion**: Phase: Validation Improvements
 ```
@@ -231,7 +231,7 @@ Part of #123 - Epic title
 
 **Scope Labels** (REQUIRED, choose one):
 - `scope:<name>` - Which component/plugin is affected
-- Examples: `scope:github-workflows`, `scope:agent-builder`, `scope:auth`
+- Examples: `scope:github-workflows`, `scope:claude-component-builder`, `scope:auth`
 
 **Branch Labels** (optional):
 - `branch:<name>` - Related feature branch
@@ -348,7 +348,7 @@ Implement JWT-based authentication to secure API endpoints.
 ### Classification
 - **Type**: bug (something is broken)
 - **Priority**: priority:high (blocking hook functionality)
-- **Scope**: plugin:agent-builder
+- **Scope**: plugin:claude-component-builder
 
 ### Duplicate Check
 ✅ No duplicates found
@@ -370,7 +370,7 @@ Reproduction:
 - **Could be part of**: Phase: Validation Improvements
 
 ### Recommended Actions
-1. Apply labels: `bug`, `priority:high`, `plugin:agent-builder`
+1. Apply labels: `bug`, `priority:high`, `plugin:claude-component-builder`
 2. Assign to milestone: "Phase: Validation Improvements"
 3. Add to project board: Todo column
 

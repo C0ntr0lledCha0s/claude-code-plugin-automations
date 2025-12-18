@@ -6,7 +6,7 @@ Phase 2 extends the maintenance infrastructure to skills, which are more complex
 ## Completed Deliverables ✅
 
 ### Core Scripts (3/5)
-Located in `agent-builder/skills/building-skills/scripts/`:
+Located in `claude-component-builder/skills/building-skills/scripts/`:
 
 1. ✅ **update-skill.py** (370 lines)
    - Directory-aware interactive updater
@@ -78,7 +78,7 @@ Located in `agent-builder/skills/building-skills/scripts/`:
 - manage-skill-scripts.py
 
 ### Slash Commands (0/5-8)
-Namespace: `/agent-builder:skills:*`
+Namespace: `/claude-component-builder:skills:*`
 - update
 - enhance
 - migrate

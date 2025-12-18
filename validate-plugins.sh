@@ -52,7 +52,7 @@ validate_plugin() {
                 # Run validation and capture output
                 # Temporarily disable exit-on-error to capture validation output
                 set +e
-                validation_output=$(python3 agent-builder/skills/building-agents/scripts/validate-agent.py "$agent" 2>&1)
+                validation_output=$(python3 claude-component-builder/skills/building-agents/scripts/validate-agent.py "$agent" 2>&1)
                 validation_exit_code=$?
                 set -e
 
@@ -69,7 +69,7 @@ validate_plugin() {
 
     # Validate hooks
     if [ -f "$plugin_dir/hooks/hooks.json" ]; then
-        if python3 agent-builder/skills/building-hooks/scripts/validate-hooks.py "$plugin_dir/hooks/hooks.json" >/dev/null 2>&1; then
+        if python3 claude-component-builder/skills/building-hooks/scripts/validate-hooks.py "$plugin_dir/hooks/hooks.json" >/dev/null 2>&1; then
             echo -e "   ${GREEN}✓${NC} hooks.json is valid"
         else
             echo -e "   ${RED}✗${NC} hooks.json validation failed"
@@ -82,7 +82,7 @@ validate_plugin() {
         for skill_dir in "$plugin_dir/skills"/*; do
             if [ -d "$skill_dir" ] && [ -f "$skill_dir/SKILL.md" ]; then
                 skill_name=$(basename "$skill_dir")
-                if python3 agent-builder/skills/building-skills/scripts/validate-skill.py "$skill_dir" >/dev/null 2>&1; then
+                if python3 claude-component-builder/skills/building-skills/scripts/validate-skill.py "$skill_dir" >/dev/null 2>&1; then
                     echo -e "   ${GREEN}✓${NC} Skill: $skill_name"
                 else
                     echo -e "   ${YELLOW}⚠${NC}  Skill: $skill_name (validation warnings)"
@@ -97,7 +97,7 @@ validate_plugin() {
         for command in "$plugin_dir/commands"/*.md; do
             if [ -f "$command" ]; then
                 command_name=$(basename "$command")
-                if python3 agent-builder/skills/building-commands/scripts/validate-command.py "$command" >/dev/null 2>&1; then
+                if python3 claude-component-builder/skills/building-commands/scripts/validate-command.py "$command" >/dev/null 2>&1; then
                     echo -e "   ${GREEN}✓${NC} Command: $command_name"
                 else
                     echo -e "   ${RED}✗${NC} Command: $command_name (validation failed)"

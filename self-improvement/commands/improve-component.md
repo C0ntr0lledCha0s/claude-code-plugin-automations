@@ -228,9 +228,9 @@ description: Expert at analyzing code quality using ESLint, Prettier, and static
    Quality score: 2.4/5 → 4.6/5 (+2.2 points)"
    ```
 
-4. **Validate with agent-builder** (optional):
+4. **Validate with claude-component-builder** (optional):
    ```bash
-   python agent-builder/skills/building-[type]s/scripts/validate-[type].py "$1"
+   python claude-component-builder/skills/building-[type]s/scripts/validate-[type].py "$1"
    ```
 ```
 

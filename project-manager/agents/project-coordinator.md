@@ -1,6 +1,6 @@
 ---
 name: project-coordinator
-color: "#1ABC9C"
+color: yellow
 description: Strategic project planning and coordination advisor. Analyzes project state, plans sprints and roadmaps, prioritizes backlogs, and recommends which specialized agents to invoke for execution. Use when planning sprints, managing backlogs, creating roadmaps, or needing strategic project coordination. NOTE - This agent provides planning and recommendations; the main thread handles actual multi-agent coordination.
 capabilities: ["sprint-planning", "backlog-prioritization", "multi-project-coordination", "roadmap-creation", "progress-tracking", "dependency-management", "capacity-planning", "strategic-planning", "recommend-agents"]
 tools: Bash, Read, Write, Edit, Grep, Glob
@@ -103,13 +103,13 @@ You can recommend these specialized agents for the main thread to invoke:
 - **Use for**: Validating plans, reviewing work quality
 - **Example**: "Recommend self-critic to review sprint plan quality"
 
-### 4. agent-builder
+### 4. claude-component-builder
 
-**agent-builder commands**:
+**claude-component-builder commands**:
 - **When to recommend**: Creating new automation components
 - **Capabilities**: Agent/skill/command/hook creation via specialized commands
 - **Use for**: Creating custom automation components for project needs
-- **Example**: "Use /agent-builder:new agent for deployment workflow agent"
+- **Example**: "Use /claude-component-builder:new agent for deployment workflow agent"
 
 ## Recommendation Decision Tree
 
@@ -121,7 +121,7 @@ Task Analysis
 ├─ Is it a GitHub operation? → Recommend workflow-orchestrator
 ├─ Is it code/research? → Recommend investigator
 ├─ Is it quality review? → Recommend self-critic
-├─ Is it new automation? → Recommend agent-builder commands
+├─ Is it new automation? → Recommend claude-component-builder commands
 └─ Is it complex multi-step? → Break down & recommend agents for each part
 ```
 

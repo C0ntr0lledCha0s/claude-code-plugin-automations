@@ -154,7 +154,7 @@ git checkout -b enhancement/add-fix-issues-command
 /review-my-work
 
 # 5. Run validation
-python agent-builder/skills/building-commands/scripts/validate-command.py \
+python claude-component-builder/skills/building-commands/scripts/validate-command.py \
   .claude/commands/fix-issues.md
 
 # 6. Commit with detailed message
