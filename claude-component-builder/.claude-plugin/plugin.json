@@ -44,7 +44,7 @@
     "./commands/new-plugin.md",
     "./commands/audit.md",
     "./commands/validate.md",
-    "./commands/migrate.md"
-  ],
-  "hooks": "./hooks/hooks.json"
+    "./commands/migrate.md",
+    "./commands/plugin.md"
+  ]
 }
