@@ -1,4 +1,5 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "claude-code-plugin-automations",
   "owner": {
     "name": "C0ntr0lledCha0s",

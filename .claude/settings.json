@@ -24,7 +24,7 @@
     "claude-code-plugin-automations": {
       "source": {
         "source": "directory",
-        "path": "./.claude-plugin/"
+        "path": "."
       }
     }
   }
