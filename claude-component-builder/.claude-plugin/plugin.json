@@ -44,7 +44,6 @@
     "./commands/new-plugin.md",
     "./commands/audit.md",
     "./commands/validate.md",
-    "./commands/migrate.md",
-    "./commands/plugin.md"
+    "./commands/migrate.md"
   ]
 }
