@@ -30,7 +30,7 @@ FILE_COUNT=$(echo "$ALL_CHANGED" | grep -c '[^[:space:]]' 2>/dev/null || echo 0)
 
 # Only suggest review if 3+ source files were modified
 if [[ "$FILE_COUNT" -ge 3 ]]; then
-    echo '{"decision": "approve", "hookSpecificOutput": {"message": "Session summary: '"$FILE_COUNT"' source files were modified. Consider running /research-agent:best-practice for a review."}}'
+    echo '{"decision": "approve", "systemMessage": "Session summary: '"$FILE_COUNT"' source files were modified. Consider running /research-agent:best-practice for a review."}'
 else
     echo '{"decision": "approve", "suppressOutput": true}'
 fi

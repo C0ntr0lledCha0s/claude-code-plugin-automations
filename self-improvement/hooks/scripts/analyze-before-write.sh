@@ -192,6 +192,15 @@ if not content:
 file_path = tool_input.get("file_path", "")
 file_ext = os.path.splitext(file_path)[1].lower() if file_path else ""
 
+# Fast-path: skip non-code files that don't need security analysis
+NON_CODE_EXTENSIONS = {
+    '.md', '.json', '.txt', '.yaml', '.yml', '.toml', '.css', '.html',
+    '.svg', '.lock', '.xml', '.csv', '.cfg', '.ini', '.gitignore',
+}
+if file_ext in NON_CODE_EXTENSIONS:
+    print('{"decision": "approve"}')
+    sys.exit(0)
+
 # Security patterns to check - CRITICAL issues that should warn
 CRITICAL_PATTERNS = [
     (r'\beval\s*\(', "eval() detected - can execute arbitrary code"),
@@ -298,32 +307,12 @@ if issues:
         print(json.dumps(result))
 
 elif addressed:
-    # Previous warnings were addressed - positive feedback
-    success_message = "✅ **Previous issues addressed**\n\n"
-    success_message += f"Fixed: {', '.join(addressed)}\n"
-    success_message += "\nGreat job addressing the warnings!"
-
-    result = {
-        "decision": "approve",
-        "hookSpecificOutput": {
-            "message": success_message
-        }
-    }
-    print(json.dumps(result))
+    # Previous warnings were addressed - silently approve
+    print('{"decision": "approve"}')
 
 elif suggestions and len(suggestions) >= 2:
-    # Multiple suggestions - worth mentioning
-    suggestion_message = "💡 **Code Quality Suggestions**\n\n"
-    for suggestion in suggestions[:3]:
-        suggestion_message += f"- {suggestion}\n"
-
-    result = {
-        "decision": "approve",
-        "hookSpecificOutput": {
-            "message": suggestion_message
-        }
-    }
-    print(json.dumps(result))
+    # Suggestions only - silently approve
+    print('{"decision": "approve"}')
 
 else:
     # No significant issues

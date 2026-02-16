@@ -32,7 +32,7 @@ DOC_COUNT=$(echo "$ALL_CHANGED" | grep -iE "\.(${DOC_EXTENSIONS})$" | grep -c '[
 
 # Suggest docs update if source files changed but no docs were updated
 if [[ "$SOURCE_COUNT" -ge 2 && "$DOC_COUNT" -eq 0 ]]; then
-    echo '{"decision": "approve", "hookSpecificOutput": {"message": "'"$SOURCE_COUNT"' source files were modified without documentation updates. Consider running /documents-manager:docs-coverage to check."}}'
+    echo '{"decision": "approve", "systemMessage": "'"$SOURCE_COUNT"' source files were modified without documentation updates. Consider running /documents-manager:docs-coverage to check."}'
 else
     echo '{"decision": "approve", "suppressOutput": true}'
 fi

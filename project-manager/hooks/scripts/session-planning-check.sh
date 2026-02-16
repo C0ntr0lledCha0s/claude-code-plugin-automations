@@ -30,7 +30,7 @@ PLANNING_COUNT=$(echo "$ALL_CHANGED" | grep -E "$PLANNING_PATTERNS" | grep -c '[
 
 # Only suggest coordination if planning files were modified
 if [[ "$PLANNING_COUNT" -ge 1 ]]; then
-    echo '{"decision": "approve", "hookSpecificOutput": {"message": "Project planning files were modified. Consider running /project-manager:project-status to check coordination needs."}}'
+    echo '{"decision": "approve", "systemMessage": "Project planning files were modified. Consider running /project-manager:project-status to check coordination needs."}'
 else
     echo '{"decision": "approve", "suppressOutput": true}'
 fi

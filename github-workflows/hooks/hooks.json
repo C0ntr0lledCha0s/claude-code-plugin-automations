@@ -68,15 +68,6 @@
         ]
       },
       {
-        "matcher": "Bash.*git commit",
-        "hooks": [
-          {
-            "type": "prompt",
-            "prompt": "If this Bash command was 'git commit' and it succeeded, check the commit message for issue references (Closes #N, Fixes #N, Refs #N, Progresses #N). If found: 1) Offer to add a comment to the referenced GitHub issue with the commit SHA and summary using 'gh issue comment <number> --body \"Commit <sha>: <subject>\"', 2) For 'Progresses #N', suggest adding an 'in-progress' label to the issue, 3) Remind user that 'Closes/Fixes' will auto-close the issue when the PR is merged. If no issue reference was found but the issue cache exists at .claude/github-workflows/active-issues.json, suggest running /github-workflows:issue-track to sync issues for better commit-issue integration."
-          }
-        ]
-      },
-      {
         "matcher": "Bash.*git merge",
         "hooks": [
           {

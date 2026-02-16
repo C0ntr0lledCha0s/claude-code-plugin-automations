@@ -5,12 +5,15 @@
 # Loads accumulated learnings and patterns to inform the current session
 #
 
-set -euo pipefail
+set -uo pipefail
+
+# Track whether we've already sent JSON output
+OUTPUT_SENT=false
 
 # Cleanup trap for error handling
 cleanup() {
     local exit_code=$?
-    if [[ $exit_code -ne 0 ]]; then
+    if [[ $exit_code -ne 0 && "$OUTPUT_SENT" != "true" ]]; then
         # Log error to stderr but don't fail the session start
         echo "ERROR: load-learnings.sh failed with exit code $exit_code" >&2
         # Ensure we always output valid JSON even on error
@@ -46,7 +49,7 @@ load_learnings() {
     temp_output=$(mktemp)
     trap "rm -f '$temp_output'" RETURN
 
-    python3 - "$LEARNINGS_DB" "$PATTERNS_DB" "$SESSION_ID" "$SCRIPT_DIR" > "$temp_output" 2>&1 <<'EOF'
+    python3 - "$LEARNINGS_DB" "$PATTERNS_DB" "$SESSION_ID" "$SCRIPT_DIR" > "$temp_output" 2>/dev/null <<'EOF'
 import json
 import sys
 import subprocess
@@ -320,6 +323,7 @@ EOF
     local json_output
     json_output=$(grep -E '^\{' "$temp_output" | tail -1 || echo '')
 
+    OUTPUT_SENT=true
     if [[ -n "$json_output" ]]; then
         echo "$json_output"
     else
