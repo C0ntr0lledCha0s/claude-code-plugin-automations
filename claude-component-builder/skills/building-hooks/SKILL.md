@@ -212,6 +212,34 @@ Hooks can return structured JSON to control behavior:
 - **`permissionDecision`**: For tool permission hooks
 - **`additionalContext`**: Context added to Claude's knowledge
 
+### ⚠️ IMPORTANT: Event-Specific Output Formats
+
+**`hookSpecificOutput` is ONLY valid for:**
+- `PreToolUse` - use with `permissionDecision`, `updatedInput`
+- `UserPromptSubmit` - use with `additionalContext`
+- `PostToolUse` - use with `additionalContext`
+
+**For SessionStart/SessionEnd hooks, use `systemMessage` instead:**
+```json
+// ✅ CORRECT for SessionStart/SessionEnd
+{"decision": "approve", "systemMessage": "Your context here"}
+
+// ❌ WRONG - will cause validation error
+{"decision": "approve", "hookSpecificOutput": {"additionalContext": "..."}}
+```
+
+**Valid SessionStart/SessionEnd outputs:**
+```json
+// Simple approval
+{"decision": "approve", "suppressOutput": true}
+
+// With reason
+{"decision": "approve", "reason": "Setup complete"}
+
+// With message for Claude
+{"decision": "approve", "systemMessage": "Session guidance or context"}
+```
+
 ### Exit Codes
 
 - **`0`**: Success (stdout shown in transcript mode)

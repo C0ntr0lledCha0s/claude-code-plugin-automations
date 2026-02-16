@@ -299,16 +299,15 @@ if critical_patterns or important_patterns or actionable_learnings:
                 pass  # Don't fail session start if tracking fails
 
     # Output for Claude to use
+    # SessionStart hooks must use systemMessage, not hookSpecificOutput
     result = {
         "decision": "approve",
-        "hookSpecificOutput": {
-            "additionalContext": f"""
+        "systemMessage": f"""
 {context_message}
 
 ---
 *Apply these patterns proactively. Goal: reduce pattern frequency over time.*
 """
-        }
     }
     print(json.dumps(result))
 else:
