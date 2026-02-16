@@ -1,14 +1,1 @@
-{
-  "hooks": {
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-docs-check.sh\""
-          }
-        ]
-      }
-    ]
-  }
-}
+{"hooks": {}}
