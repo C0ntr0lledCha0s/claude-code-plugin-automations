@@ -20,8 +20,17 @@
     "documentation-coverage",
     "documentation-generator"
   ],
-  "commands": "./commands/",
-  "agents": "./agents/",
-  "skills": "./skills/",
+  "commands": [
+    "./commands/docs-audit.md",
+    "./commands/docs-coverage.md",
+    "./commands/docs-generate.md",
+    "./commands/docs-update.md"
+  ],
+  "agents": ["./agents/docs-analyzer.md"],
+  "skills": [
+    "./skills/analyzing-docs",
+    "./skills/managing-docs",
+    "./skills/writing-docs"
+  ],
   "hooks": ["./hooks/hooks.json"]
 }
